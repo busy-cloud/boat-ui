@@ -1,4 +1,6 @@
 import {Injectable} from '@angular/core';
+import {SmartRequestService} from './lib/smart-request.service';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -7,10 +9,21 @@ export class UserService {
 
   private _user: any
 
-  constructor() {
+  constructor(protected rs: SmartRequestService, protected router: Router) {
     //TODO 自动加载登录状态，此处应该有token
     let u = localStorage.getItem('user')
-    if (u) this._user = JSON.parse(u)
+    if (u) {
+      this._user = JSON.parse(u)
+    } else {
+      rs.get('/api/me').subscribe((res) => {
+        console.log("api me", res)
+        if (res.error) {
+          this.router.navigateByUrl("/login")
+          return
+        }
+        this.set(res.data);
+      });
+    }
   }
 
   get user() {

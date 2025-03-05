@@ -63,7 +63,7 @@ export class LoginComponent {
     }
 
     let obj = this.group.value
-    this.rs.post("admin/login", {...obj, password: Md5.hashStr(obj.password)}).subscribe(res => {
+    this.rs.post("login", {...obj, password: Md5.hashStr(obj.password)}).subscribe(res => {
       console.log("login", res)
       if (res.error) {
         return

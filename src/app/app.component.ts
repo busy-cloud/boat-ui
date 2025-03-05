@@ -27,8 +27,7 @@ import {UserService} from './user.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  isCollapsed = false;
-
-  constructor(protected us: UserService) {
+  constructor() {
+    //console.log("app component loaded");
   }
 }

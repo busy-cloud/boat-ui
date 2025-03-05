@@ -38,6 +38,7 @@ export class AdminComponent {
     company: '南京本易物联网有限公司',
   }
 
+  menus: any[] = []
   settings: any[] = []
 
   constructor(protected us: UserService, private rs: SmartRequestService) {
@@ -48,20 +49,21 @@ export class AdminComponent {
 
   loadOem() {
     this.rs.get("oem").subscribe((res) => {
-      if (res.err) return
+      if (res.error) return
       Object.assign(this.oem, res.data);
     })
   }
 
   loadMenu() {
-    this.rs.get("menu").subscribe((res) => {
-      if (res.err) return
+    this.rs.get("menus").subscribe((res) => {
+      if (res.error) return
+      this.menus = res.data
     })
   }
 
   loadSetting() {
     this.rs.get("settings").subscribe((res) => {
-      if (res.err) return
+      if (res.error) return
       this.settings = res.data
     })
   }

@@ -1,0 +1,83 @@
+<nz-layout class="app-layout">
+  <nz-sider class="menu-sidebar"
+            nzCollapsible
+            nzWidth="200px"
+            nzBreakpoint="md"
+            [(nzCollapsed)]="isCollapsed"
+            [nzTrigger]="null">
+    <div class="sidebar-logo">
+        <img src="boat.svg" alt="logo">
+        <h1>Boat</h1>
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-submenu nzOpen nzTitle="控制台" nzIcon="dashboard">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="dash">首页</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="数据仓库" nzIcon="database">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="table">数据表</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a>文件仓</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a>空间使用</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="函数计算" nzIcon="function">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="function">接口</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a>基础库</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="设置" nzIcon="setting">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a>设置</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div class="app-header">
+        <span class="header-trigger"
+              nz-icon
+              (click)="isCollapsed = !isCollapsed"
+              [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+        ></span>
+        <div class="header-content">
+
+        </div>
+        <span class="header-user" nz-dropdown [nzDropdownMenu]="user">
+            <span nz-icon nzType="user"></span>
+          {{ us.user.name || us.user.id || '无名' }}
+        </span>
+        <nz-dropdown-menu #user>
+          <ul nz-menu>
+            <li nz-menu-item>个人中心</li>
+            <li nz-menu-item>修改密码</li>
+            <li nz-menu-divider></li>
+            <li nz-menu-item>退出</li>
+          </ul>
+        </nz-dropdown-menu>
+      </div>
+    </nz-header>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

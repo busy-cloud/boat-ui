@@ -9,5 +9,5 @@ import (
 var www embed.FS
 
 func init() {
-  web.StaticFS(www, "/", "dist/boat-ui/browser", "index.html")
+  web.StaticFS(www, "/", "dist/browser", "index.html")
 }

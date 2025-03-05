@@ -9,7 +9,7 @@ export const routes: Routes = [
     path: '', component: AdminComponent, children: [
       {path: '', pathMatch: 'full', redirectTo: 'dash'},
       {path: 'dash', component: DashComponent},
-      {path: 'setting/:item', component: SettingComponent},
+      {path: 'setting/:module', component: SettingComponent},
     ]
   },
 ];

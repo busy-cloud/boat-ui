@@ -1,12 +1,60 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
+import {SmartRequestService} from '../../lib/smart-request.service';
+import {ActivatedRoute} from '@angular/router';
+import {SmartEditorComponent} from '../../lib/smart-editor/smart-editor.component';
+import {NzCardComponent} from 'ng-zorro-antd/card';
+import {NzButtonComponent} from 'ng-zorro-antd/button';
+import {NzNotificationService} from 'ng-zorro-antd/notification';
+import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-setting',
   standalone: true,
-  imports: [],
+  imports: [
+    SmartEditorComponent,
+    NzCardComponent,
+    NzButtonComponent
+  ],
   templateUrl: './setting.component.html',
   styleUrl: './setting.component.scss'
 })
 export class SettingComponent {
+  module = ""
+  form: any = {}
+  data: any = {}
+
+  @ViewChild("editor", {static: true}) editor!: SmartEditorComponent;
+
+
+  constructor(protected rs: SmartRequestService,
+              protected route: ActivatedRoute,
+              protected ns: NzNotificationService,
+              protected ts: Title) {
+
+    route.params.subscribe(params => {
+      this.module = params['module']
+      this.load()
+    })
+    //this.load()
+  }
+
+  load() {
+    this.rs.get("setting/" + this.module).subscribe((res) => {
+      if (res.err) return
+      this.data = res.data
+    })
+    this.rs.get("setting/" + this.module + "/form").subscribe((res) => {
+      if (res.err) return
+      this.form = res.data
+      this.ts.setTitle("设置 " + this.form.name)
+    })
+  }
+
+  submit() {
+    this.rs.post("setting/" + this.module, this.editor.value).subscribe((res) => {
+      this.ns.success("提示", "保存成功")
+    })
+  }
+
 
 }

@@ -1,1 +1,7 @@
-<p>setting works!</p>
+<nz-card [nzTitle]="'设置 ' + form.name" [nzExtra]="extra">
+  <smart-editor #editor [fields]="form.form" [values]="data"></smart-editor>
+</nz-card>
+
+<ng-template #extra>
+  <button nz-button nzType="primary" (click)="submit()">保存</button>
+</ng-template>

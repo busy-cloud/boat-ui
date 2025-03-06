@@ -1,1 +1,14 @@
-<p>chart works! {{page}}</p>
+@if (content) {
+  @if (content.template == 'chart') {
+    <nz-card [nzTitle]="content.title" [nzExtra]="extra">
+      <div echarts [options]="chartOption" [merge]="mergeOption" [loading]="loading" class="chart"></div>
+    </nz-card>
+    <ng-template #extra>
+      <button nz-button nzType="primary" (click)="loadData()">刷新</button>
+    </ng-template>
+  } @else {
+    模板类型应该是info
+  }
+} @else {
+  <nz-spin nzSimple></nz-spin>
+}

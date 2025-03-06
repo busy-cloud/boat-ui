@@ -14,7 +14,7 @@ export type PageContent = Content & (TableContent | FormContent | InfoContent | 
 export interface Content {
   id: string
   title: string
-  params: any
+  params?: any
   params_func?: string | ((data: any) => any)
   children?: PageContent[]
 }

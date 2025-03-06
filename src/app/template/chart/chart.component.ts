@@ -10,7 +10,7 @@ import {BarChart, GaugeChart, LineChart, PieChart, RadarChart} from 'echarts/cha
 //import 'echarts/theme/macarons.js';
 import {
   DatasetComponent,
-  GridComponent,
+  GridComponent, LegendComponent,
   TitleComponent,
   TooltipComponent,
   TransformComponent
@@ -36,6 +36,7 @@ echarts.use([
   RadarChart,
   TitleComponent,
   TooltipComponent,
+  LegendComponent,
   GridComponent,
   DatasetComponent,
   TransformComponent,
@@ -79,7 +80,15 @@ export class ChartComponent {
   loading = false
 
   //参数
-  chartOption: EChartsOption = {}
+  chartOption: EChartsOption = {
+    title: {show: true, text: "123"},
+    legend: {
+      data: ["A", "B", "C", "D"]
+    },
+    grid: {show: true},
+    tooltip: {show: true},
+
+  }
   mergeOption: EChartsOption = {}
 
 
@@ -172,7 +181,10 @@ export class ChartComponent {
           xAxis: {type: 'category', data: ['1', '2', '3', '4', '5', '6', '7', '8', '9']},
           yAxis: {type: 'value'},
           series: [
-            {type: 'line', data: [34,2,23,3,2,34,234,234,235,]}
+            {type: 'bar', name:"A", data: [34,2,23,3,2,34,234,234,235,]},
+            {type: 'bar',  name:"B",data: [34,2,23,3,2,34,234,234,235,]},
+            {type: 'bar',  name:"C",data: [34,2,23,3,2,34,234,234,235,]},
+            {type: 'bar',  name:"D",data: [34,2,23,3,2,34,234,234,235,]},
           ]
         }
         break

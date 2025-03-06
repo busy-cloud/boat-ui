@@ -1,9 +1,11 @@
-<smart-table
-  [buttons]="content.buttons"
-  [columns]="content.columns"
-  [operators]="content.operators"
-  [datum]="data"
-  [total]="total"
-  [loading]="loading"
-  (query)="onQuery($event)"
-></smart-table>
+<nz-card [nzTitle]="content.title">
+  <smart-table
+    [buttons]="content.buttons"
+    [columns]="content.columns"
+    [operators]="content.operators"
+    [datum]="data"
+    [total]="total"
+    [loading]="loading"
+    (query)="onQuery($event)"
+  ></smart-table>
+</nz-card>

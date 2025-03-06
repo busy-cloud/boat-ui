@@ -44,7 +44,7 @@
         <ul>
           @for (setting of settings;track setting) {
             <li nz-menu-item nzMatchRouter>
-              <a [routerLink]="['setting', setting.module]">{{ setting.name }}</a>
+              <a [routerLink]="['setting', setting.module]">{{ setting.title }}</a>
             </li>
           }
         </ul>

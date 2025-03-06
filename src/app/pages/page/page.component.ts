@@ -1,13 +1,19 @@
 import {Component} from '@angular/core';
 import {SmartRequestService} from '../../lib/smart-request.service';
 import {ActivatedRoute, RouterOutlet} from '@angular/router';
-import {TableComponent} from '../../template/table/table.component';
-import {InfoComponent} from '../../template/info/info.component';
-import {FormComponent} from '../../template/form/form.component';
+import {TableComponent, TablePage} from '../../template/table/table.component';
+import {InfoComponent, InfoPage} from '../../template/info/info.component';
+import {FormComponent, FormPage} from '../../template/form/form.component';
 import {ChartComponent} from '../../template/chart/chart.component';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
-import {Title} from '@angular/platform-browser';
 import {NzCardComponent} from 'ng-zorro-antd/card';
+
+type Content = TablePage | FormPage | InfoPage | { template: '_loading' } | { template: 'chart' }
+
+export interface Page {
+  name: string
+  content: Content[]
+}
 
 @Component({
   selector: 'app-page',
@@ -17,8 +23,6 @@ import {NzCardComponent} from 'ng-zorro-antd/card';
     FormComponent,
     ChartComponent,
     NzSpinComponent,
-    RouterOutlet,
-    NzCardComponent
   ],
   templateUrl: './page.component.html',
   standalone: true,
@@ -27,61 +31,73 @@ import {NzCardComponent} from 'ng-zorro-antd/card';
 export class PageComponent {
   id = ''
 
-  page: any = {
-    //template: '_loading'
-    template: 'info',
-    title: '用户表',
-
-    content: {
-      buttons: [
-        {label: 'test'}
-      ],
+  page: Page = {
+    name: '',
+    content: [{
+      template: 'table',
+      title: '测试表',
+      buttons: [{label: 'test'}],
       columns: [
         {
           key: 'id', label: 'ID',
           action: {
             type: 'link',
-            link: (row: any) => `/admin/page/${row.id}`,
-            params: (row: any) => {
+            link: `/admin/page/:id`,
+            paramsFunc: (row: any) => {
               return {id: row.id}
             }
           }
         },
         {key: 'name', label: '姓名', keyword: true, sortable: true},
         {key: 'disabled', label: '禁用', sortable: true},
-        {key: 'created', label: '创建日期', time: true, sortable: true},
-      ],
-      items: [
-        {
-          key: 'id', label: 'ID',
-          action: {
-            type: 'link',
-            link: (row: any) => `/admin/page/${row.id}`,
-            params: (row: any) => {
-              return {id: row.id}
-            }
-          }
-        },
-        {key: 'name', label: '姓名'},
-        {key: 'disabled', label: '禁用'},
-        {key: 'created', label: '创建日期', type: 'date'},
+        {key: 'created', label: '创建日期', date: true, sortable: true},
       ],
       operators: [
         {
           label: '编辑', action: {
             type: 'link',
-            link: () => '/admin/page/edit',
+            link: '/admin/page/edit',
             external: true
           }
         }
       ],
       search_url: "api/user/search"
-    }
+    },
+      {
+        template: 'info',
+        title: '测试表',
+        load_url: 'user/:id',
+        items: [
+          {
+            key: 'id', label: 'ID',
+            action: {
+              type: 'link',
+              link: `/admin/page/:id`,
+              paramsFunc: (row: any) => {
+                return {id: row.id}
+              }
+            }
+          },
+          {key: 'name', label: '姓名'},
+          {key: 'disabled', label: '禁用'},
+          {key: 'created', label: '创建日期', type: 'date'},
+        ],
+      },
+      {
+        template: 'form',
+        title: '测试表单',
+        fields: [
+          {key: 'id', label: 'ID', type: "text"},
+          {key: 'name', label: '姓名', type: "text"},
+          {key: 'disabled', label: '禁用', type: "switch"},
+          {key: 'created', label: '创建日期', type: 'date'},
+        ],
+      }
+    ]
   }
 
   constructor(protected rs: SmartRequestService,
-              protected route: ActivatedRoute,
-              protected ts: Title) {
+              protected route: ActivatedRoute) {
     route.params.subscribe(params => {
       this.id = params['id'];
       this.load()
@@ -92,8 +108,8 @@ export class PageComponent {
     this.rs.get("page/" + this.id).subscribe((res) => {
       if (res.error) return
       this.page = res.data
-      if (this.page.title)
-        this.ts.setTitle(this.page.title);
+      // if (this.page.title)
+      //   this.ts.setTitle(this.page.title);
     })
   }
 

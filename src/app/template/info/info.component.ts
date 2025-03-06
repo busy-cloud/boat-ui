@@ -1,20 +1,28 @@
 import {Component, Input} from '@angular/core';
 import {SmartInfoComponent, SmartInfoItem} from '../../lib/smart-info/smart-info.component';
-import {SmartTableButton, SmartTableColumn, SmartTableOperator} from '../../lib/smart-table/smart-table.component';
 import {SmartRequestService} from '../../lib/smart-request.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Params} from '@angular/router';
+import {isFunction} from 'rxjs/internal/util/isFunction';
+import {NzCardComponent} from 'ng-zorro-antd/card';
+import {NzButtonComponent} from 'ng-zorro-antd/button';
+import {ReplaceLinkParams} from '../../lib/smart-table/smart-table.component';
 
 export interface InfoPage {
-  items?: SmartInfoItem[]
+  title: string
+  template: 'info'
+  items: SmartInfoItem[]
+
   load_url?: string
-  load_action?: string | any
+  load_func?: string | Function | ((params: Params, request: SmartRequestService) => Promise<any>)
 }
 
 
 @Component({
   selector: 'app-info',
   imports: [
-    SmartInfoComponent
+    SmartInfoComponent,
+    NzCardComponent,
+    NzButtonComponent
   ],
   templateUrl: './info.component.html',
   standalone: true,
@@ -24,31 +32,40 @@ export class InfoComponent {
   @Input() content!: InfoPage;
   @Input() page!: string;
 
-  data: any = {id:122, name: '张三', created: new Date()};
+  @Input() params: Params = {}
 
+  data: any = {id: 122, name: '张三', created: new Date()};
 
   constructor(protected rs: SmartRequestService, protected route: ActivatedRoute) {
-
+    route.queryParams.subscribe(res => {
+      this.params = res;
+      this.load() //重新加载
+    })
   }
 
   ngAfterViewInit() {
-    if (this.content.load_action) {
-      this.content.load_action = new Function(this.content.load_action)
+    if (this.content.load_func) {
+      try {
+        this.content.load_func = new Function('params', 'request', this.content.load_func as string)
+      } catch (e) {
+        console.error(e)
+      }
     }
     this.load()
   }
 
   load() {
-    if (this.content.load_action) {
-      this.content.load_action = new Function(this.content.load_action)
-      this.content.load_action()
+    if (isFunction(this.content.load_func)) {
+      this.content.load_func(this.params, this.rs).then((res: any) => {
+        this.data = res;
+      })
     } else if (this.content.load_url) {
-      this.rs.get(this.content.load_url).subscribe(res=>{
+      let url = ReplaceLinkParams(this.content.load_url, this.params);
+      this.rs.get(url).subscribe(res => {
         if (res.error) return
         this.data = res.data
       })
     }
   }
-
 
 }

@@ -1,17 +1,16 @@
-<nz-card [nzTitle]="page.title">
-
-  @switch (page.template) {
+@for (p of page.content; track p) {
+  @switch (p.template) {
     @case ("table") {
-      <app-table [page]="id" [content]="page.content"></app-table>
+      <app-table [page]="id" [content]="p"></app-table>
     }
     @case ("info") {
-      <app-info [page]="id" [content]="page.content"></app-info>
+      <app-info [page]="id" [content]="p"></app-info>
     }
     @case ("form") {
-      <app-form [page]="id" [content]="page.content"></app-form>
+      <app-form [page]="id" [content]="p"></app-form>
     }
     @case ("chart") {
-      <app-chart [page]="id" [content]="page.content"></app-chart>
+      <app-chart [page]="id" [content]="p"></app-chart>
     }
     @case ("_loading") {
       <nz-spin nzSimple></nz-spin>
@@ -20,5 +19,4 @@
       未知类型模板
     }
   }
-</nz-card>
-<router-outlet></router-outlet>
+}

@@ -1,4 +1,7 @@
-<smart-info
-  [fields]="content.items || []"
-  [value]="data"
-></smart-info>
+<nz-card [nzTitle]="content.title" [nzExtra]="extra">
+  <smart-info [fields]="content.items || []" [value]="data"></smart-info>
+</nz-card>
+
+<ng-template #extra>
+  <button nz-button nzType="primary" (click)="load()">刷新</button>
+</ng-template>

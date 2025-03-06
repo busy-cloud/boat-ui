@@ -13,7 +13,7 @@ export interface SmartInfoItem {
   type?: string
   label: string
   span?: number
-  action: SmartAction
+  action?: SmartAction
   options?: { [p: string | number]: any }
 }
 

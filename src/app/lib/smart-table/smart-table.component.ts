@@ -12,7 +12,7 @@ import {FormsModule} from '@angular/forms';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 
 export function ReplaceLinkParams(link: string, data: any): string {
-  link.matchAll(/:\w+/)
+  //link.matchAll(/:\w+/g)
   let match = link.match(/\:\w+/g)
   if (match != null) {
     match.forEach(m => {
@@ -87,7 +87,7 @@ export interface SmartTableOperator {
   icon?: string
   label?: string
   title?: string
-  action: SmartAction
+  action?: SmartAction
   confirm?: string
 }
 

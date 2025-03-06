@@ -1,29 +1,27 @@
-<nz-descriptions [nzTitle]="title" nzBordered nzSize="small" [nzColumn]="{ xs: 1, sm: 1, md: 2, lg:2, xl:3, xxl:3}">
-    <ng-container *ngFor="let f of fields">
-        <ng-container [ngSwitch]="f.type">
-            <nz-descriptions-item [nzTitle]="f.label" [nzSpan]="f.span || 1">
-                <ng-container *ngSwitchCase="'text'">
-                    {{ value[f.key] }}
-                </ng-container>
-                <ng-container *ngSwitchCase="'select'">
-                    {{ f.options?.[value[f.key]] }}
-                </ng-container>
-                <ng-container *ngSwitchCase="'date'">
-                    {{ value[f.key] | date: 'yyyy-MM-dd HH:mm:ss' }}
-                </ng-container>
-                <ng-container *ngSwitchCase="'progress'">
-                    <nz-progress [nzPercent]="value[f.key]"></nz-progress>
-                </ng-container>
-                <ng-container *ngSwitchCase="'tags'">
-                    <nz-tag *ngFor="let t of value[f.key]">{{ t }}</nz-tag>
-                </ng-container>
-                <ng-container *ngSwitchCase="'link'">
-                    <a [routerLink]="f.link?.()">{{ value[f.key] }}</a>
-                </ng-container>
-                <ng-container *ngSwitchDefault>
-                    {{ value[f.key] }}
-                </ng-container>
-            </nz-descriptions-item>
-        </ng-container>
-    </ng-container>
+<nz-descriptions [nzTitle]="title" nzBordered nzSize="small"
+                 [nzColumn]="{ xs: 1, sm: 1, md: 2, lg:2, xl:3, xxl:3}">
+  @for (f of fields; track f) {
+    <nz-descriptions-item [nzTitle]="f.label" [nzSpan]="f.span || 1" (click)="execute(f.action)">
+      @switch (f.type) {
+        @case ('text') {
+          {{ value[f.key] }}
+        }
+        @case ('select') {
+          {{ f.options?.[value[f.key]] || value[f.key] }}
+        }
+        @case ('date') {
+          {{ value[f.key] | date: 'yyyy-MM-dd HH:mm:ss' }}
+        }
+        @case ('progress') {
+          <nz-progress [nzPercent]="value[f.key]"></nz-progress>
+        }
+        @case ('tags') {
+          <nz-tag *ngFor="let t of value[f.key]">{{ t }}</nz-tag>
+        }
+        @default {
+          {{ value[f.key] }}
+        }
+      }
+    </nz-descriptions-item>
+  }
 </nz-descriptions>

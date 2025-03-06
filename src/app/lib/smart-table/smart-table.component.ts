@@ -9,6 +9,17 @@ import {NzTableFilterList, NzTableModule, NzTableQueryParams} from "ng-zorro-ant
 import {CommonModule} from "@angular/common";
 import {NzPopconfirmDirective} from "ng-zorro-antd/popconfirm";
 import {FormsModule} from '@angular/forms';
+import {isFunction} from 'rxjs/internal/util/isFunction';
+
+export interface SmartAction {
+  type: 'link' | 'script' | 'page' | 'dialog'
+  link?: string | ((data: any) => string)
+  params?: any | ((data: any) => any)
+  script?: string | ((data: any) => string)
+  page?: string
+  dialog?: boolean
+  external?: boolean
+}
 
 export interface SmartTableColumn {
   key: string
@@ -19,28 +30,22 @@ export interface SmartTableColumn {
   date?: boolean
   ellipsis?: boolean
   break?: boolean
-  link?: (data: any) => string
-  query?: (data: any) => any
+  action?: SmartAction
 }
 
 export interface SmartTableOperator {
   icon?: string
   label?: string
   title?: string
-  link?: (data: any) => string
-  query?: (data: any) => any
-  action?: (data: any) => void
+  action: SmartAction
   confirm?: string
-  external?: boolean
 }
 
 export interface SmartTableButton {
   icon?: string
   label: string
   title?: string
-  link?: () => string
-  query?: () => any
-  action?: () => void
+  action?: SmartAction
 }
 
 
@@ -134,6 +139,49 @@ export class SmartTableComponent implements OnInit {
     }
 
     this.query.emit(this.body)
+  }
+
+  execute(action: SmartAction | undefined, data: any) {
+    if (!action) return
+
+    let params = action.params
+    if (isFunction(action.params)) {
+      params = action.params(data)
+    }
+
+    switch (action.type) {
+      case 'link':
+        let uri: any = action.link
+        if (isFunction(action.link)) {
+          uri = action.link(data)
+        }
+
+        let query = new URLSearchParams(params).toString()
+        let url = uri + '?' + query
+
+        if (action.external)
+          window.open(url)
+        else
+          this.router.navigateByUrl(url)
+        //this.router.navigate([uri], {queryParams: params})
+
+        break
+
+      case 'script':
+        if (isFunction(action.script)) {
+          action.script(data)
+        }
+        break
+
+      case 'page':
+        this.router.navigate(["page", action.page], {queryParams: params})
+        break
+
+      case 'dialog':
+        //TODO 弹窗
+        break
+
+    }
   }
 
   onQuery(query: NzTableQueryParams) {

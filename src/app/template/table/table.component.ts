@@ -33,7 +33,7 @@ export class TableComponent {
   @Input() content!: TablePage;
   @Input() page!: string;
 
-  data: any[] = [{id: 1}];
+  data: any[] = [{id: 1, name: '测试'}];
   total: number = 1;
   loading: boolean = false;
 

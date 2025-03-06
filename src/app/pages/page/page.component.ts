@@ -29,7 +29,7 @@ export class PageComponent {
 
   page: any = {
     //template: '_loading'
-    template: 'table',
+    template: 'info',
     title: '用户表',
 
     content: {
@@ -39,17 +39,41 @@ export class PageComponent {
       columns: [
         {
           key: 'id', label: 'ID',
-          link: (row: any) => `/admin/page/${row.id}`,
-          query: (row: any) => {
-            return {id: row.id}
+          action: {
+            type: 'link',
+            link: (row: any) => `/admin/page/${row.id}`,
+            params: (row: any) => {
+              return {id: row.id}
+            }
           }
         },
         {key: 'name', label: '姓名', keyword: true, sortable: true},
         {key: 'disabled', label: '禁用', sortable: true},
         {key: 'created', label: '创建日期', time: true, sortable: true},
       ],
+      items: [
+        {
+          key: 'id', label: 'ID',
+          action: {
+            type: 'link',
+            link: (row: any) => `/admin/page/${row.id}`,
+            params: (row: any) => {
+              return {id: row.id}
+            }
+          }
+        },
+        {key: 'name', label: '姓名'},
+        {key: 'disabled', label: '禁用'},
+        {key: 'created', label: '创建日期', type: 'date'},
+      ],
       operators: [
-        {label: '编辑', link: () => '/admin/page/user/edit',}
+        {
+          label: '编辑', action: {
+            type: 'link',
+            link: () => '/admin/page/edit',
+            external: true
+          }
+        }
       ],
       search_url: "api/user/search"
     }

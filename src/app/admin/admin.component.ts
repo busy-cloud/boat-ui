@@ -25,7 +25,6 @@ import {NgOptimizedImage} from '@angular/common';
     NzSubMenuComponent,
     RouterLink,
     RouterOutlet,
-    NgOptimizedImage
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'

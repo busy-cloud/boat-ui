@@ -88,7 +88,9 @@
             @if (item.date) {
                 {{ data[item.key] | date: 'yyyy-MM-dd HH:mm:ss' }}
             } @else if (item.link) {
-                <a [routerLink]="item.link(data)">{{ data[item.key] }}</a>
+                <a [routerLink]="item.link(data)"
+                   [queryParams]="item.query && item.query(data)"
+                >{{ data[item.key] }}</a>
             } @else {
                 {{ data[item.key] }}
 
@@ -100,11 +102,15 @@
 
             @if (o.link) {
                 @if (o.external) {
-                    <a [title]="o.title||''" target="_blank" [routerLink]="o.link(data)">
+                    <a [title]="o.title||''" target="_blank"
+                       [routerLink]="o.link(data)"
+                       [queryParams]="o.query && o.query(data)">
                         <i *ngIf="o.icon" nz-icon [nzType]="o.icon"></i>{{ o.label }}
                     </a>
                 } @else {
-                    <a [title]="o.title||''" [routerLink]="o.link(data)">
+                    <a [title]="o.title||''"
+                       [routerLink]="o.link(data)"
+                       [queryParams]="o.query && o.query(data)">
                         <i *ngIf="o.icon" nz-icon [nzType]="o.icon"></i>{{ o.label }}
                     </a>
                 }

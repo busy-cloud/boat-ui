@@ -66,7 +66,6 @@ export interface SmartField {
     tips?: string
 
     clear?: boolean
-
     disabled?: boolean
     hidden?: boolean //隐藏？？？
 
@@ -88,6 +87,8 @@ export interface SmartField {
     change?: (value: any) => void //监测变化
 
     time?: boolean //日期控件 显示时间
+    time_format?: string
+
 
     upload?: string //文件上传
 
@@ -209,7 +210,6 @@ function createControl(f: SmartField, value: any = undefined): FormControl {
         NzAutocompleteModule,
         NzCheckboxComponent,
         NzRadioModule,
-        NzButtonGroupComponent,
         NzRateComponent,
     ],
     templateUrl: './smart-editor.component.html',

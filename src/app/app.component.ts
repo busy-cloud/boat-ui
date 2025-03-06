@@ -13,15 +13,12 @@ import {UserService} from './user.service';
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     RouterOutlet,
     NzIconModule,
     NzLayoutModule,
     NzMenuModule,
     FormsModule,
     ReactiveFormsModule,
-    NzDropDownDirective,
-    NzDropdownMenuComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
@@ -29,5 +26,6 @@ import {UserService} from './user.service';
 export class AppComponent {
   constructor() {
     //console.log("app component loaded");
+    console.log("action type: link page dialog script")
   }
 }

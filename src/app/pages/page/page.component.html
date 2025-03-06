@@ -1,0 +1,24 @@
+<nz-card [nzTitle]="page.title">
+
+  @switch (page.template) {
+    @case ("table") {
+      <app-table [page]="id" [content]="page.content"></app-table>
+    }
+    @case ("info") {
+      <app-info [page]="id" [content]="page.content"></app-info>
+    }
+    @case ("form") {
+      <app-form [page]="id" [content]="page.content"></app-form>
+    }
+    @case ("chart") {
+      <app-chart [page]="id" [content]="page.content"></app-chart>
+    }
+    @case ("_loading") {
+      <nz-spin nzSimple></nz-spin>
+    }
+    @default {
+      未知类型模板
+    }
+  }
+</nz-card>
+<router-outlet></router-outlet>

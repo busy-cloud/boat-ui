@@ -11,11 +11,61 @@ import {NzPopconfirmDirective} from "ng-zorro-antd/popconfirm";
 import {FormsModule} from '@angular/forms';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 
+export function ReplaceLinkParams(link: string, data: any): string {
+  link.matchAll(/:\w+/)
+  let match = link.match(/\:\w+/g)
+  if (match != null) {
+    match.forEach(m => {
+      const k = m.substring(1)
+      link = link.replaceAll(m, data[k])
+    })
+  }
+  return link
+}
+
+export function GetActionLink(action: SmartAction, data: any) {
+  if (!action.link) return ""
+
+  // 先进行正则替换
+  let link = ReplaceLinkParams(action.link, data)
+
+  // 计算函数
+  if (typeof action.linkFunc == "string" && action.linkFunc.length > 0) {
+    try {
+      action.linkFunc = new Function(action.linkFunc)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  if (isFunction(action.linkFunc)) {
+    link = action.linkFunc(data)
+  }
+  return link
+}
+
+export function GetActionParams(action: SmartAction, data: any) :any {
+  let params = action.params
+  // 计算函数
+  if (typeof action.paramsFunc == "string" && action.paramsFunc.length > 0) {
+    try {
+      action.paramsFunc = new Function(action.paramsFunc)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  if (isFunction(action.paramsFunc)) {
+    params = action.paramsFunc(data)
+  }
+  return params
+}
+
 export interface SmartAction {
   type: 'link' | 'script' | 'page' | 'dialog'
-  link?: string | ((data: any) => string)
-  params?: any | ((data: any) => any)
-  script?: string | ((data: any) => string)
+  link?: string
+  linkFunc?: string | Function | ((data: any) => string)
+  params?: any
+  paramsFunc?: string | Function | ((data: any) => any)
+  script?: string | Function | ((data: any) => string)
   page?: string
   dialog?: boolean
   external?: boolean
@@ -144,18 +194,12 @@ export class SmartTableComponent implements OnInit {
   execute(action: SmartAction | undefined, data: any) {
     if (!action) return
 
-    let params = action.params
-    if (isFunction(action.params)) {
-      params = action.params(data)
-    }
+    let params = GetActionParams(action, data)
 
     switch (action.type) {
       case 'link':
-        let uri: any = action.link
-        if (isFunction(action.link)) {
-          uri = action.link(data)
-        }
 
+        let uri = GetActionLink(action, data)
         let query = new URLSearchParams(params).toString()
         let url = uri + '?' + query
 
@@ -179,6 +223,7 @@ export class SmartTableComponent implements OnInit {
 
       case 'dialog':
         //TODO 弹窗
+
         break
 
     }

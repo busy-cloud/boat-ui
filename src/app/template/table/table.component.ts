@@ -22,7 +22,6 @@ export interface TablePage {
 @Component({
   selector: 'app-table',
   imports: [
-    SmartEditorComponent,
     SmartTableComponent
   ],
   templateUrl: './table.component.html',

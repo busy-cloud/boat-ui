@@ -4,7 +4,7 @@ import {NzDescriptionsModule} from "ng-zorro-antd/descriptions";
 import {NzProgressComponent} from "ng-zorro-antd/progress";
 import {Router, RouterLink} from "@angular/router";
 import {NzTagComponent} from "ng-zorro-antd/tag";
-import {SmartAction} from '../smart-table/smart-table.component';
+import {GetActionLink, GetActionParams, SmartAction} from '../smart-table/smart-table.component';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 
 
@@ -41,18 +41,12 @@ export class SmartInfoComponent {
   execute(action: SmartAction | undefined) {
     if (!action) return
 
-    let params = action.params
-    if (isFunction(action.params)) {
-      params = action.params(this.value)
-    }
+    let params = GetActionParams(action, this.value)
 
     switch (action.type) {
       case 'link':
-        let uri: any = action.link
-        if (isFunction(action.link)) {
-          uri = action.link(this.value)
-        }
 
+        let uri = GetActionLink(action, this.value)
         let query = new URLSearchParams(params).toString()
         let url = uri + '?' + query
 

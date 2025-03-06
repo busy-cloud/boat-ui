@@ -59,6 +59,7 @@ export class TableComponent {
     } else {
       if (this.page) this.load()
       this.route.params.subscribe(params => {
+        if (this.page == params['page']) return
         this.page = params['page'];
         this.load()
       })
@@ -66,6 +67,7 @@ export class TableComponent {
   }
 
   load() {
+    console.log("[table] load", this.page)
     this.rs.get("page/" + this.page).subscribe((res) => {
       if (res.error) return
       this.content = res.data
@@ -76,6 +78,7 @@ export class TableComponent {
   }
 
   build() {
+    console.log("[table] build", this.page)
     if (this.content && this.content.template === "table" && typeof this.content.search_func == "string") {
       try {
         //@ts-ignore
@@ -89,6 +92,7 @@ export class TableComponent {
   $event: ParamSearch = {filter: {}}
 
   onQuery($event: ParamSearch) {
+    console.log("[table] query", this.page)
     //默认用上次搜索
     if (!$event) $event = this.$event
     else this.$event = $event

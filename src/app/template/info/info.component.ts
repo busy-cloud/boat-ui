@@ -9,6 +9,7 @@ import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {ReplaceLinkParams} from '../../lib/smart-table/smart-table.component';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
 import {PageContent} from '../../pages/page/page.component';
+import {CompareObject} from '../form/form.component';
 
 export interface InfoContent {
   template: 'info'
@@ -51,32 +52,36 @@ export class InfoComponent {
     //如果是input传入，则是作为组件使用
     if (this.content) {
       this.build()
+      this.loadData()
     } else {
       if (this.page) this.load()
-      this.route.params.subscribe(res => {
-        this.page = res['page'];
+      this.route.params.subscribe(params => {
+        if (this.page == params['page']) return
+        this.page = params['page'];
         this.load() //重新加载
       })
-      this.route.queryParams.subscribe(res => {
-        this.params = res;
+      this.route.queryParams.subscribe(params => {
+        if (CompareObject(params, this.params)) return
+        this.params = params;
         this.loadData() //重新加载
       })
     }
-
-    this.loadData()
   }
 
   load() {
+    console.log("[info] load", this.page)
     this.rs.get("page/" + this.page).subscribe((res) => {
       if (res.error) return
       this.content = res.data
       if (this.content)
         this.ts.setTitle(this.content.title);
       this.build()
+      this.loadData()
     })
   }
 
   build() {
+    console.log("[info] build", this.page)
     if (this.content && this.content.template === "info" && typeof this.content.load_func == "string") {
       try {
         //@ts-ignore
@@ -88,6 +93,7 @@ export class InfoComponent {
   }
 
   loadData() {
+    console.log("[info] load data", this.page)
     if (this.content && this.content.template === "info" && isFunction(this.content.load_func)) {
       this.content.load_func(this.params, this.rs).then((res: any) => {
         this.data = res;

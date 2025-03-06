@@ -50,8 +50,9 @@ export class PageComponent {
       //this.ts.setTitle(this.content.title);
       this.build()
     } else {
-      this.load()
+      if (this.page) this.load()
       this.route.params.subscribe(params => {
+        if (this.page == params['page']) return
         this.page = params['page'];
         this.load()
       })
@@ -63,6 +64,7 @@ export class PageComponent {
   }
 
   load() {
+    console.log("[page] load", this.page)
     this.rs.get("page/" + this.page).subscribe((res) => {
       if (res.error) return
       this.content = res.data
@@ -73,6 +75,7 @@ export class PageComponent {
   }
 
   build() {
+    console.log("[page] build", this.page)
     this.content?.children?.forEach(c => {
       if (typeof c.params_func == "string") {
         try {

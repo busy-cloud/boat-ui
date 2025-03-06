@@ -1,18 +1,22 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {SmartRequestService} from '../../lib/smart-request.service';
-import {ActivatedRoute, RouterOutlet} from '@angular/router';
-import {TableComponent, TablePage} from '../../template/table/table.component';
-import {InfoComponent, InfoPage} from '../../template/info/info.component';
-import {FormComponent, FormPage} from '../../template/form/form.component';
-import {ChartComponent} from '../../template/chart/chart.component';
+import {ActivatedRoute, Params, RouterOutlet} from '@angular/router';
+import {TableComponent, TableContent} from '../../template/table/table.component';
+import {InfoComponent, InfoContent} from '../../template/info/info.component';
+import {FormComponent, FormContent} from '../../template/form/form.component';
+import {ChartComponent, ChartContent} from '../../template/chart/chart.component';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
 import {Title} from '@angular/platform-browser';
+import {isFunction} from 'rxjs/internal/util/isFunction';
 
-type Content = TablePage | FormPage | InfoPage | { template: '_loading' } | { template: 'chart' }
+export type PageContent = Content & (TableContent | FormContent | InfoContent | ChartContent)
 
-export interface Page {
-  name: string
-  content: Content[]
+export interface Content {
+  id: string
+  title: string
+  params: any
+  params_func?: string | ((data: any) => any)
+  children?: PageContent[]
 }
 
 @Component({
@@ -29,90 +33,63 @@ export interface Page {
   styleUrl: './page.component.scss'
 })
 export class PageComponent {
-  id = ''
-
-  page: Page = {
-    name: '测试',
-    content: [{
-      template: 'table',
-      title: '测试表格',
-      buttons: [{label: 'test'}],
-      columns: [
-        {
-          key: 'id', label: 'ID',
-          action: {
-            type: 'link',
-            link: `/admin/page/:id`,
-            paramsFunc: (row: any) => {
-              return {id: row.id}
-            }
-          }
-        },
-        {key: 'name', label: '姓名', keyword: true, sortable: true},
-        {key: 'disabled', label: '禁用', sortable: true},
-        {key: 'created', label: '创建日期', date: true, sortable: true},
-      ],
-      operators: [
-        {
-          label: '编辑', action: {
-            type: 'link',
-            link: '/admin/page/edit',
-            external: true
-          }
-        }
-      ],
-      search_url: "api/user/search"
-    },
-      {
-        template: 'info',
-        title: '测试信息',
-        load_url: 'user/:id',
-        items: [
-          {
-            key: 'id', label: 'ID',
-            action: {
-              type: 'link',
-              link: `/admin/page/:id`,
-              paramsFunc: (row: any) => {
-                return {id: row.id}
-              }
-            }
-          },
-          {key: 'name', label: '姓名'},
-          {key: 'disabled', label: '禁用'},
-          {key: 'created', label: '创建日期', type: 'date'},
-        ],
-      },
-      {
-        template: 'form',
-        title: '测试表单',
-        fields: [
-          {key: 'id', label: 'ID', type: "text"},
-          {key: 'name', label: '姓名', type: "text"},
-          {key: 'disabled', label: '禁用', type: "switch"},
-          {key: 'created', label: '创建日期', type: 'date'},
-        ],
-      }
-    ]
-  }
+  @Input() page!: string
+  @Input() content!: PageContent
+  @Input() params!: Params
 
   constructor(protected rs: SmartRequestService,
               protected route: ActivatedRoute,
               protected ts: Title,
-              ) {
-    route.params.subscribe(params => {
-      this.id = params['id'];
+  ) {
+    this.page = this.route.snapshot.params['page'];
+    this.params = route.snapshot.queryParams;
+  }
+
+  ngAfterViewInit(): void {
+    if (this.content) {
+      //this.ts.setTitle(this.content.title);
+      this.build()
+    } else {
       this.load()
-    })
+      this.route.params.subscribe(params => {
+        this.page = params['page'];
+        this.load()
+      })
+      this.route.queryParams.subscribe(params => {
+        this.params = params;
+        //this.load()
+      })
+    }
   }
 
   load() {
-    this.rs.get("page/" + this.id).subscribe((res) => {
+    this.rs.get("page/" + this.page).subscribe((res) => {
       if (res.error) return
-      this.page = res.data
-      if (this.page.name)
-        this.ts.setTitle(this.page.name);
+      this.content = res.data
+      if (this.content.title)
+        this.ts.setTitle(this.content.title);
+      this.build()
     })
+  }
+
+  build() {
+    this.content?.children?.forEach(c => {
+      if (typeof c.params_func == "string") {
+        try {
+          //@ts-ignore
+          c.params_func = new Function('params', c.params_func as string)
+        } catch (e) {
+          console.error(e)
+        }
+      }
+    })
+  }
+
+  childrenParams(child: PageContent): any {
+    if (isFunction(child.params_func)) {
+      return child.params_func(this.params)
+    }
+    return child.params
   }
 
 }

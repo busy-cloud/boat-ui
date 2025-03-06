@@ -1,22 +1,24 @@
-@for (p of page.content; track p) {
-  @switch (p.template) {
+@if (content) {
+  @switch (content.template) {
     @case ("table") {
-      <app-table [page]="id" [content]="p"></app-table>
+      <app-table [page]="page" [content]="content" [params]="params"></app-table>
     }
     @case ("info") {
-      <app-info [page]="id" [content]="p"></app-info>
+      <app-info [page]="page" [content]="content" [params]="params"></app-info>
     }
     @case ("form") {
-      <app-form [page]="id" [content]="p"></app-form>
+      <app-form [page]="page" [content]="content" [params]="params"></app-form>
     }
     @case ("chart") {
-      <app-chart [page]="id" [content]="p"></app-chart>
-    }
-    @case ("_loading") {
-      <nz-spin nzSimple></nz-spin>
+      <app-chart [page]="page" [content]="content" [params]="params"></app-chart>
     }
     @default {
       未知类型模板
     }
   }
+  @for (p of content.children; track p) {
+    <app-page [page]="p.id" [content]="p" [params]="childrenParams(p)"></app-page>
+  }
+} @else {
+  <nz-spin nzSimple></nz-spin>
 }

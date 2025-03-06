@@ -21,36 +21,13 @@
         <li nz-submenu [nzTitle]="menu.name" [nzIcon]="menu.icon">
           <ul>
             @for (item of menu.items; track item) {
-              <li nz-menu-item nzMatchRouter>
+              <li nz-menu-item nzMatchRouter nzMatchRouterExact>
                 <a [routerLink]="item.url" [queryParams]="item.query">{{ item.name }}</a>
               </li>
             }
           </ul>
         </li>
       }
-      <li nz-submenu nzTitle="数据仓库" nzIcon="database">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="table">数据表</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>文件仓</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>空间使用</a>
-          </li>
-        </ul>
-      </li>
-      <li nz-submenu nzTitle="测试" nzIcon="function">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="page/123">table/123</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="page/abc">table/abc</a>
-          </li>
-        </ul>
-      </li>
       <li nz-submenu nzTitle="设置" nzIcon="setting">
         <ul>
           @for (setting of settings; track setting) {

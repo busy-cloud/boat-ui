@@ -1,11 +1,19 @@
-<nz-card [nzTitle]="content.title">
-  <smart-table
-    [buttons]="content.buttons"
-    [columns]="content.columns"
-    [operators]="content.operators"
-    [datum]="data"
-    [total]="total"
-    [loading]="loading"
-    (query)="onQuery($event)"
-  ></smart-table>
-</nz-card>
+@if (content) {
+  @if (content.template == 'table') {
+    <nz-card [nzTitle]="content.title">
+      <smart-table
+        [buttons]="content.buttons"
+        [columns]="content.columns"
+        [operators]="content.operators"
+        [datum]="data"
+        [total]="total"
+        [loading]="loading"
+        (query)="onQuery($event)"
+      ></smart-table>
+    </nz-card>
+  } @else {
+    模板类型应该是table
+  }
+} @else {
+  <nz-spin nzSimple></nz-spin>
+}

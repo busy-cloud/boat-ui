@@ -46,7 +46,7 @@ export class SettingComponent {
     this.rs.get("setting/" + this.module + "/form").subscribe((res) => {
       if (res.error) return
       this.form = res.data
-      this.ts.setTitle("设置 " + this.form.name)
+      this.ts.setTitle("设置 " + this.form.title)
     })
   }
 

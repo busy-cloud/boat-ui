@@ -6,7 +6,7 @@ import {InfoComponent, InfoPage} from '../../template/info/info.component';
 import {FormComponent, FormPage} from '../../template/form/form.component';
 import {ChartComponent} from '../../template/chart/chart.component';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
-import {NzCardComponent} from 'ng-zorro-antd/card';
+import {Title} from '@angular/platform-browser';
 
 type Content = TablePage | FormPage | InfoPage | { template: '_loading' } | { template: 'chart' }
 
@@ -32,10 +32,10 @@ export class PageComponent {
   id = ''
 
   page: Page = {
-    name: '',
+    name: '测试',
     content: [{
       template: 'table',
-      title: '测试表',
+      title: '测试表格',
       buttons: [{label: 'test'}],
       columns: [
         {
@@ -65,7 +65,7 @@ export class PageComponent {
     },
       {
         template: 'info',
-        title: '测试表',
+        title: '测试信息',
         load_url: 'user/:id',
         items: [
           {
@@ -97,7 +97,9 @@ export class PageComponent {
   }
 
   constructor(protected rs: SmartRequestService,
-              protected route: ActivatedRoute) {
+              protected route: ActivatedRoute,
+              protected ts: Title,
+              ) {
     route.params.subscribe(params => {
       this.id = params['id'];
       this.load()
@@ -108,8 +110,8 @@ export class PageComponent {
     this.rs.get("page/" + this.id).subscribe((res) => {
       if (res.error) return
       this.page = res.data
-      // if (this.page.title)
-      //   this.ts.setTitle(this.page.title);
+      if (this.page.name)
+        this.ts.setTitle(this.page.name);
     })
   }
 

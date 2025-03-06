@@ -6,8 +6,8 @@
             [(nzCollapsed)]="isCollapsed"
             [nzTrigger]="null">
     <div class="sidebar-logo">
-        <img [src]="oem.logo" alt="logo">
-        <h1>{{ oem.name }}</h1>
+      <img [src]="oem.logo" alt="logo">
+      <h1>{{ oem.name }}</h1>
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
       <li nz-submenu nzOpen nzTitle="控制台" nzIcon="dashboard">
@@ -17,6 +17,17 @@
           </li>
         </ul>
       </li>
+      @for (menu of menus; track menu) {
+        <li nz-submenu [nzTitle]="menu.name" [nzIcon]="menu.icon">
+          <ul>
+            @for (item of menu.items; track item) {
+              <li nz-menu-item nzMatchRouter>
+                <a [routerLink]="item.url" [queryParams]="item.query">{{ item.name }}</a>
+              </li>
+            }
+          </ul>
+        </li>
+      }
       <li nz-submenu nzTitle="数据仓库" nzIcon="database">
         <ul>
           <li nz-menu-item nzMatchRouter>
@@ -42,7 +53,7 @@
       </li>
       <li nz-submenu nzTitle="设置" nzIcon="setting">
         <ul>
-          @for (setting of settings;track setting) {
+          @for (setting of settings; track setting) {
             <li nz-menu-item nzMatchRouter>
               <a [routerLink]="['setting', setting.module]">{{ setting.title }}</a>
             </li>

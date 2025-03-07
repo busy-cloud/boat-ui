@@ -50,10 +50,9 @@ export interface ChartContent {
   type: 'line' | 'bar' | 'pie' | 'gauge' | 'radar'
   //title: string;
   legend?: boolean
+  tooltip?: boolean
   time?: boolean
-  radar?: {
-    max: { [key: string]: number }
-  }
+  radar?: { [key: string]: number }
   options: EChartsOption
   load_url?: string
   load_func?: string | ((event: Params, request: SmartRequestService) => Promise<any>)
@@ -148,14 +147,18 @@ export class ChartComponent {
       if (!chartOption.legend)
         chartOption.legend = {}
     }
+    if (this.content.tooltip) {
+      if (!chartOption.tooltip)
+        chartOption.tooltip = {}
+    }
 
-    if (!chartOption.dataset)
-      chartOption.dataset = {source: []}
+    //默认一组数据
     if (!chartOption.series)
-      chartOption.series = [{type: 'line'}, {type: 'line'}, {type: 'line'}]
-    //要初始化多条之后
+      chartOption.series = [{name: '', type: this.content.type}]
 
     switch (this.content.type) {
+      case "pie":
+        break
       case "line":
       case "bar":
         if (!chartOption.xAxis)
@@ -164,18 +167,15 @@ export class ChartComponent {
           chartOption.yAxis = {type: 'value'}
         break
       case 'radar':
-        if (!chartOption.series)
-          chartOption.series = [{
-            name: '',
-            type: 'radar',
-          }]
         if (!chartOption.radar)
-          if (this.content.radar?.max) {
+          if (this.content.radar) {
             chartOption.radar = {indicator: []}
-            for (let k in this.content.radar?.max) {
-              chartOption.radar.indicator?.push({name: k, max: this.content.radar.max[k]})
+            for (let k in this.content.radar) {
+              chartOption.radar.indicator?.push({name: k, max: this.content.radar[k]})
             }
           }
+        break
+      case 'gauge':
         break
     }
 
@@ -187,8 +187,8 @@ export class ChartComponent {
     console.log("[chart] load data", this.page)
     if (!this.content || this.content.template != "chart") return
 
-    //TODO 删除测试代码
-    this.update(undefined)
+    //删除测试代码
+    //this.update(undefined)
 
     if (isFunction(this.content.load_func)) {
       this.loading = true
@@ -197,6 +197,7 @@ export class ChartComponent {
         this.update(res)
       }).finally(() => {
         this.loading = false
+
       })
     } else if (this.content.load_url) {
       this.loading = true
@@ -217,9 +218,19 @@ export class ChartComponent {
 
     switch (this.content.type) {
       case "pie":
+        // 第一列为x轴，第一行为分组
+        // data = [
+        //   ['', '2015'],
+        //   ['一', 43.3],
+        //   ['二', 83.1],
+        //   ['三', 86.4],
+        // ]
+
+        merge.dataset = {source: data}
         break
       case "bar":
       case "line":
+        // 第一列为x轴，第一行为分组
         data = [
           ['', '2015', '2016', '2017'],
           ['一', 43.3, 85.8, 93.7],
@@ -232,8 +243,15 @@ export class ChartComponent {
         ]
 
         merge.dataset = {source: data}
-        break
-      case "gauge":
+
+        //series 不能merge
+        if (this.chartOption.series?.length != data[0].length - 1) {
+          this.chartOption.series = data[0].map((item: any) => {
+            //@ts-ignore
+            return {type: this.content.type}
+          })
+          this.chartOption.series.pop()
+        }
         break
       case "radar":
         //每行一条线，
@@ -244,7 +262,14 @@ export class ChartComponent {
         // ]
         merge.dataset = {source: data}
         break
+      case "gauge":
+        //只有一个值
+        // data = [[15]]
+        //data = 15
+        merge.dataset = {source: [[data]]}
+        break
     }
+
     this.mergeOption = merge
     console.log(this.mergeOption)
   }

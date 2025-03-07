@@ -7,7 +7,7 @@ import {SmartRequestService} from '../../lib/smart-request.service';
 import * as echarts from 'echarts/core';
 import {BarChart, GaugeChart, LineChart, PieChart, RadarChart} from 'echarts/charts';
 //引入主题色
-//import 'echarts/theme/macarons.js';
+import 'echarts/theme/macarons.js';
 import {
   DatasetComponent,
   GridComponent, LegendComponent,
@@ -49,6 +49,8 @@ export interface ChartContent {
   template: 'chart'
   type: 'line' | 'bar' | 'pie' | 'gauge' | 'radar'
   //title: string;
+  theme?: string
+  height?: number
   legend?: boolean
   tooltip?: boolean
   time?: boolean
@@ -83,8 +85,9 @@ export class ChartComponent {
 
   //参数 EChartsOption
   chartOption: any = {}
-
   mergeOption: any = {} //EChartsOption
+  chartTheme = 'macarons'
+  chartHeight = 400;
 
 
   constructor(protected rs: SmartRequestService,
@@ -181,6 +184,9 @@ export class ChartComponent {
 
     this.chartOption = chartOption
     console.log(this.chartOption)
+
+    this.chartTheme = this.content.theme || "macarons"
+    this.chartHeight = this.content.height || 400
   }
 
   loadData() {
@@ -231,16 +237,16 @@ export class ChartComponent {
       case "bar":
       case "line":
         // 第一列为x轴，第一行为分组
-        data = [
-          ['', '2015', '2016', '2017'],
-          ['一', 43.3, 85.8, 93.7],
-          ['二', 83.1, 73.4, 55.1],
-          ['三', 86.4, 65.2, 82.5],
-          ['四', 72.4, 53.9, 39.1],
-          ['五', 83.1, 73.4, 55.1],
-          ['六', 86.4, 65.2, 82.5],
-          ['日', 72.4, 53.9, 39.1],
-        ]
+        // data = [
+        //   ['', '2015', '2016', '2017'],
+        //   ['一', 43.3, 85.8, 93.7],
+        //   ['二', 83.1, 73.4, 55.1],
+        //   ['三', 86.4, 65.2, 82.5],
+        //   ['四', 72.4, 53.9, 39.1],
+        //   ['五', 83.1, 73.4, 55.1],
+        //   ['六', 86.4, 65.2, 82.5],
+        //   ['日', 72.4, 53.9, 39.1],
+        // ]
 
         merge.dataset = {source: data}
 

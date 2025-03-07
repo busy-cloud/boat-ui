@@ -1,7 +1,12 @@
 @if (content) {
   @if (content.template == 'chart') {
     <nz-card [nzTitle]="content.title" [nzExtra]="extra">
-      <div echarts [options]="chartOption" [merge]="mergeOption" [loading]="loading" class="chart"></div>
+      <div echarts [options]="chartOption"
+           [merge]="mergeOption"
+           [loading]="loading"
+           [theme]="chartTheme"
+           [style.height]="chartHeight+'px'"
+      ></div>
     </nz-card>
     <ng-template #extra>
       <button nz-button (click)="loadData()">刷新</button>

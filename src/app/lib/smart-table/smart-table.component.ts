@@ -3,13 +3,14 @@ import {NzSpaceComponent, NzSpaceItemDirective} from "ng-zorro-antd/space";
 import {NzButtonComponent} from "ng-zorro-antd/button";
 import {NzIconDirective} from "ng-zorro-antd/icon";
 import {NzInputDirective, NzInputGroupComponent} from "ng-zorro-antd/input";
-import {Router, RouterLink} from "@angular/router";
-import {NzPaginationComponent} from "ng-zorro-antd/pagination";
+import {Router} from "@angular/router";
 import {NzTableFilterList, NzTableModule, NzTableQueryParams} from "ng-zorro-antd/table";
 import {CommonModule} from "@angular/common";
 import {NzPopconfirmDirective} from "ng-zorro-antd/popconfirm";
 import {FormsModule} from '@angular/forms';
 import {isFunction} from 'rxjs/internal/util/isFunction';
+import {NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
+import {PageComponent} from '../../pages/page/page.component';
 
 export function ReplaceLinkParams(link: string, data: any): string {
   //link.matchAll(/:\w+/g)
@@ -124,11 +125,10 @@ export interface ParamSearch {
     NzIconDirective,
     NzInputDirective,
     NzInputGroupComponent,
-    RouterLink,
-    NzPaginationComponent,
     NzSpaceItemDirective,
     NzTableModule,
     NzPopconfirmDirective,
+    NzModalModule,
   ],
   templateUrl: './smart-table.component.html',
   styleUrl: './smart-table.component.scss'
@@ -160,11 +160,10 @@ export class SmartTableComponent implements OnInit {
       if (this.columns[i].keyword)
         return true
     }
-    return false
-    //return this.columns.filter(c => c.keyword).length > 0
+    return false    //return this.columns.filter(c => c.keyword).length > 0
   }
 
-  constructor(private router: Router,) {
+  constructor(private router: Router, private ms: NzModalService) {
   }
 
   ngOnInit(): void {
@@ -223,7 +222,13 @@ export class SmartTableComponent implements OnInit {
 
       case 'dialog':
         //TODO 弹窗
-
+        this.ms.create({
+          nzContent: PageComponent,
+          nzData: {
+            page: action.page,
+            params: params
+          }
+        })
         break
 
     }

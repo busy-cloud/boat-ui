@@ -10,6 +10,7 @@ import {ReplaceLinkParams} from '../../lib/smart-table/smart-table.component';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
 import {Title} from '@angular/platform-browser';
 import {PageContent} from '../../pages/page/page.component';
+import {NzIconDirective} from 'ng-zorro-antd/icon';
 
 export interface FormContent {
   template: 'form'
@@ -62,7 +63,8 @@ export function CompareObject(obj1: any, obj2: any): any {
     SmartEditorComponent,
     NzCardComponent,
     NzButtonComponent,
-    NzSpinComponent
+    NzSpinComponent,
+    NzIconDirective
   ],
   templateUrl: './form.component.html',
   standalone: true,
@@ -77,6 +79,8 @@ export class FormComponent {
   @ViewChild("editor", {static: true}) editor!: SmartEditorComponent;
 
   data: any = {id: 122, name: '张三', created: new Date()};
+
+  submitting = false;
 
   constructor(protected rs: SmartRequestService,
               protected route: ActivatedRoute,
@@ -155,18 +159,25 @@ export class FormComponent {
   }
 
   submit() {
+    if (this.submitting) return
     console.log("[form] submit", this.page)
     if (this.content && this.content.template === "form" && isFunction(this.content.submit_func)) {
+      this.submitting = true
       this.content.submit_func(this.data, this.rs).then((res: any) => {
         //this.data = res;
         this.ns.success("提示", "提交成功")
+      }).finally(()=>{
+        this.submitting = false
       })
     } else if (this.content && this.content.template === "form" && this.content.submit_url) {
+      this.submitting = true
       let url = ReplaceLinkParams(this.content.submit_url, this.params);
       this.rs.post(url, this.editor.value).subscribe(res => {
         if (res.error) return
         //this.data = res.data
         this.ns.success("提示", "提交成功")
+      }).add(()=>{
+        this.submitting = false
       })
     }
   }

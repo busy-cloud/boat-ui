@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {SmartRequestService} from '../../lib/smart-request.service';
-import {ActivatedRoute, Params, RouterOutlet} from '@angular/router';
+import {ActivatedRoute, Params} from '@angular/router';
 import {TableComponent, TableContent} from '../../template/table/table.component';
 import {InfoComponent, InfoContent} from '../../template/info/info.component';
 import {FormComponent, FormContent} from '../../template/form/form.component';

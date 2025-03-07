@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {NzContentComponent, NzHeaderComponent, NzLayoutComponent, NzSiderComponent} from 'ng-zorro-antd/layout';
 import {NzDropDownDirective, NzDropdownMenuComponent} from 'ng-zorro-antd/dropdown';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
@@ -6,7 +6,6 @@ import {NzMenuDirective, NzMenuDividerDirective, NzMenuItemComponent, NzSubMenuC
 import {RouterLink, RouterOutlet} from '@angular/router';
 import {UserService} from '../user.service';
 import {SmartRequestService} from '../lib/smart-request.service';
-import {NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-admin',

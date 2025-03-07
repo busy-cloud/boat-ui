@@ -1,12 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
 import {NzCardComponent} from 'ng-zorro-antd/card';
-import {NzInputDirective, NzInputGroupComponent} from 'ng-zorro-antd/input';
-import {NzIconDirective} from 'ng-zorro-antd/icon';
-import {NzTooltipDirective} from 'ng-zorro-antd/tooltip';
-import {NzFormControlComponent, NzFormDirective, NzFormItemComponent, NzFormLabelComponent} from 'ng-zorro-antd/form';
-import {NzButtonComponent} from 'ng-zorro-antd/button';
-import {NzColDirective} from 'ng-zorro-antd/grid';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NzNotificationService} from 'ng-zorro-antd/notification';
 import {Md5} from 'ts-md5';
 import {Router} from '@angular/router';
@@ -18,20 +11,8 @@ import {SmartEditorComponent, SmartField} from '../lib/smart-editor/smart-editor
   selector: 'app-login',
   standalone: true,
   imports: [
-    NzCardComponent,
-    NzInputGroupComponent,
-    NzInputDirective,
-    NzIconDirective,
-    NzTooltipDirective,
-    NzFormDirective,
-    NzFormItemComponent,
-    NzButtonComponent,
-    NzFormLabelComponent,
-    NzFormControlComponent,
-    NzColDirective,
-    FormsModule,
-    ReactiveFormsModule,
-    SmartEditorComponent
+    SmartEditorComponent,
+    NzCardComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'

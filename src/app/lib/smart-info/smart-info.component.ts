@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {NzDescriptionsModule} from "ng-zorro-antd/descriptions";
 import {NzProgressComponent} from "ng-zorro-antd/progress";
-import {Router, RouterLink} from "@angular/router";
+import {Router} from "@angular/router";
 import {NzTagComponent} from "ng-zorro-antd/tag";
 import {GetActionLink, GetActionParams, SmartAction} from '../smart-table/smart-table.component';
 import {isFunction} from 'rxjs/internal/util/isFunction';
@@ -24,7 +24,6 @@ export interface SmartInfoItem {
     CommonModule,
     NzDescriptionsModule,
     NzProgressComponent,
-    RouterLink,
     NzTagComponent,
   ],
   templateUrl: './smart-info.component.html',

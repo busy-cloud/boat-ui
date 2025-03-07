@@ -4,7 +4,10 @@
       <smart-info [fields]="content.items || []" [value]="data"></smart-info>
     </nz-card>
     <ng-template #extra>
-      <button nz-button (click)="loadData()">刷新</button>
+      <button nz-button (click)="loadData()">
+        <span nz-icon nzType="reload" [nzSpin]="loading"></span>
+        刷新
+      </button>
     </ng-template>
   } @else {
     模板类型应该是info

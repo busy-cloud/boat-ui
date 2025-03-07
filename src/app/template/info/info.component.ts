@@ -10,6 +10,7 @@ import {ReplaceLinkParams} from '../../lib/smart-table/smart-table.component';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
 import {PageContent} from '../../pages/page/page.component';
 import {CompareObject} from '../form/form.component';
+import {NzIconDirective} from 'ng-zorro-antd/icon';
 
 export interface InfoContent {
   template: 'info'
@@ -26,7 +27,8 @@ export interface InfoContent {
     SmartInfoComponent,
     NzCardComponent,
     NzButtonComponent,
-    NzSpinComponent
+    NzSpinComponent,
+    NzIconDirective
   ],
   templateUrl: './info.component.html',
   standalone: true,
@@ -39,6 +41,7 @@ export class InfoComponent {
   @Input() params!: Params
 
   data: any = {id: 122, name: '张三', created: new Date()};
+  loading = false
 
   constructor(protected rs: SmartRequestService,
               protected route: ActivatedRoute,
@@ -95,14 +98,20 @@ export class InfoComponent {
   loadData() {
     console.log("[info] load data", this.page)
     if (this.content && this.content.template === "info" && isFunction(this.content.load_func)) {
+      this.loading = true
       this.content.load_func(this.params, this.rs).then((res: any) => {
         this.data = res;
+      }).finally(()=>{
+        this.loading = false
       })
     } else if (this.content && this.content.template === "info" && this.content.load_url) {
+      this.loading = true
       let url = ReplaceLinkParams(this.content.load_url, this.params);
       this.rs.get(url).subscribe(res => {
         if (res.error) return
         this.data = res.data
+      }).add(()=>{
+        this.loading = false
       })
     }
   }

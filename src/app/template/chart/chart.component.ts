@@ -10,7 +10,8 @@ import {BarChart, GaugeChart, LineChart, PieChart, RadarChart} from 'echarts/cha
 import 'echarts/theme/macarons.js';
 import {
   DatasetComponent,
-  GridComponent, LegendComponent,
+  GridComponent,
+  LegendComponent,
   TitleComponent,
   TooltipComponent,
   TransformComponent
@@ -26,6 +27,7 @@ import {PageContent} from '../../pages/page/page.component';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzCardComponent} from 'ng-zorro-antd/card';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
+import {NzIconDirective} from 'ng-zorro-antd/icon';
 
 echarts.use([
   BarChart,
@@ -68,6 +70,7 @@ export interface ChartContent {
     NzButtonComponent,
     NzCardComponent,
     NzSpinComponent,
+    NzIconDirective,
   ],
   providers: [
     provideEchartsCore({echarts})

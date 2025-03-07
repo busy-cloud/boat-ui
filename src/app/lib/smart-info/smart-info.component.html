@@ -1,7 +1,7 @@
 <nz-descriptions [nzTitle]="title" nzBordered nzSize="small"
                  [nzColumn]="{ xs: 1, sm: 1, md: 2, lg:2, xl:3, xxl:3}">
   @for (f of fields; track f) {
-    <nz-descriptions-item [nzTitle]="f.label" [nzSpan]="f.span || 1" (click)="execute(f.action)">
+    <nz-descriptions-item [nzTitle]="f.label" [nzSpan]="f.span || 1" (click)="action.emit(f.action)">
       @switch (f.type) {
         @case ('text') {
           {{ value[f.key] }}

@@ -1,16 +1,24 @@
 import {Component, Input, ViewChild} from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {SmartRequestService} from '../../lib/smart-request.service';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 import {NzNotificationService} from 'ng-zorro-antd/notification';
 import {SmartEditorComponent, SmartField} from '../../lib/smart-editor/smart-editor.component';
 import {NzCardComponent} from 'ng-zorro-antd/card';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
-import {ReplaceLinkParams} from '../../lib/smart-table/smart-table.component';
+import {
+  GetActionLink,
+  GetActionParams,
+  ReplaceLinkParams,
+  SmartAction
+} from '../../lib/smart-table/smart-table.component';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
 import {Title} from '@angular/platform-browser';
-import {PageContent} from '../../pages/page/page.component';
+import {PageComponent, PageContent} from '../../pages/page/page.component';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
+import {SmartToolbarComponent} from '../../lib/smart-toolbar/smart-toolbar.component';
+import {NgIf} from '@angular/common';
+import {NzModalService} from 'ng-zorro-antd/modal';
 
 export interface FormContent {
   template: 'form'
@@ -64,13 +72,16 @@ export function CompareObject(obj1: any, obj2: any): any {
     NzCardComponent,
     NzButtonComponent,
     NzSpinComponent,
-    NzIconDirective
+    NzIconDirective,
+    SmartToolbarComponent,
+    NgIf
   ],
   templateUrl: './form.component.html',
   standalone: true,
   styleUrl: './form.component.scss'
 })
 export class FormComponent {
+  @Input() app!: string
   @Input() page!: string;
   @Input() content!: PageContent
 
@@ -84,6 +95,8 @@ export class FormComponent {
 
   constructor(protected rs: SmartRequestService,
               protected route: ActivatedRoute,
+              protected router: Router,
+              protected ms: NzModalService,
               protected ts: Title,
               protected ns: NzNotificationService) {
     //默认从路由中取
@@ -113,9 +126,11 @@ export class FormComponent {
 
   load() {
     console.log("[form] load", this.page)
-    this.rs.get("page/" + this.page).subscribe((res) => {
+    let url = "page/" + this.page
+    if (this.app) url = url + this.app + "/" + this.page
+    this.rs.get(url).subscribe((res) => {
       if (res.error) return
-      this.content = res.data
+      this.content = res
       if (this.content)
         this.ts.setTitle(this.content.title);
       this.build()
@@ -182,5 +197,54 @@ export class FormComponent {
     }
   }
 
+  execute(action: SmartAction | undefined) {
+    if (!action) return
+
+    let params = GetActionParams(action, this.params)
+
+    switch (action.type) {
+      case 'link':
+
+        let uri = GetActionLink(action, this.params)
+        let query = new URLSearchParams(params).toString()
+        let url = uri + '?' + query
+
+        if (action.external)
+          window.open(url)
+        else
+          this.router.navigateByUrl(url)
+        //this.router.navigate([uri], {queryParams: params})
+
+        break
+
+      case 'script':
+        if (typeof action.script == "string") {
+          try {
+            action.script = new Function("params", "request", action.script)
+          } catch (e) {
+            console.error(e)
+          }
+        }
+        if (isFunction(action.script)) {
+          action.script.call(this, this.params, this.rs)
+        }
+        break
+
+      case 'page':
+        this.router.navigate(["page", action.page], {queryParams: params})
+        break
+
+      case 'dialog':
+        this.ms.create({
+          nzContent: PageComponent,
+          nzData: {
+            page: action.page,
+            params: params
+          }
+        })
+        break
+
+    }
+  }
 
 }

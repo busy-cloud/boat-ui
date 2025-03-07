@@ -75,6 +75,12 @@ export interface SmartAction {
   external?: boolean
 }
 
+export interface SmartActionRow {
+  action: SmartAction
+  data: any
+  index: number
+}
+
 export interface SmartTableColumn {
   key: string
   label: string
@@ -91,7 +97,7 @@ export interface SmartTableOperator {
   icon?: string
   label?: string
   title?: string
-  action?: SmartAction
+  action: SmartAction
   confirm?: string
 }
 
@@ -123,15 +129,10 @@ export interface ParamSearch {
   imports: [
     CommonModule,
     FormsModule,
-    NzSpaceComponent,
-    NzButtonComponent,
-    NzIconDirective,
-    NzInputDirective,
-    NzInputGroupComponent,
-    NzSpaceItemDirective,
     NzTableModule,
     NzPopconfirmDirective,
     NzModalModule,
+    NzIconDirective,
   ],
   templateUrl: './smart-table.component.html',
   styleUrl: './smart-table.component.scss'
@@ -140,10 +141,6 @@ export class SmartTableComponent implements OnInit {
   @Input() pageSize = 20;
   pageIndex = 1;
 
-  keyword = '';
-
-
-  @Input() buttons?: SmartTableButton[];
   @Input() columns: SmartTableColumn[] = []
   @Input() operators?: SmartTableOperator[]
 
@@ -154,95 +151,14 @@ export class SmartTableComponent implements OnInit {
   //@Input() showSearch: boolean = true
 
   @Output() query = new EventEmitter<ParamSearch>
+  @Output() action = new EventEmitter<SmartActionRow>();
 
   body: ParamSearch = {filter: {}}
-
-  showSearch() {
-    //console.log('showSearch')
-    for (let i in this.columns) {
-      if (this.columns[i].keyword)
-        return true
-    }
-    return false    //return this.columns.filter(c => c.keyword).length > 0
-  }
 
   constructor(private router: Router, private ms: NzModalService, private rs: SmartRequestService) {
   }
 
   ngOnInit(): void {
-  }
-
-  refresh() {
-    this.pageIndex = 1;
-    //this.load();
-    this.query.emit(this.body)
-  }
-
-  search() {
-    //console.log(this.keyword);
-    this.body.keyword = {}
-
-    if (this.keyword) {
-      this.columns.forEach(c => {
-        if (c.keyword)
-          // @ts-ignore
-          this.body.keyword[c.key] = this.keyword
-      })
-    }
-
-    this.query.emit(this.body)
-  }
-
-  execute(action: SmartAction | undefined, data: any) {
-    if (!action) return
-
-    let params = GetActionParams(action, data)
-
-    switch (action.type) {
-      case 'link':
-
-        let uri = GetActionLink(action, data)
-        let query = new URLSearchParams(params).toString()
-        let url = uri + '?' + query
-
-        if (action.external)
-          window.open(url)
-        else
-          this.router.navigateByUrl(url)
-        //this.router.navigate([uri], {queryParams: params})
-
-        break
-
-      case 'script':
-        if (typeof action.script == "string") {
-          try {
-            action.script = new Function("params", "request", action.script)
-          }catch (e) {
-            console.error(e)
-          }
-        }
-        if (isFunction(action.script)) {
-          //action.script(data)
-          //@ts-ignore
-          action.script.call(this, params, this.rs)
-        }
-        break
-
-      case 'page':
-        this.router.navigate(["page", action.page], {queryParams: params})
-        break
-
-      case 'dialog':
-        //弹窗
-        this.ms.create({
-          nzContent: PageComponent,
-          nzData: {
-            page: action.page,
-            params: params
-          }
-        })
-        break
-    }
   }
 
   onQuery(query: NzTableQueryParams) {

@@ -63,13 +63,12 @@ import {SmartRequestService} from '../smart-request.service';
 })
 export class SmartToolbarComponent {
   @Output() change = new EventEmitter<any>();
+  @Output() action = new EventEmitter<SmartAction>();
 
   group: FormGroup = new FormGroup({})
   _fields: SmartField[] = []
   _values: any = {}
   empty: any = []
-
-  @Input() params: Params = {}
 
   @Input() set fields(fs: SmartField[]) {
     //console.log("[SmartToolbar] set fields", fs)
@@ -158,57 +157,4 @@ export class SmartToolbarComponent {
 
   protected readonly Infinity = Infinity;
 
-
-  execute(action: SmartAction | undefined) {
-    if (!action) return
-
-    let params = GetActionParams(action, this.params)
-
-    switch (action.type) {
-      case 'link':
-
-        let uri = GetActionLink(action, params)
-        let query = new URLSearchParams(params).toString()
-        let url = uri + '?' + query
-
-        if (action.external)
-          window.open(url)
-        else
-          this.router.navigateByUrl(url)
-        //this.router.navigate([uri], {queryParams: params})
-
-        break
-
-      case 'script':
-        if (typeof action.script == "string") {
-          try {
-            action.script = new Function("params", "request", action.script)
-          } catch (e) {
-            console.error(e)
-          }
-        }
-        if (isFunction(action.script)) {
-          action.script.call(this, this.value, this.rs)
-        }
-        if (isFunction(action.script)) {
-          action.script(this.params)
-        }
-        break
-
-      case 'page':
-        this.router.navigate(["page", action.page], {queryParams: params})
-        break
-
-      case 'dialog':
-        //弹窗
-        this.ms.create({
-          nzContent: PageComponent,
-          nzData: {
-            page: action.page,
-            params: params
-          }
-        })
-        break
-    }
-  }
 }

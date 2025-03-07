@@ -1,12 +1,10 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {NzDescriptionsModule} from "ng-zorro-antd/descriptions";
 import {NzProgressComponent} from "ng-zorro-antd/progress";
 import {Router} from "@angular/router";
 import {NzTagComponent} from "ng-zorro-antd/tag";
-import {GetActionLink, GetActionParams, SmartAction} from '../smart-table/smart-table.component';
-import {isFunction} from 'rxjs/internal/util/isFunction';
-import {PageComponent} from '../../pages/page/page.component';
+import {SmartAction} from '../smart-table/smart-table.component';
 import {SmartRequestService} from '../smart-request.service';
 import {NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
 
@@ -37,57 +35,8 @@ export class SmartInfoComponent {
   @Input() title: string = '';
   @Input() fields: SmartInfoItem[] = []
   @Input() value: any = {}
+  @Output() action = new EventEmitter<SmartAction>();
 
-  constructor(protected router: Router, protected rs: SmartRequestService, protected ms: NzModalService) {
-  }
-
-  execute(action: SmartAction | undefined) {
-    if (!action) return
-
-    let params = GetActionParams(action, this.value)
-
-    switch (action.type) {
-      case 'link':
-
-        let uri = GetActionLink(action, this.value)
-        let query = new URLSearchParams(params).toString()
-        let url = uri + '?' + query
-
-        if (action.external)
-          window.open(url)
-        else
-          this.router.navigateByUrl(url)
-        //this.router.navigate([uri], {queryParams: params})
-
-        break
-
-      case 'script':
-        if (typeof action.script == "string") {
-          try {
-            action.script = new Function("data", "request", action.script)
-          }catch (e) {
-            console.error(e)
-          }
-        }
-        if (isFunction(action.script)) {
-          action.script.call(this, this.value, this.rs)
-        }
-        break
-
-      case 'page':
-        this.router.navigate(["page", action.page], {queryParams: params})
-        break
-
-      case 'dialog':
-        this.ms.create({
-          nzContent: PageComponent,
-          nzData: {
-            page: action.page,
-            params: params
-          }
-        })
-        break
-
-    }
+  constructor() {
   }
 }

@@ -1,6 +1,11 @@
 import {Component, Input} from '@angular/core';
-import {ActivatedRoute, Params} from '@angular/router';
-import {ReplaceLinkParams} from '../../lib/smart-table/smart-table.component';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {
+  GetActionLink,
+  GetActionParams,
+  ReplaceLinkParams,
+  SmartAction
+} from '../../lib/smart-table/smart-table.component';
 import {SmartRequestService} from '../../lib/smart-request.service';
 
 //echarts 相关引入
@@ -23,11 +28,15 @@ import {EChartsOption} from 'echarts';
 import {Title} from '@angular/platform-browser';
 import {CompareObject} from '../form/form.component';
 import {isFunction} from 'rxjs/internal/util/isFunction';
-import {PageContent} from '../../pages/page/page.component';
+import {PageComponent, PageContent} from '../../pages/page/page.component';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzCardComponent} from 'ng-zorro-antd/card';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
+import {SmartToolbarComponent} from '../../lib/smart-toolbar/smart-toolbar.component';
+import {NgIf} from '@angular/common';
+import {SmartInfoComponent} from '../../lib/smart-info/smart-info.component';
+import {NzModalService} from 'ng-zorro-antd/modal';
 
 echarts.use([
   BarChart,
@@ -71,6 +80,9 @@ export interface ChartContent {
     NzCardComponent,
     NzSpinComponent,
     NzIconDirective,
+    SmartToolbarComponent,
+    NgIf,
+    SmartInfoComponent,
   ],
   providers: [
     provideEchartsCore({echarts})
@@ -80,6 +92,7 @@ export interface ChartContent {
   styleUrl: './chart.component.scss'
 })
 export class ChartComponent {
+  @Input() app!: string
   @Input() page!: string;
   @Input() content!: PageContent;
   @Input() params!: Params;
@@ -95,6 +108,8 @@ export class ChartComponent {
 
   constructor(protected rs: SmartRequestService,
               protected route: ActivatedRoute,
+              protected router: Router,
+              protected ms: NzModalService,
               protected ts: Title) {
     //默认从路由中取
     this.page = route.snapshot.params['page']
@@ -123,9 +138,11 @@ export class ChartComponent {
 
   load() {
     console.log("[chart] load", this.page)
-    this.rs.get("page/" + this.page).subscribe((res) => {
+    let url = "page/" + this.page
+    if (this.app) url = url + this.app + "/" + this.page
+    this.rs.get(url).subscribe((res) => {
       if (res.error) return
-      this.content = res.data
+      this.content = res
       if (this.content)
         this.ts.setTitle(this.content.title);
       this.build()
@@ -282,5 +299,57 @@ export class ChartComponent {
     this.mergeOption = merge
     console.log(this.mergeOption)
   }
+
+
+  execute(action: SmartAction | undefined) {
+    if (!action) return
+
+    let params = GetActionParams(action, this.params)
+
+    switch (action.type) {
+      case 'link':
+
+        let uri = GetActionLink(action, this.params)
+        let query = new URLSearchParams(params).toString()
+        let url = uri + '?' + query
+
+        if (action.external)
+          window.open(url)
+        else
+          this.router.navigateByUrl(url)
+        //this.router.navigate([uri], {queryParams: params})
+
+        break
+
+      case 'script':
+        if (typeof action.script == "string") {
+          try {
+            action.script = new Function("params", "request", action.script)
+          } catch (e) {
+            console.error(e)
+          }
+        }
+        if (isFunction(action.script)) {
+          action.script.call(this, this.params, this.rs)
+        }
+        break
+
+      case 'page':
+        this.router.navigate(["page", action.page], {queryParams: params})
+        break
+
+      case 'dialog':
+        this.ms.create({
+          nzContent: PageComponent,
+          nzData: {
+            page: action.page,
+            params: params
+          }
+        })
+        break
+
+    }
+  }
+
 
 }

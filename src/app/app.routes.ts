@@ -3,10 +3,16 @@ import {LoginComponent} from './login/login.component';
 import {UserService} from './user.service';
 import {inject} from '@angular/core';
 import {UnknownComponent} from './lib/unknown/unknown.component';
+import {PageComponent} from './pages/page/page.component';
+import {TableComponent} from './template/table/table.component';
+import {FormComponent} from './template/form/form.component';
+import {InfoComponent} from './template/info/info.component';
+import {ChartComponent} from './template/chart/chart.component';
 
 export const routes: Routes = [
   {path: '', pathMatch: 'full', redirectTo: '/admin'},
   {path: 'login', component: LoginComponent},
+  //{path: 'app/:app/page/:page', component: PageComponent},
   {
     path: 'admin',
     loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),

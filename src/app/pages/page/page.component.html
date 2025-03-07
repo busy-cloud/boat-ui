@@ -1,16 +1,16 @@
 @if (content) {
   @switch (content.template) {
     @case ("table") {
-      <app-table [page]="page" [content]="content" [params]="params"></app-table>
+      <app-table [app]="app" [page]="page" [content]="content" [params]="params"></app-table>
     }
     @case ("info") {
-      <app-info [page]="page" [content]="content" [params]="params"></app-info>
+      <app-info [app]="app" [page]="page" [content]="content" [params]="params"></app-info>
     }
     @case ("form") {
-      <app-form [page]="page" [content]="content" [params]="params"></app-form>
+      <app-form [app]="app" [page]="page" [content]="content" [params]="params"></app-form>
     }
     @case ("chart") {
-      <app-chart [page]="page" [content]="content" [params]="params"></app-chart>
+      <app-chart [app]="app" [page]="page" [content]="content" [params]="params"></app-chart>
     }
     @default {
       未知类型模板

@@ -1,7 +1,8 @@
 @if (content) {
   @if (content.template == 'info') {
     <nz-card [nzTitle]="content.title" [nzExtra]="extra">
-      <smart-info [fields]="content.items || []" [value]="data"></smart-info>
+      <smart-toolbar *ngIf="content.toolbar" [fields]="content.toolbar" (action)="execute($event)"></smart-toolbar>
+      <smart-info [fields]="content.items || []" [value]="data" (action)="execute($event)"></smart-info>
     </nz-card>
     <ng-template #extra>
       <button nz-button (click)="loadData()">

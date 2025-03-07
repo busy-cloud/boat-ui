@@ -1,14 +1,12 @@
 <div class="toolbar">
   <nz-space>
 
-  </nz-space>
-
   @for (field of fields; track field) {
     <span *nzSpaceItem>
     @switch (field.type) {
       @case ('button') {
         <!--文本-->
-        <button nz-button (click)="execute(field.action)">
+        <button nz-button (click)="action.emit(field.action)">
           <span nz-icon [nzType]="field.icon" *ngIf="field.icon"></span>
           {{ field.label }}
         </button>
@@ -21,7 +19,7 @@
         <nz-dropdown-menu #menu="nzDropdownMenu">
           <ul nz-menu>
             @for (item of field.dropdown; track item) {
-            <li nz-menu-item (click)="execute(item.action)">{{item.label}}</li>
+            <li nz-menu-item (click)="action.emit(item.action)">{{item.label}}</li>
             }
           </ul>
         </nz-dropdown-menu>
@@ -123,10 +121,12 @@
         </nz-upload>
       }
       @default {
-
+        未支持的组件
       }
     }
     </span>
   }
+
+  </nz-space>
 </div>
 

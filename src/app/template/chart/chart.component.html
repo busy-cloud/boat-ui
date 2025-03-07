@@ -1,6 +1,7 @@
 @if (content) {
   @if (content.template == 'chart') {
     <nz-card [nzTitle]="content.title" [nzExtra]="extra">
+      <smart-toolbar *ngIf="content.toolbar" [fields]="content.toolbar" (action)="execute($event)"></smart-toolbar>
       <div echarts [options]="chartOption"
            [merge]="mergeOption"
            [loading]="loading"

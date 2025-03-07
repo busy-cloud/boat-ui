@@ -1,16 +1,23 @@
 @if (content) {
   @if (content.template == 'table') {
-    <nz-card [nzTitle]="content.title">
+    <nz-card [nzTitle]="content.title" [nzExtra]="extra">
+      <smart-toolbar *ngIf="content.toolbar" [fields]="content.toolbar" (action)="execute($event)"></smart-toolbar>
       <smart-table
-        [buttons]="content.buttons"
         [columns]="content.columns"
         [operators]="content.operators"
         [datum]="data"
         [total]="total"
         [loading]="loading"
         (query)="onQuery($event)"
+        (action)="executeTable($event)"
       ></smart-table>
     </nz-card>
+    <ng-template #extra>
+      <button nz-button (click)="refresh()">
+        <span nz-icon nzType="reload" [nzSpin]="loading"></span>
+        刷新
+      </button>
+    </ng-template>
   } @else {
     模板类型应该是table
   }

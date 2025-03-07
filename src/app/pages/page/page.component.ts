@@ -8,6 +8,7 @@ import {ChartComponent, ChartContent} from '../../template/chart/chart.component
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
 import {Title} from '@angular/platform-browser';
 import {isFunction} from 'rxjs/internal/util/isFunction';
+import {SmartField} from '../../lib/smart-editor/smart-editor.component';
 
 export type PageContent = Content & (TableContent | FormContent | InfoContent | ChartContent)
 
@@ -16,6 +17,8 @@ export interface Content {
   title: string
   params?: any
   params_func?: string | ((data: any) => any)
+  toolbar?: SmartField[]
+
   children?: PageContent[]
 }
 
@@ -33,6 +36,7 @@ export interface Content {
   styleUrl: './page.component.scss'
 })
 export class PageComponent {
+  @Input() app!: string
   @Input() page!: string
   @Input() content!: PageContent
   @Input() params!: Params
@@ -41,6 +45,7 @@ export class PageComponent {
               protected route: ActivatedRoute,
               protected ts: Title,
   ) {
+    this.app = this.route.snapshot.params['app'];
     this.page = this.route.snapshot.params['page'];
     this.params = route.snapshot.queryParams;
   }
@@ -52,7 +57,8 @@ export class PageComponent {
     } else {
       if (this.page) this.load()
       this.route.params.subscribe(params => {
-        if (this.page == params['page']) return
+        if (this.app==params['app'] && this.page == params['page']) return
+        this.app = params['app'];
         this.page = params['page'];
         this.load()
       })
@@ -64,10 +70,16 @@ export class PageComponent {
   }
 
   load() {
-    console.log("[page] load", this.page)
-    this.rs.get("page/" + this.page).subscribe((res) => {
+    console.log("[page] load", this.app, this.page)
+
+    //@ts-ignore
+    //this.content = undefined //清空页面
+
+    let url = "page/" + this.page
+    if (this.app) url = url + this.app + "/" + this.page
+    this.rs.get(url).subscribe((res) => {
       if (res.error) return
-      this.content = res.data
+      this.content = res
       if (this.content.title)
         this.ts.setTitle(this.content.title);
       this.build()
@@ -75,7 +87,7 @@ export class PageComponent {
   }
 
   build() {
-    console.log("[page] build", this.page)
+    console.log("[page] build", this.app, this.page)
     this.content?.children?.forEach(c => {
       if (typeof c.params_func == "string") {
         try {

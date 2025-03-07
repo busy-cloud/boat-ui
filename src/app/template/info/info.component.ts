@@ -1,16 +1,24 @@
 import {Component, Input} from '@angular/core';
 import {SmartInfoComponent, SmartInfoItem} from '../../lib/smart-info/smart-info.component';
 import {SmartRequestService} from '../../lib/smart-request.service';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 import {NzCardComponent} from 'ng-zorro-antd/card';
 import {Title} from '@angular/platform-browser';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
-import {ReplaceLinkParams} from '../../lib/smart-table/smart-table.component';
+import {
+  GetActionLink,
+  GetActionParams,
+  ReplaceLinkParams,
+  SmartAction
+} from '../../lib/smart-table/smart-table.component';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
-import {PageContent} from '../../pages/page/page.component';
+import {PageComponent, PageContent} from '../../pages/page/page.component';
 import {CompareObject} from '../form/form.component';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
+import {NzModalService} from 'ng-zorro-antd/modal';
+import {SmartToolbarComponent} from '../../lib/smart-toolbar/smart-toolbar.component';
+import {NgIf} from '@angular/common';
 
 export interface InfoContent {
   template: 'info'
@@ -28,15 +36,18 @@ export interface InfoContent {
     NzCardComponent,
     NzButtonComponent,
     NzSpinComponent,
-    NzIconDirective
+    NzIconDirective,
+    SmartToolbarComponent,
+    NgIf
   ],
   templateUrl: './info.component.html',
   standalone: true,
   styleUrl: './info.component.scss'
 })
 export class InfoComponent {
-  @Input() content!: PageContent;
+  @Input() app!: string
   @Input() page!: string;
+  @Input() content!: PageContent;
 
   @Input() params!: Params
 
@@ -45,6 +56,8 @@ export class InfoComponent {
 
   constructor(protected rs: SmartRequestService,
               protected route: ActivatedRoute,
+              protected router: Router,
+              protected ms: NzModalService,
               protected ts: Title) {
     //默认从路由中取
     this.page = route.snapshot.params['page']
@@ -73,9 +86,11 @@ export class InfoComponent {
 
   load() {
     console.log("[info] load", this.page)
-    this.rs.get("page/" + this.page).subscribe((res) => {
+    let url = "page/" + this.page
+    if (this.app) url = url + this.app + "/" + this.page
+    this.rs.get(url).subscribe((res) => {
       if (res.error) return
-      this.content = res.data
+      this.content = res
       if (this.content)
         this.ts.setTitle(this.content.title);
       this.build()
@@ -113,6 +128,57 @@ export class InfoComponent {
       }).add(()=>{
         this.loading = false
       })
+    }
+  }
+
+
+  execute(action: SmartAction | undefined) {
+    if (!action) return
+
+    let params = GetActionParams(action, this.data)
+
+    switch (action.type) {
+      case 'link':
+
+        let uri = GetActionLink(action, this.data)
+        let query = new URLSearchParams(params).toString()
+        let url = uri + '?' + query
+
+        if (action.external)
+          window.open(url)
+        else
+          this.router.navigateByUrl(url)
+        //this.router.navigate([uri], {queryParams: params})
+
+        break
+
+      case 'script':
+        if (typeof action.script == "string") {
+          try {
+            action.script = new Function("data", "request", action.script)
+          } catch (e) {
+            console.error(e)
+          }
+        }
+        if (isFunction(action.script)) {
+          action.script.call(this, this.data, this.rs)
+        }
+        break
+
+      case 'page':
+        this.router.navigate(["page", action.page], {queryParams: params})
+        break
+
+      case 'dialog':
+        this.ms.create({
+          nzContent: PageComponent,
+          nzData: {
+            page: action.page,
+            params: params
+          }
+        })
+        break
+
     }
   }
 

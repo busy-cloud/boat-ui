@@ -11,8 +11,11 @@ import {FormsModule} from '@angular/forms';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 import {NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
 import {PageComponent} from '../../pages/page/page.component';
+import {SmartRequestService} from '../smart-request.service';
 
 export function ReplaceLinkParams(link: string, data: any): string {
+  if (!data) return link //无参数，直接返回
+
   //link.matchAll(/:\w+/g)
   let match = link.match(/\:\w+/g)
   if (match != null) {
@@ -44,7 +47,7 @@ export function GetActionLink(action: SmartAction, data: any) {
   return link
 }
 
-export function GetActionParams(action: SmartAction, data: any) :any {
+export function GetActionParams(action: SmartAction, data: any): any {
   let params = action.params
   // 计算函数
   if (typeof action.paramsFunc == "string" && action.paramsFunc.length > 0) {
@@ -163,7 +166,7 @@ export class SmartTableComponent implements OnInit {
     return false    //return this.columns.filter(c => c.keyword).length > 0
   }
 
-  constructor(private router: Router, private ms: NzModalService) {
+  constructor(private router: Router, private ms: NzModalService, private rs: SmartRequestService) {
   }
 
   ngOnInit(): void {
@@ -211,8 +214,17 @@ export class SmartTableComponent implements OnInit {
         break
 
       case 'script':
+        if (typeof action.script == "string") {
+          try {
+            action.script = new Function("params", "request", action.script)
+          }catch (e) {
+            console.error(e)
+          }
+        }
         if (isFunction(action.script)) {
-          action.script(data)
+          //action.script(data)
+          //@ts-ignore
+          action.script.call(this, params, this.rs)
         }
         break
 
@@ -221,7 +233,7 @@ export class SmartTableComponent implements OnInit {
         break
 
       case 'dialog':
-        //TODO 弹窗
+        //弹窗
         this.ms.create({
           nzContent: PageComponent,
           nzData: {
@@ -230,7 +242,6 @@ export class SmartTableComponent implements OnInit {
           }
         })
         break
-
     }
   }
 

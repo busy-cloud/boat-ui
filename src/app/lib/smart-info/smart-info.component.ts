@@ -6,6 +6,9 @@ import {Router} from "@angular/router";
 import {NzTagComponent} from "ng-zorro-antd/tag";
 import {GetActionLink, GetActionParams, SmartAction} from '../smart-table/smart-table.component';
 import {isFunction} from 'rxjs/internal/util/isFunction';
+import {PageComponent} from '../../pages/page/page.component';
+import {SmartRequestService} from '../smart-request.service';
+import {NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
 
 
 export interface SmartInfoItem {
@@ -25,6 +28,7 @@ export interface SmartInfoItem {
     NzDescriptionsModule,
     NzProgressComponent,
     NzTagComponent,
+    NzModalModule,
   ],
   templateUrl: './smart-info.component.html',
   styleUrl: './smart-info.component.scss'
@@ -34,7 +38,7 @@ export class SmartInfoComponent {
   @Input() fields: SmartInfoItem[] = []
   @Input() value: any = {}
 
-  constructor(protected router: Router) {
+  constructor(protected router: Router, protected rs: SmartRequestService, protected ms: NzModalService) {
   }
 
   execute(action: SmartAction | undefined) {
@@ -58,8 +62,15 @@ export class SmartInfoComponent {
         break
 
       case 'script':
+        if (typeof action.script == "string") {
+          try {
+            action.script = new Function("data", "request", action.script)
+          }catch (e) {
+            console.error(e)
+          }
+        }
         if (isFunction(action.script)) {
-          action.script(this.value)
+          action.script.call(this, this.value, this.rs)
         }
         break
 
@@ -68,8 +79,13 @@ export class SmartInfoComponent {
         break
 
       case 'dialog':
-        //TODO 弹窗
-
+        this.ms.create({
+          nzContent: PageComponent,
+          nzData: {
+            page: action.page,
+            params: params
+          }
+        })
         break
 
     }

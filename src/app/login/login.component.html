@@ -1,32 +1,12 @@
-
-<div>
+<div class="login">
 
   <nz-card nzTitle="登录">
 
-    <form nz-form [formGroup]="group" (ngSubmit)="submit()">
+    <smart-editor #editor [fields]="fields" (submit)="submit()"></smart-editor>
 
-      <nz-form-item>
-        <nz-form-label [nzSpan]="4">账号</nz-form-label>
-        <nz-form-control [nzSpan]="14">
-          <nz-input-group nzPrefixIcon="user">
-            <input formControlName="username" type="text" nz-input placeholder="账号"/>
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
-
-      <nz-form-item>
-        <nz-form-label [nzSpan]="4">密码</nz-form-label>
-        <nz-form-control [nzSpan]="14">
-          <nz-input-group nzPrefixIcon="lock">
-            <input formControlName="password" type="password" nz-input placeholder="密码" autofocus />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
-
-      <button nz-button nzType="primary">登录</button>
-
-    </form>
-
+    <div style="float: right">
+      <button nz-button nzType="primary" (click)="submit()">登录</button>
+    </div>
   </nz-card>
 </div>
 

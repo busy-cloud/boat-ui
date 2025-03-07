@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {NzCardComponent} from 'ng-zorro-antd/card';
 import {NzInputDirective, NzInputGroupComponent} from 'ng-zorro-antd/input';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
@@ -12,6 +12,7 @@ import {Md5} from 'ts-md5';
 import {Router} from '@angular/router';
 import {UserService} from '../user.service';
 import {SmartRequestService} from '../lib/smart-request.service';
+import {SmartEditorComponent, SmartField} from '../lib/smart-editor/smart-editor.component';
 
 @Component({
   selector: 'app-login',
@@ -29,47 +30,43 @@ import {SmartRequestService} from '../lib/smart-request.service';
     NzFormControlComponent,
     NzColDirective,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SmartEditorComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  group: FormGroup;
 
-  constructor(formBuilder: FormBuilder,
-              private router: Router,
+  fields: SmartField[] = [
+    {key: 'username', type:'text', label: '用户名', required: true},
+    {key: 'password', type:'password', label: '密码', required: true},
+  ]
+
+  @ViewChild("editor", {static: true}) editor!: SmartEditorComponent;
+
+  constructor(private router: Router,
               private ns: NzNotificationService,
               private rs: SmartRequestService,
               private us: UserService,
               ) {
-    this.group = formBuilder.group({
-      username: ['admin', Validators.required],
-      password: ['', Validators.required],
-    })
   }
 
   submit() {
 
-    if (this.group.invalid){
+    if (!this.editor.valid){
       this.ns.error("错误", "无效账号密码")
-      Object.values(this.group.controls).forEach(control => {
-        if (control.invalid) {
-          control.markAsDirty();
-          control.updateValueAndValidity({ onlySelf: true });
-        }
-      });
       return
     }
 
-    let obj = this.group.value
+    let obj = this.editor.value
     this.rs.post("login", {...obj, password: Md5.hashStr(obj.password)}).subscribe(res => {
       console.log("login", res)
       if (res.error) {
         return
       }
       this.us.set(res.data)
-      this.router.navigateByUrl('admin/dash')
+      this.router.navigateByUrl('admin')
     })
   }
 }

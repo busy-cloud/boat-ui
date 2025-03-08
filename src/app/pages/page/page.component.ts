@@ -9,6 +9,7 @@ import {NzSpinComponent} from 'ng-zorro-antd/spin';
 import {Title} from '@angular/platform-browser';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 import {SmartField} from '../../lib/smart-editor/smart-editor.component';
+import {NzColDirective, NzRowDirective} from 'ng-zorro-antd/grid';
 
 export type PageContent = Content & (TableContent | FormContent | InfoContent | ChartContent)
 
@@ -18,6 +19,7 @@ export interface Content {
   params?: any
   params_func?: string | ((data: any) => any)
   toolbar?: SmartField[]
+  span: string|number|null //占用宽度 总数24
 
   children?: PageContent[]
 }
@@ -30,10 +32,12 @@ export interface Content {
     FormComponent,
     ChartComponent,
     NzSpinComponent,
+    NzRowDirective,
+    NzColDirective,
   ],
   templateUrl: './page.component.html',
   standalone: true,
-  styleUrl: './page.component.scss'
+  styleUrl: './page.component.scss',
 })
 export class PageComponent {
   @Input() app!: string
@@ -57,7 +61,7 @@ export class PageComponent {
     } else {
       if (this.page) this.load()
       this.route.params.subscribe(params => {
-        if (this.app==params['app'] && this.page == params['page']) return
+        if (this.app == params['app'] && this.page == params['page']) return
         this.app = params['app'];
         this.page = params['page'];
         this.load()

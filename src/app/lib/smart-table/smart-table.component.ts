@@ -155,7 +155,7 @@ export class SmartTableComponent implements OnInit {
 
   body: ParamSearch = {filter: {}}
 
-  constructor(private router: Router, private ms: NzModalService, private rs: SmartRequestService) {
+  constructor(private router: Router, private ms: NzModalService, private request: SmartRequestService) {
   }
 
   ngOnInit(): void {

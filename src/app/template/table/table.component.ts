@@ -55,7 +55,7 @@ export class TableComponent {
   total: number = 1;
   loading: boolean = false;
 
-  constructor(protected rs: SmartRequestService,
+  constructor(protected request: SmartRequestService,
               protected route: ActivatedRoute,
               protected router: Router,
               protected ms: NzModalService,
@@ -80,7 +80,7 @@ export class TableComponent {
     console.log("[table] load", this.page)
     let url = "page/" + this.page
     if (this.app) url = url + this.app + "/" + this.page
-    this.rs.get(url).subscribe((res) => {
+    this.request.get(url).subscribe((res) => {
       if (res.error) return
       this.content = res
       if (this.content)
@@ -115,7 +115,7 @@ export class TableComponent {
     //搜索
     if (isFunction(this.content.search_func)) {
       this.loading = true
-      this.content?.search_func($event, this.rs).then((res: any) => {
+      this.content?.search_func($event, this.request).then((res: any) => {
         this.data = res.data
         this.total = res.total || res.data.length
       }).finally(() => {
@@ -123,7 +123,7 @@ export class TableComponent {
       })
     } else if (this.content.search_url) {
       this.loading = true
-      this.rs.post(this.content.search_url, $event).subscribe(res => {
+      this.request.post(this.content.search_url, $event).subscribe(res => {
         if (res.error) return
         this.data = res.data
         this.total = res.total || res.data.length
@@ -166,7 +166,7 @@ export class TableComponent {
           }
         }
         if (isFunction(action.script)) {
-          action.script.call(this, this.params, this.rs)
+          action.script.call(this, this.params, this.request)
         }
         break
 
@@ -218,7 +218,7 @@ export class TableComponent {
         if (isFunction($event.action.script)) {
           //action.script(data)
           //@ts-ignore
-          action.script.call(this, params, this.rs)
+          action.script.call(this, params, this.request)
         }
         break
 

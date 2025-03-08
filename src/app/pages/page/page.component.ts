@@ -46,9 +46,9 @@ export class PageComponent {
   @Input() content!: PageContent
   @Input() params!: Params
 
-  constructor(protected rs: SmartRequestService,
+  constructor(protected request: SmartRequestService,
               protected route: ActivatedRoute,
-              protected ts: Title,
+              protected title: Title,
   ) {
     this.app = this.route.snapshot.params['app'];
     this.page = this.route.snapshot.params['page'];
@@ -82,11 +82,11 @@ export class PageComponent {
 
     let url = "page/" + this.page
     if (this.app) url = url + this.app + "/" + this.page
-    this.rs.get(url).subscribe((res) => {
+    this.request.get(url).subscribe((res) => {
       if (res.error) return
       this.content = res
       if (this.content.title)
-        this.ts.setTitle(this.content.title);
+        this.title.setTitle(this.content.title);
       this.build()
     })
   }

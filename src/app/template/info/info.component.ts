@@ -54,7 +54,7 @@ export class InfoComponent {
   data: any = {id: 122, name: '张三', created: new Date()};
   loading = false
 
-  constructor(protected rs: SmartRequestService,
+  constructor(protected request: SmartRequestService,
               protected route: ActivatedRoute,
               protected router: Router,
               protected ms: NzModalService,
@@ -88,7 +88,7 @@ export class InfoComponent {
     console.log("[info] load", this.page)
     let url = "page/" + this.page
     if (this.app) url = url + this.app + "/" + this.page
-    this.rs.get(url).subscribe((res) => {
+    this.request.get(url).subscribe((res) => {
       if (res.error) return
       this.content = res
       if (this.content)
@@ -116,7 +116,7 @@ export class InfoComponent {
     if (!this.content || this.content.template !== "info" )return
     if (isFunction(this.content.load_func)) {
       this.loading = true
-      this.content.load_func(this.params, this.rs).then((res: any) => {
+      this.content.load_func(this.params, this.request).then((res: any) => {
         this.data = res;
       }).finally(()=>{
         this.loading = false
@@ -124,7 +124,7 @@ export class InfoComponent {
     } else if (this.content.load_url) {
       this.loading = true
       let url = ReplaceLinkParams(this.content.load_url, this.params);
-      this.rs.get(url).subscribe(res => {
+      this.request.get(url).subscribe(res => {
         if (res.error) return
         this.data = res.data
       }).add(()=>{
@@ -163,7 +163,7 @@ export class InfoComponent {
           }
         }
         if (isFunction(action.script)) {
-          action.script.call(this, this.data, this.rs)
+          action.script.call(this, this.data, this.request)
         }
         break
 

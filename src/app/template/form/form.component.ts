@@ -93,7 +93,7 @@ export class FormComponent {
 
   submitting = false;
 
-  constructor(protected rs: SmartRequestService,
+  constructor(protected request: SmartRequestService,
               protected route: ActivatedRoute,
               protected router: Router,
               protected ms: NzModalService,
@@ -128,7 +128,7 @@ export class FormComponent {
     console.log("[form] load", this.page)
     let url = "page/" + this.page
     if (this.app) url = url + this.app + "/" + this.page
-    this.rs.get(url).subscribe((res) => {
+    this.request.get(url).subscribe((res) => {
       if (res.error) return
       this.content = res
       if (this.content)
@@ -162,12 +162,12 @@ export class FormComponent {
     console.log("[form] load data", this.page)
     if (!this.content || this.content.template !== "form" )return
     if (isFunction(this.content.load_func)) {
-      this.content.load_func(this.params, this.rs).then((res: any) => {
+      this.content.load_func(this.params, this.request).then((res: any) => {
         this.data = res;
       })
     } else if (this.content.load_url) {
       let url = ReplaceLinkParams(this.content.load_url, this.params);
-      this.rs.get(url).subscribe(res => {
+      this.request.get(url).subscribe(res => {
         if (res.error) return
         this.data = res.data
       })
@@ -180,7 +180,7 @@ export class FormComponent {
     if (!this.content || this.content.template !== "form" )return
     if (isFunction(this.content.submit_func)) {
       this.submitting = true
-      this.content.submit_func(this.data, this.rs).then((res: any) => {
+      this.content.submit_func(this.data, this.request).then((res: any) => {
         //this.data = res;
         this.ns.success("提示", "提交成功")
       }).finally(()=>{
@@ -189,7 +189,7 @@ export class FormComponent {
     } else if (this.content.submit_url) {
       this.submitting = true
       let url = ReplaceLinkParams(this.content.submit_url, this.params);
-      this.rs.post(url, this.editor.value).subscribe(res => {
+      this.request.post(url, this.editor.value).subscribe(res => {
         if (res.error) return
         //this.data = res.data
         this.ns.success("提示", "提交成功")
@@ -228,7 +228,7 @@ export class FormComponent {
           }
         }
         if (isFunction(action.script)) {
-          action.script.call(this, this.params, this.rs)
+          action.script.call(this, this.params, this.request)
         }
         break
 

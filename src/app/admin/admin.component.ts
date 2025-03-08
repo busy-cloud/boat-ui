@@ -39,28 +39,28 @@ export class AdminComponent {
   menus: any[] = []
   settings: any[] = []
 
-  constructor(protected us: UserService, private rs: SmartRequestService) {
+  constructor(protected us: UserService, private request: SmartRequestService) {
     this.loadOem()
     this.loadMenu()
     this.loadSetting()
   }
 
   loadOem() {
-    this.rs.get("oem").subscribe((res) => {
+    this.request.get("oem").subscribe((res) => {
       if (res.error) return
       Object.assign(this.oem, res.data);
     })
   }
 
   loadMenu() {
-    this.rs.get("menus").subscribe((res) => {
+    this.request.get("menus").subscribe((res) => {
       if (res.error) return
       this.menus = res.data
     })
   }
 
   loadSetting() {
-    this.rs.get("settings").subscribe((res) => {
+    this.request.get("settings").subscribe((res) => {
       if (res.error) return
       this.settings = res.data
     })

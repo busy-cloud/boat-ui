@@ -105,7 +105,7 @@ export class ChartComponent {
   chartHeight = 400;
 
 
-  constructor(protected rs: SmartRequestService,
+  constructor(protected request: SmartRequestService,
               protected route: ActivatedRoute,
               protected router: Router,
               protected ms: NzModalService,
@@ -139,7 +139,7 @@ export class ChartComponent {
     console.log("[chart] load", this.page)
     let url = "page/" + this.page
     if (this.app) url = url + this.app + "/" + this.page
-    this.rs.get(url).subscribe((res) => {
+    this.request.get(url).subscribe((res) => {
       if (res.error) return
       this.content = res
       if (this.content)
@@ -217,7 +217,7 @@ export class ChartComponent {
 
     if (isFunction(this.content.load_func)) {
       this.loading = true
-      this.content.load_func(this.params, this.rs).then((res: any) => {
+      this.content.load_func(this.params, this.request).then((res: any) => {
         //this.data = res;
         this.update(res)
       }).finally(() => {
@@ -227,7 +227,7 @@ export class ChartComponent {
     } else if (this.content.load_url) {
       this.loading = true
       let url = ReplaceLinkParams(this.content.load_url, this.params);
-      this.rs.get(url).subscribe(res => {
+      this.request.get(url).subscribe(res => {
         if (res.error) return
         //this.data = res.data
         this.update(res.data)
@@ -329,7 +329,7 @@ export class ChartComponent {
           }
         }
         if (isFunction(action.script)) {
-          action.script.call(this, this.params, this.rs)
+          action.script.call(this, this.params, this.request)
         }
         break
 

@@ -130,7 +130,7 @@ export class SmartToolbarComponent {
     return this.group.value
   }
 
-  constructor(private fb: FormBuilder, private router: Router, private ms: NzModalService, private rs: SmartRequestService) {
+  constructor(private fb: FormBuilder, private router: Router, private ms: NzModalService, private request: SmartRequestService) {
   }
 
   ngOnInit(): void {

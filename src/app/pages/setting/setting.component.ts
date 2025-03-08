@@ -26,10 +26,10 @@ export class SettingComponent {
   @ViewChild("editor", {static: true}) editor!: SmartEditorComponent;
 
 
-  constructor(protected rs: SmartRequestService,
+  constructor(protected request: SmartRequestService,
               protected route: ActivatedRoute,
               protected ns: NzNotificationService,
-              protected ts: Title) {
+              protected title: Title) {
 
     route.params.subscribe(params => {
       this.module = params['module']
@@ -39,19 +39,19 @@ export class SettingComponent {
   }
 
   load() {
-    this.rs.get("setting/" + this.module).subscribe((res) => {
+    this.request.get("setting/" + this.module).subscribe((res) => {
       if (res.error) return
       this.data = res.data
     })
-    this.rs.get("setting/" + this.module + "/form").subscribe((res) => {
+    this.request.get("setting/" + this.module + "/form").subscribe((res) => {
       if (res.error) return
       this.form = res.data
-      this.ts.setTitle("设置 " + this.form.title)
+      this.title.setTitle("设置 " + this.form.title)
     })
   }
 
   submit() {
-    this.rs.post("setting/" + this.module, this.editor.value).subscribe((res) => {
+    this.request.post("setting/" + this.module, this.editor.value).subscribe((res) => {
       this.ns.success("提示", "保存成功")
     })
   }

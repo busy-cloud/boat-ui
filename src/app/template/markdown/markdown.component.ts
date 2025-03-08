@@ -44,7 +44,7 @@ export class MarkdownComponent {
   src = ""
   loading = false
 
-  constructor(protected rs: SmartRequestService,
+  constructor(protected request: SmartRequestService,
               protected route: ActivatedRoute,
               protected router: Router,
               protected ms: NzModalService,
@@ -78,7 +78,7 @@ export class MarkdownComponent {
     console.log("[markdown] load", this.page)
     let url = "page/" + this.page
     if (this.app) url = url + this.app + "/" + this.page
-    this.rs.get(url).subscribe((res) => {
+    this.request.get(url).subscribe((res) => {
       if (res.error) return
       this.content = res
       if (this.content)
@@ -106,7 +106,7 @@ export class MarkdownComponent {
     if (!this.content || this.content.template !== "markdown" )return
     if (isFunction(this.content.src_func)) {
       this.loading = true
-      this.content.src_func(this.params, this.rs).then((res: any) => {
+      this.content.src_func(this.params, this.request).then((res: any) => {
         this.src = res;
       }).finally(()=>{
         this.loading = false

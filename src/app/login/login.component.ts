@@ -28,7 +28,7 @@ export class LoginComponent {
 
   constructor(private router: Router,
               private ns: NzNotificationService,
-              private rs: SmartRequestService,
+              private request: SmartRequestService,
               private us: UserService,
               ) {
   }
@@ -41,7 +41,7 @@ export class LoginComponent {
     }
 
     let obj = this.editor.value
-    this.rs.post("login", {...obj, password: Md5.hashStr(obj.password)}).subscribe(res => {
+    this.request.post("login", {...obj, password: Md5.hashStr(obj.password)}).subscribe(res => {
       console.log("login", res)
       if (res.error) {
         return

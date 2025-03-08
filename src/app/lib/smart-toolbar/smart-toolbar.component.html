@@ -1,8 +1,6 @@
-<div class="toolbar">
-  <nz-space>
-
+<div class="btn-wrapper" nz-flex nzGap="middle" nzWrap="wrap">
   @for (field of fields; track field) {
-    <span *nzSpaceItem>
+    <span>
     @switch (field.type) {
       @case ('button') {
         <!--文本-->
@@ -126,7 +124,5 @@
     }
     </span>
   }
-
-  </nz-space>
 </div>
 

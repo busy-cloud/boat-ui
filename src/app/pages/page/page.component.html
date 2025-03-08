@@ -19,7 +19,7 @@
   @if (content.children) {
     <div nz-row>
       @for (p of content.children; track p) {
-        <div nz-col [nzSpan]="p.span">
+        <div nz-col [nzSpan]="p.span" [nzMd]="p.span" nzXs="24" nzSm="24">
           <app-page [page]="p.id" [content]="p" [params]="childrenParams(p)"></app-page>
         </div>
       }

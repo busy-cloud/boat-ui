@@ -27,6 +27,7 @@ import {GetActionLink, GetActionParams, SmartAction} from '../smart-table/smart-
 import {Params, Router} from '@angular/router';
 import {NzModalService} from 'ng-zorro-antd/modal';
 import {SmartRequestService} from '../smart-request.service';
+import {NzFlexDirective} from 'ng-zorro-antd/flex';
 
 @Component({
   selector: 'smart-toolbar',
@@ -57,6 +58,7 @@ import {SmartRequestService} from '../smart-request.service';
     NzDropdownMenuComponent,
     NzMenuDirective,
     NzMenuItemComponent,
+    NzFlexDirective,
   ],
   templateUrl: './smart-toolbar.component.html',
   styleUrl: './smart-toolbar.component.scss'

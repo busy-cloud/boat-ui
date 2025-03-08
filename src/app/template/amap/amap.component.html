@@ -1,0 +1,18 @@
+@if (content) {
+  @if (content.template == 'form') {
+    <nz-card [nzTitle]="content.title" [nzExtra]="extra">
+      <smart-toolbar *ngIf="content.toolbar" [fields]="content.toolbar" (action)="execute($event)"></smart-toolbar>
+      <div class="mapContainer" #mapContainer></div>
+    </nz-card>
+    <ng-template #extra>
+      <button nz-button (click)="loadData()">
+        <span nz-icon nzType="reload" [nzSpin]="loading"></span>
+        刷新
+      </button>
+    </ng-template>
+  } @else {
+    模板类型应该是form
+  }
+} @else {
+  <nz-spin nzSimple></nz-spin>
+}

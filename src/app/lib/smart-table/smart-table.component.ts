@@ -34,15 +34,15 @@ export function GetActionLink(action: SmartAction, data: any) {
   let link = ReplaceLinkParams(action.link, data)
 
   // 计算函数
-  if (typeof action.linkFunc == "string" && action.linkFunc.length > 0) {
+  if (typeof action.link_func == "string" && action.link_func.length > 0) {
     try {
-      action.linkFunc = new Function(action.linkFunc)
+      action.link_func = new Function(action.link_func)
     } catch (e) {
       console.error(e)
     }
   }
-  if (isFunction(action.linkFunc)) {
-    link = action.linkFunc(data)
+  if (isFunction(action.link_func)) {
+    link = action.link_func(data)
   }
   return link
 }
@@ -50,15 +50,15 @@ export function GetActionLink(action: SmartAction, data: any) {
 export function GetActionParams(action: SmartAction, data: any): any {
   let params = action.params
   // 计算函数
-  if (typeof action.paramsFunc == "string" && action.paramsFunc.length > 0) {
+  if (typeof action.params_func == "string" && action.params_func.length > 0) {
     try {
-      action.paramsFunc = new Function(action.paramsFunc)
+      action.params_func = new Function('data', action.params_func)
     } catch (e) {
       console.error(e)
     }
   }
-  if (isFunction(action.paramsFunc)) {
-    params = action.paramsFunc(data)
+  if (isFunction(action.params_func)) {
+    params = action.params_func(data)
   }
   return params
 }
@@ -66,9 +66,9 @@ export function GetActionParams(action: SmartAction, data: any): any {
 export interface SmartAction {
   type: 'link' | 'script' | 'page' | 'dialog'
   link?: string
-  linkFunc?: string | Function | ((data: any) => string)
+  link_func?: string | Function | ((data: any) => string)
   params?: any
-  paramsFunc?: string | Function | ((data: any) => any)
+  params_func?: string | Function | ((data: any) => any)
   script?: string | Function | ((data: any) => string)
   page?: string
   dialog?: boolean

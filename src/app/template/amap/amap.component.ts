@@ -1,57 +1,62 @@
-import {Component, Input} from '@angular/core';
-import {SmartInfoComponent, SmartInfoItem} from '../../lib/smart-info/smart-info.component';
-import {SmartRequestService} from '../../lib/smart-request.service';
+import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {isFunction} from 'rxjs/internal/util/isFunction';
-import {NzCardComponent} from 'ng-zorro-antd/card';
-import {Title} from '@angular/platform-browser';
+import {SmartRequestService} from '../../lib/smart-request.service';
+import {load as loadMap} from '@amap/amap-jsapi-loader';
+import {PageComponent, PageContent} from '../../pages/page/page.component';
+import {NgIf} from '@angular/common';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
+import {NzCardComponent} from 'ng-zorro-antd/card';
+import {NzIconDirective} from 'ng-zorro-antd/icon';
+import {NzSpinComponent} from 'ng-zorro-antd/spin';
+import {SmartToolbarComponent} from '../../lib/smart-toolbar/smart-toolbar.component';
+import {NzModalService} from 'ng-zorro-antd/modal';
+import {Title} from '@angular/platform-browser';
+import {CompareObject} from '../form/form.component';
+import {isFunction} from 'rxjs/internal/util/isFunction';
 import {
   GetActionLink,
   GetActionParams,
   ReplaceLinkParams,
   SmartAction
 } from '../../lib/smart-table/smart-table.component';
-import {NzSpinComponent} from 'ng-zorro-antd/spin';
-import {PageComponent, PageContent} from '../../pages/page/page.component';
-import {CompareObject} from '../form/form.component';
-import {NzIconDirective} from 'ng-zorro-antd/icon';
-import {NzModalService} from 'ng-zorro-antd/modal';
-import {SmartToolbarComponent} from '../../lib/smart-toolbar/smart-toolbar.component';
-import {NgIf} from '@angular/common';
 
-export interface InfoContent {
-  template: 'info'
-  items: SmartInfoItem[]
+export interface AmapContent {
+  template: 'amap'
+
+  key?: string
+  secret?: string
+  style?: string
+  zoom?: number
+  city?: number
 
   load_url?: string
   load_func?: string | Function | ((params: Params, request: SmartRequestService) => Promise<any>)
 }
 
-
 @Component({
-  selector: 'app-info',
-  imports: [
-    SmartInfoComponent,
-    NzCardComponent,
-    NzButtonComponent,
-    NzSpinComponent,
-    NzIconDirective,
-    SmartToolbarComponent,
-    NgIf
-  ],
-  templateUrl: './info.component.html',
+  selector: 'app-amap',
   standalone: true,
-  styleUrl: './info.component.scss'
+  imports: [
+    NgIf,
+    NzButtonComponent,
+    NzCardComponent,
+    NzIconDirective,
+    NzSpinComponent,
+    SmartToolbarComponent
+  ],
+  templateUrl: './amap.component.html',
+  styleUrl: './amap.component.scss'
 })
-export class InfoComponent {
+export class AmapComponent {
   @Input() app!: string
   @Input() page!: string;
-  @Input() content!: PageContent;
+  @Input() content!: PageContent
+  @Input() params: Params = {}
 
-  @Input() params!: Params
+  @ViewChild("mapContainer", {static: true}) mapContainer!: ElementRef;
 
-  data: any = {id: 122, name: '张三', created: new Date()};
+  map: any //AMap.Map;
+  data: any[] = []
   loading = false
 
   constructor(protected request: SmartRequestService,
@@ -86,7 +91,7 @@ export class InfoComponent {
   }
 
   load() {
-    console.log("[info] load", this.page)
+    console.log("[amap] load", this.page)
     let url = "page/" + this.page
     if (this.app) url = url + this.app + "/" + this.page
     this.request.get(url).subscribe((res) => {
@@ -100,31 +105,72 @@ export class InfoComponent {
   }
 
   build() {
-    console.log("[info] build", this.page)
-    if (!this.content || this.content.template !== "info" )return
-    if (typeof this.content.load_func == "string") {
+    console.log("[amap] build", this.page)
+    let content = this.content as AmapContent;
+    if (!content) return
+
+    if (typeof content.load_func == "string") {
       try {
         //@ts-ignore
-        this.content.load_func = new Function('params', 'request', this.content.load_func as string)
+        content.load_func = new Function('params', 'request', content.load_func as string)
       } catch (e) {
         console.error(e)
       }
     }
+
+    //@ts-ignore
+    window._AMapSecurityConfig = {
+      securityJsCode: content.secret || '55de9923dc16159e4750b7c743117e0d',
+    };
+
+    //加载地图，并显示
+    loadMap({
+      key: content.key || 'eb6a831c04b6dfedda190d6254febb58',
+      version: '2.0',
+      plugins: ['AMap.Icon', 'AMap.Marker'],
+      AMapUI: {
+        version: '1.1',
+        plugins: [],
+      },
+    }).then((AMap) => {
+      //this.element.nativeElement
+      this.map = new AMap.Map(this.mapContainer.nativeElement, {
+        //center: [120.301663, 31.574729],  //设置地图中心点坐标
+        resizeEnable: true,
+        mapStyle: content.style || 'amap://styles/normal',
+        zoom: content.zoom || 12,
+      });
+
+      // AMap.plugin('AMap.Geocoder', () => {
+      //     this.geocoder = new AMap.Geocoder();
+      // });
+      // this.geocoder = new AMap.Geocoder({ city: '' });
+      // this.marker = new AMap.Marker();
+
+      if (content.city)
+        this.map.setCity(content.city)
+
+      this.map.setFitView();
+    }).catch((e) => {
+      console.log(e);
+    });
   }
 
   loadData() {
-    console.log("[info] load data", this.page)
-    if (!this.content || this.content.template !== "info" )return
-    if (isFunction(this.content.load_func)) {
+    console.log("[amap] load data", this.page)
+    let content = this.content as AmapContent;
+    if (!content) return
+
+    if (isFunction(content.load_func)) {
       this.loading = true
-      this.content.load_func(this.params, this.request).then((res: any) => {
+      content.load_func(this.params, this.request).then((res: any) => {
         this.data = res;
       }).finally(()=>{
         this.loading = false
       })
-    } else if (this.content.load_url) {
+    } else if (content.load_url) {
       this.loading = true
-      let url = ReplaceLinkParams(this.content.load_url, this.params);
+      let url = ReplaceLinkParams(content.load_url, this.params);
       this.request.get(url).subscribe(res => {
         if (res.error) return
         this.data = res.data

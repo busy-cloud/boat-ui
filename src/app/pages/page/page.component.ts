@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, inject, Input} from '@angular/core';
 import {SmartRequestService} from '../../lib/smart-request.service';
 import {ActivatedRoute, Params} from '@angular/router';
 import {TableComponent, TableContent} from '../../template/table/table.component';
@@ -11,8 +11,16 @@ import {isFunction} from 'rxjs/internal/util/isFunction';
 import {SmartField} from '../../lib/smart-editor/smart-editor.component';
 import {NzColDirective, NzRowDirective} from 'ng-zorro-antd/grid';
 import {MarkdownContent} from '../../template/markdown/markdown.component';
+import {NZ_MODAL_DATA} from 'ng-zorro-antd/modal';
+import {AmapContent} from '../../template/amap/amap.component';
 
-export type PageContent = Content & (TableContent | FormContent | InfoContent | ChartContent | MarkdownContent)
+export type PageContent = Content & (
+  TableContent |
+  FormContent |
+  InfoContent |
+  ChartContent |
+  MarkdownContent |
+  AmapContent)
 
 export interface Content {
   id: string
@@ -20,7 +28,7 @@ export interface Content {
   params?: any
   params_func?: string | ((data: any) => any)
   toolbar?: SmartField[]
-  span: string|number|null //占用宽度 总数24
+  span: string | number | null //占用宽度 总数24
 
   children?: PageContent[]
 }
@@ -41,18 +49,29 @@ export interface Content {
   styleUrl: './page.component.scss',
 })
 export class PageComponent {
+
   @Input() app!: string
   @Input() page!: string
   @Input() content!: PageContent
   @Input() params!: Params
 
+  nzModalData: any
+
   constructor(protected request: SmartRequestService,
               protected route: ActivatedRoute,
               protected title: Title,
   ) {
-    this.app = this.route.snapshot.params['app'];
-    this.page = this.route.snapshot.params['page'];
-    this.params = route.snapshot.queryParams;
+    //优先使用弹窗参数
+    this.nzModalData = inject(NZ_MODAL_DATA, {optional: true});
+    if (this.nzModalData) {
+      this.app = this.nzModalData.app;
+      this.page = this.nzModalData.page;
+      this.params = this.nzModalData.params;
+    } else {
+      this.app = this.route.snapshot.params['app'];
+      this.page = this.route.snapshot.params['page'];
+      this.params = route.snapshot.queryParams;
+    }
   }
 
   ngAfterViewInit(): void {
@@ -61,16 +80,19 @@ export class PageComponent {
       this.build()
     } else {
       if (this.page) this.load()
-      this.route.params.subscribe(params => {
-        if (this.app == params['app'] && this.page == params['page']) return
-        this.app = params['app'];
-        this.page = params['page'];
-        this.load()
-      })
-      this.route.queryParams.subscribe(params => {
-        this.params = params;
-        //this.load()
-      })
+      //弹窗之外，需要监听路由参数
+      if (!this.nzModalData) {
+        this.route.params.subscribe(params => {
+          if (this.app == params['app'] && this.page == params['page']) return
+          this.app = params['app'];
+          this.page = params['page'];
+          this.load()
+        })
+        this.route.queryParams.subscribe(params => {
+          this.params = params;
+          //this.load()
+        })
+      }
     }
   }
 

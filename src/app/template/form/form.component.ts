@@ -140,7 +140,8 @@ export class FormComponent {
 
   build() {
     console.log("[form] build", this.page)
-    if (this.content && this.content.template === "form" && typeof this.content.load_func == "string") {
+    if (!this.content || this.content.template !== "form") return
+    if (typeof this.content.load_func == "string") {
       try {
         //@ts-ignore
         this.content.load_func = new Function('params', 'request', this.content.load_func as string)
@@ -148,7 +149,7 @@ export class FormComponent {
         console.error(e)
       }
     }
-    if (this.content && this.content.template === "form" && typeof this.content.submit_func == "string") {
+    if (typeof this.content.submit_func == "string") {
       try {
         //@ts-ignore
         this.content.submit_func = new Function('data', 'request', this.content.submit_func as string)

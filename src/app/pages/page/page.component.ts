@@ -10,8 +10,9 @@ import {Title} from '@angular/platform-browser';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 import {SmartField} from '../../lib/smart-editor/smart-editor.component';
 import {NzColDirective, NzRowDirective} from 'ng-zorro-antd/grid';
+import {MarkdownContent} from '../../template/markdown/markdown.component';
 
-export type PageContent = Content & (TableContent | FormContent | InfoContent | ChartContent)
+export type PageContent = Content & (TableContent | FormContent | InfoContent | ChartContent | MarkdownContent)
 
 export interface Content {
   id: string

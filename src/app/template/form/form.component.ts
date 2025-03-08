@@ -160,11 +160,12 @@ export class FormComponent {
 
   loadData() {
     console.log("[form] load data", this.page)
-    if (this.content && this.content.template === "form" && isFunction(this.content.load_func)) {
+    if (!this.content || this.content.template !== "form" )return
+    if (isFunction(this.content.load_func)) {
       this.content.load_func(this.params, this.rs).then((res: any) => {
         this.data = res;
       })
-    } else if (this.content && this.content.template === "form" && this.content.load_url) {
+    } else if (this.content.load_url) {
       let url = ReplaceLinkParams(this.content.load_url, this.params);
       this.rs.get(url).subscribe(res => {
         if (res.error) return
@@ -176,7 +177,8 @@ export class FormComponent {
   submit() {
     if (this.submitting) return
     console.log("[form] submit", this.page)
-    if (this.content && this.content.template === "form" && isFunction(this.content.submit_func)) {
+    if (!this.content || this.content.template !== "form" )return
+    if (isFunction(this.content.submit_func)) {
       this.submitting = true
       this.content.submit_func(this.data, this.rs).then((res: any) => {
         //this.data = res;
@@ -184,7 +186,7 @@ export class FormComponent {
       }).finally(()=>{
         this.submitting = false
       })
-    } else if (this.content && this.content.template === "form" && this.content.submit_url) {
+    } else if (this.content.submit_url) {
       this.submitting = true
       let url = ReplaceLinkParams(this.content.submit_url, this.params);
       this.rs.post(url, this.editor.value).subscribe(res => {

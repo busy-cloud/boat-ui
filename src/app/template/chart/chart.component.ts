@@ -82,7 +82,6 @@ export interface ChartContent {
     NzIconDirective,
     SmartToolbarComponent,
     NgIf,
-    SmartInfoComponent,
   ],
   providers: [
     provideEchartsCore({echarts})

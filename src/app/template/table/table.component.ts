@@ -91,7 +91,8 @@ export class TableComponent {
 
   build() {
     console.log("[table] build", this.page)
-    if (this.content && this.content.template === "table" && typeof this.content.search_func == "string") {
+    if (!this.content || this.content.template !== "table" )return
+    if (typeof this.content.search_func == "string") {
       try {
         //@ts-ignore
         this.content.search_func = new Function('params', 'request', this.content.search_func as string)
@@ -105,13 +106,14 @@ export class TableComponent {
 
   onQuery($event?: ParamSearch) {
     console.log("[table] query", this.page)
+    if (!this.content || this.content.template !== "table" )return
+
     //默认用上次搜索
     if (!$event) $event = this.$event
     else this.$event = $event
 
-
     //搜索
-    if (this.content && this.content.template === "table" && isFunction(this.content.search_func)) {
+    if (isFunction(this.content.search_func)) {
       this.loading = true
       this.content?.search_func($event, this.rs).then((res: any) => {
         this.data = res.data
@@ -119,7 +121,7 @@ export class TableComponent {
       }).finally(() => {
         this.loading = false
       })
-    } else if (this.content && this.content.template === "table" && this.content.search_url) {
+    } else if (this.content.search_url) {
       this.loading = true
       this.rs.post(this.content.search_url, $event).subscribe(res => {
         if (res.error) return

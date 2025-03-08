@@ -100,7 +100,8 @@ export class InfoComponent {
 
   build() {
     console.log("[info] build", this.page)
-    if (this.content && this.content.template === "info" && typeof this.content.load_func == "string") {
+    if (!this.content || this.content.template !== "info" )return
+    if (typeof this.content.load_func == "string") {
       try {
         //@ts-ignore
         this.content.load_func = new Function('params', 'request', this.content.load_func as string)
@@ -112,14 +113,15 @@ export class InfoComponent {
 
   loadData() {
     console.log("[info] load data", this.page)
-    if (this.content && this.content.template === "info" && isFunction(this.content.load_func)) {
+    if (!this.content || this.content.template !== "info" )return
+    if (isFunction(this.content.load_func)) {
       this.loading = true
       this.content.load_func(this.params, this.rs).then((res: any) => {
         this.data = res;
       }).finally(()=>{
         this.loading = false
       })
-    } else if (this.content && this.content.template === "info" && this.content.load_url) {
+    } else if (this.content.load_url) {
       this.loading = true
       let url = ReplaceLinkParams(this.content.load_url, this.params);
       this.rs.get(url).subscribe(res => {

@@ -52,7 +52,7 @@ export class AmapComponent extends TemplateBase {
   }
 
   loadMap() {
-    console.log("[amap] load map", this.page)
+    console.log("[amap] load real map", this.page)
     let content = this.content as AmapContent;
     if (!content) return
 

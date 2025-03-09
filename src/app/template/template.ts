@@ -106,4 +106,6 @@ export interface Statistic {
   label: string
   span?: number
   format?: string
+  prefix?: string
+  suffix?: string
 }

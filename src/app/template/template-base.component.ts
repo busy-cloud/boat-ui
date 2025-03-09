@@ -39,6 +39,14 @@ export class TemplateBase {
   }
 
   ngOnInit(): void {
+    //this.mount()
+  }
+
+  ngOnDestroy(): void {
+    this.unmount()
+  }
+
+  mount(){
     if (typeof this.content.mount == "string" && this.content.mount.length > 0) {
       try {
         this.content.mount = new Function(this.content.mount)
@@ -51,7 +59,7 @@ export class TemplateBase {
     }
   }
 
-  ngOnDestroy(): void {
+  unmount(){
     if (typeof this.content.unmount == "string" && this.content.unmount.length > 0) {
       try {
         this.content.unmount = new Function(this.content.unmount)
@@ -68,24 +76,28 @@ export class TemplateBase {
     //如果是input传入，则是作为组件使用
     if (this.content) {
       this.build()
-      this.loadData()
+      this.mount()
+      this.load()
     } else {
-      if (this.page) this.load()
+      if (this.page) this.loadPage()
       this.route.params.subscribe(params => {
-        if (this.page == params['page']) return
+        if (this.app == params['app'] && this.page == params['page']) return
+        this.app = params['app'];
         this.page = params['page'];
-        this.load() //重新加载
+        //更新页面
+        this.unmount()
+        this.loadPage() //重新加载
       })
       this.route.queryParams.subscribe(params => {
         if (ObjectDeepCompare(params, this.params)) return
         this.params = params;
-        this.loadData() //重新加载
+        this.load() //重新加载
       })
     }
   }
 
-  load() {
-    console.log("[base] load", this.page)
+  loadPage() {
+    console.log("[base] loadPage", this.page)
     let url = "page/" + this.page
     if (this.app) url = url + this.app + "/" + this.page
     this.request.get(url).subscribe((res) => {
@@ -94,7 +106,8 @@ export class TemplateBase {
       if (this.content.title)
         this.title.setTitle(this.content.title);
       this.build()
-      this.loadData()
+      this.mount()
+      this.load()
     })
   }
 
@@ -107,7 +120,7 @@ export class TemplateBase {
     this.data = data
   }
 
-  loadData() {
+  load() {
     console.log("[base] load data", this.page)
 
     //初始化数据

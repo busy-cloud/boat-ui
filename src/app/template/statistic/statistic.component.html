@@ -5,13 +5,18 @@
       <nz-row [nzGutter]="16">
         @for (item of content.items; track item) {
         <nz-col [nzSpan]="12" [nzMd]="item.span || 8" [nzXs]="24">
-          <nz-statistic [nzValue]="(data?.[item.key] | number: item.format || '1.0-2')!" [nzTitle]="item.label"></nz-statistic>
+          <nz-statistic
+            [nzValue]="(data?.[item.key] | number: item.format || '1.0-2')!"
+            [nzTitle]="item.label"
+            [nzPrefix]="item.prefix"
+            [nzSuffix]="item.suffix"
+          ></nz-statistic>
         </nz-col>
         }
       </nz-row>
     </nz-card>
     <ng-template #extra>
-      <button nz-button nzType="text" (click)="loadData()">
+      <button nz-button nzType="text" (click)="load()">
         <span nz-icon nzType="reload" [nzSpin]="loading"></span>
         刷新
       </button>

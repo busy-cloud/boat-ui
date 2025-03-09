@@ -53,7 +53,7 @@ export class AmapComponent {
   @Input() content!: PageContent
   @Input() params: Params = {}
 
-  @ViewChild("mapContainer", {static: true}) mapContainer!: ElementRef;
+  @ViewChild("mapContainer", {static: false}) mapContainer!: ElementRef;
 
   map: any //AMap.Map;
   data: any[] = []
@@ -117,6 +117,15 @@ export class AmapComponent {
         console.error(e)
       }
     }
+
+    //setTimeout(()=>this.loadMap(), 1500)
+    setTimeout(()=>this.loadMap(), 50)
+  }
+
+  loadMap() {
+    console.log("[amap] load map", this.page)
+    let content = this.content as AmapContent;
+    if (!content) return
 
     //@ts-ignore
     window._AMapSecurityConfig = {

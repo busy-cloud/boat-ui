@@ -10,9 +10,9 @@ import {Title} from '@angular/platform-browser';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 import {SmartField} from '../../lib/smart-editor/smart-editor.component';
 import {NzColDirective, NzRowDirective} from 'ng-zorro-antd/grid';
-import {MarkdownContent} from '../../template/markdown/markdown.component';
+import {MarkdownComponent, MarkdownContent} from '../../template/markdown/markdown.component';
 import {NZ_MODAL_DATA} from 'ng-zorro-antd/modal';
-import {AmapContent} from '../../template/amap/amap.component';
+import {AmapComponent, AmapContent} from '../../template/amap/amap.component';
 
 export type PageContent = Content & (
   TableContent |
@@ -43,6 +43,8 @@ export interface Content {
     NzSpinComponent,
     NzRowDirective,
     NzColDirective,
+    AmapComponent,
+    MarkdownComponent,
   ],
   templateUrl: './page.component.html',
   standalone: true,

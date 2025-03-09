@@ -12,6 +12,12 @@
     @case ("chart") {
       <app-chart [app]="app" [page]="page" [content]="content" [params]="params"></app-chart>
     }
+    @case ("amap") {
+      <app-amap [app]="app" [page]="page" [content]="content" [params]="params"></app-amap>
+    }
+    @case ("markdown") {
+      <app-markdown [app]="app" [page]="page" [content]="content" [params]="params"></app-markdown>
+    }
     @default {
       未知类型模板
     }

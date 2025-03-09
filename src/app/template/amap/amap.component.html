@@ -1,5 +1,5 @@
 @if (content) {
-  @if (content.template == 'form') {
+  @if (content.template == 'amap') {
     <nz-card [nzTitle]="content.title" [nzExtra]="extra">
       <smart-toolbar *ngIf="content.toolbar" [fields]="content.toolbar" (action)="execute($event)"></smart-toolbar>
       <div class="mapContainer" #mapContainer></div>
@@ -11,7 +11,7 @@
       </button>
     </ng-template>
   } @else {
-    模板类型应该是form
+    模板类型应该是amap
   }
 } @else {
   <nz-spin nzSimple></nz-spin>

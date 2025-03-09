@@ -10,29 +10,38 @@ export type PageContent = Content & (
   InfoContent |
   ChartContent |
   MarkdownContent |
+  StatisticContent |
   AmapContent)
 
 export interface Content {
-  page?: string //暂时无用
+  //子页面
+  app?: string
+  page?: string
 
   title?: string
 
-  data?: any //初始化数据
-  data_api?: string //数据接口
+  //初始化数据
+  data?: any
+  //数据接口
+  data_api?: string
 
   //作为子页面时的参数（无用）
   params?: any
-  params_func?: string | ((data: any) => any)
+  params_func?: string | Function | ((data: any) => any)
 
-  toolbar?: SmartField[] //工具栏
+//工具栏
+  toolbar?: SmartField[]
+//占用宽度 总数24
+  span: string | number | null
+  //高度
+  height?: number | string
 
-  span: string | number | null //占用宽度 总数24
-  height?: number | string //高度
-
-  //挂载 与 卸载
+  //挂载
   mount?: string | Function | (() => void)
+  //卸载
   unmount?: string | Function | (() => void)
 
+  //子页面
   children?: PageContent[]
 }
 
@@ -84,4 +93,17 @@ export interface TableContent {
 
   search_api?: string
   search?: string | Function | ((event: ParamSearch, request: SmartRequestService) => Promise<any>)
+}
+
+
+export interface StatisticContent {
+  template: 'statistic'
+  items: Statistic[]
+}
+
+export interface Statistic {
+  key: string
+  label: string
+  span?: number
+  format?: string
 }

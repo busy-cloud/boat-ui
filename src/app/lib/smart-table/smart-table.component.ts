@@ -8,26 +8,13 @@ import {FormsModule} from '@angular/forms';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 import {NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
 import {SmartRequestService} from '../smart-request.service';
-
-export function ReplaceLinkParams(link: string, data: any): string {
-  if (!data) return link //无参数，直接返回
-
-  //link.matchAll(/:\w+/g)
-  let match = link.match(/\:\w+/g)
-  if (match != null) {
-    match.forEach(m => {
-      const k = m.substring(1)
-      link = link.replaceAll(m, data[k])
-    })
-  }
-  return link
-}
+import {LinkReplaceParams} from '../utils';
 
 export function GetActionLink(action: SmartAction, data: any) {
   if (!action.link) return ""
 
   // 先进行正则替换
-  let link = ReplaceLinkParams(action.link, data)
+  let link = LinkReplaceParams(action.link, data)
 
   // 计算函数
   if (typeof action.link_func == "string" && action.link_func.length > 0) {

@@ -1,6 +1,4 @@
 import {Component} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {SmartRequestService} from '../../lib/smart-request.service';
 
 //echarts 相关引入
 import * as echarts from 'echarts/core';
@@ -18,14 +16,12 @@ import {
 import {LabelLayout, UniversalTransition} from 'echarts/features';
 import {CanvasRenderer} from 'echarts/renderers';
 import {NgxEchartsDirective, provideEchartsCore} from 'ngx-echarts';
-import {Title} from '@angular/platform-browser';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzCardComponent} from 'ng-zorro-antd/card';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {SmartToolbarComponent} from '../../lib/smart-toolbar/smart-toolbar.component';
 import {NgIf} from '@angular/common';
-import {NzModalService} from 'ng-zorro-antd/modal';
 import {TemplateBase} from '../template-base.component';
 import {ChartContent} from '../template';
 
@@ -64,7 +60,7 @@ echarts.use([
   templateUrl: './chart.component.html',
   standalone: true,
   styleUrl: './chart.component.scss',
-  inputs: ['app', 'page', 'content', 'params', 'data']
+  //inputs: ['app', 'page', 'content', 'params', 'data', 'isChild']
 })
 export class ChartComponent extends TemplateBase {
 
@@ -73,11 +69,6 @@ export class ChartComponent extends TemplateBase {
   mergeOption: any = {} //EChartsOption
   chartTheme = 'macarons'
   chartHeight = 400;
-
-
-  constructor(request: SmartRequestService, modal: NzModalService, route: ActivatedRoute, router: Router, title: Title) {
-    super(request, modal, route, router, title)
-  }
 
 
   override build() {

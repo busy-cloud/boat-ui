@@ -1,22 +1,25 @@
 @if (content) {
   @switch (content.template) {
     @case ("table") {
-      <app-table [app]="app" [page]="page" [content]="content" [params]="params"></app-table>
+      <app-table [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-table>
     }
     @case ("info") {
-      <app-info [app]="app" [page]="page" [content]="content" [params]="params"></app-info>
+      <app-info [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-info>
     }
     @case ("form") {
-      <app-form [app]="app" [page]="page" [content]="content" [params]="params"></app-form>
+      <app-form [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-form>
     }
     @case ("chart") {
-      <app-chart [app]="app" [page]="page" [content]="content" [params]="params"></app-chart>
+      <app-chart [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-chart>
     }
     @case ("amap") {
-      <app-amap [app]="app" [page]="page" [content]="content" [params]="params"></app-amap>
+      <app-amap [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-amap>
     }
     @case ("markdown") {
-      <app-markdown [app]="app" [page]="page" [content]="content" [params]="params"></app-markdown>
+      <app-markdown [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-markdown>
+    }
+    @case ("statistic") {
+      <app-statistic [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-statistic>
     }
     @default {
       未知类型模板
@@ -26,7 +29,11 @@
     <div nz-row>
       @for (p of content.children; track p) {
         <div nz-col [nzSpan]="p.span" [nzMd]="p.span" nzXs="24" nzSm="24">
-          <app-page [page]="p.page||''" [content]="p" [params]="childrenParams(p)"></app-page>
+          <app-page [app]="p.app||''"
+                    [page]="p.page||''"
+                    [content]="p"
+                    [params]="p.params || params"
+                    [isChild]="true"></app-page>
         </div>
       }
     </div>

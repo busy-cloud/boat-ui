@@ -1,40 +1,38 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {SmartRequestService} from '../lib/smart-request.service';
 import {NzModalService} from 'ng-zorro-antd/modal';
 import {Title} from '@angular/platform-browser';
-import {GetActionLink, GetActionParams, ReplaceLinkParams, SmartAction} from '../lib/smart-table/smart-table.component';
+import {GetActionLink, GetActionParams, SmartAction} from '../lib/smart-table/smart-table.component';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 import {PageContent} from './template';
 import {PageComponent} from '../page/page.component';
-import {CompareObject} from '../utils';
+import {LinkReplaceParams, ObjectDeepCompare} from '../lib/utils';
 
 @Component({
   selector: 'app-template',
   imports: [],
   template: '',
   standalone: true,
-  inputs: ['app', 'page', 'content', 'params', 'data']
+  inputs: ['app', 'page', 'content', 'params', 'data', 'isChild']
 })
 export class TemplateBase {
-  app!: string
-  page!: string;
+  request = inject(SmartRequestService)
+  modal = inject(NzModalService)
+  route = inject(ActivatedRoute)
+  router = inject(Router)
+  title = inject(Title)
+
+  app: string = this.route.snapshot.params['app']
+  page: string = this.route.snapshot.params['page']
+  params: Params =  this.route.snapshot.queryParams
   content!: PageContent
-  params: Params = {}
+  isChild = false
+
   data: any = []
 
   loading = false
 
-  protected constructor(protected request: SmartRequestService,
-                        protected modal: NzModalService,
-                        protected route: ActivatedRoute,
-                        protected router: Router,
-                        protected title: Title) {
-    //默认从路由中取
-    this.app = route.snapshot.params['app']
-    this.page = route.snapshot.params['page']
-    this.params = route.snapshot.queryParams;
-  }
 
   ngAfterViewInit() {
     this.init()
@@ -79,7 +77,7 @@ export class TemplateBase {
         this.load() //重新加载
       })
       this.route.queryParams.subscribe(params => {
-        if (CompareObject(params, this.params)) return
+        if (ObjectDeepCompare(params, this.params)) return
         this.params = params;
         this.loadData() //重新加载
       })
@@ -121,7 +119,7 @@ export class TemplateBase {
     //通过api加载数据
     if (this.content.data_api) {
       this.loading = true
-      let url = ReplaceLinkParams(this.content.data_api, this.params);
+      let url = LinkReplaceParams(this.content.data_api, this.params);
       this.request.get(url).subscribe(res => {
         if (res.error) return
         //this.data = res.data

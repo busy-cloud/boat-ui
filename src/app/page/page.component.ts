@@ -13,6 +13,7 @@ import {isFunction} from 'rxjs/internal/util/isFunction';
 import {NzColDirective, NzRowDirective} from 'ng-zorro-antd/grid';
 import {NZ_MODAL_DATA} from 'ng-zorro-antd/modal';
 import {PageContent} from '../template/template';
+import {StatisticComponent} from '../template/statistic/statistic.component';
 
 @Component({
   selector: 'app-page',
@@ -26,33 +27,34 @@ import {PageContent} from '../template/template';
     NzColDirective,
     AmapComponent,
     MarkdownComponent,
+    StatisticComponent,
   ],
   templateUrl: './page.component.html',
   standalone: true,
   styleUrl: './page.component.scss',
 })
 export class PageComponent {
-
   @Input() app!: string
   @Input() page!: string
   @Input() content!: PageContent
   @Input() params!: Params
+  @Input() isChild = false
 
-  nzModalData: any
+  nzModalData: any = inject(NZ_MODAL_DATA, {optional: true});
 
   constructor(protected request: SmartRequestService,
               protected route: ActivatedRoute,
               protected title: Title,
+              //@Optional() protected nzModalData: NZ_MODAL_DATA
   ) {
     //优先使用弹窗参数
-    this.nzModalData = inject(NZ_MODAL_DATA, {optional: true});
     if (this.nzModalData) {
       this.app = this.nzModalData.app;
       this.page = this.nzModalData.page;
       this.params = this.nzModalData.params;
     } else {
-      this.app = this.route.snapshot.params['app'];
-      this.page = this.route.snapshot.params['page'];
+      this.app = route.snapshot.params['app'];
+      this.page = route.snapshot.params['page'];
       this.params = route.snapshot.queryParams;
     }
   }
@@ -107,14 +109,10 @@ export class PageComponent {
           console.error(e)
         }
       }
+      if (isFunction(c.params_func)) {
+        c.params = c.params_func(this.params)
+      }
     })
-  }
-
-  childrenParams(child: PageContent): any {
-    if (isFunction(child.params_func)) {
-      return child.params_func(this.params)
-    }
-    return child.params
   }
 
 }

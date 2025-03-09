@@ -1,6 +1,4 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {SmartRequestService} from '../../lib/smart-request.service';
 import {load as loadMap} from '@amap/amap-jsapi-loader';
 import {NgIf} from '@angular/common';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
@@ -8,8 +6,6 @@ import {NzCardComponent} from 'ng-zorro-antd/card';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
 import {SmartToolbarComponent} from '../../lib/smart-toolbar/smart-toolbar.component';
-import {NzModalService} from 'ng-zorro-antd/modal';
-import {Title} from '@angular/platform-browser';
 import {TemplateBase} from '../template-base.component';
 import {AmapContent} from '../template';
 
@@ -26,7 +22,7 @@ import {AmapContent} from '../template';
   ],
   templateUrl: './amap.component.html',
   styleUrl: './amap.component.scss',
-  inputs: ['app', 'page', 'content', 'params', 'data']
+  //inputs: ['app', 'page', 'content', 'params', 'data', 'isChild']
 })
 export class AmapComponent extends TemplateBase {
 
@@ -35,10 +31,6 @@ export class AmapComponent extends TemplateBase {
   map: any //AMap.Map;
   mapHeight = "200px"
 
-
-  constructor(request: SmartRequestService, modal: NzModalService, route: ActivatedRoute, router: Router, title: Title) {
-    super(request, modal, route, router, title)
-  }
 
   override build() {
     console.log("[amap] build", this.page)

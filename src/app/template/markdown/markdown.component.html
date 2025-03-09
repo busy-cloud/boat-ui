@@ -1,7 +1,7 @@
 @if (content) {
   @if (content.template == 'info') {
     <nz-card [nzTitle]="content.title">
-      <markdown [src]="src"></markdown>
+      <markdown [data]="data"></markdown>
     </nz-card>
   } @else {
     模板类型应该是markdown

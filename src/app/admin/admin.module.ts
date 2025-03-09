@@ -10,4 +10,5 @@ import {routes} from "./admin.routes";
     RouterModule.forChild(routes),
   ]
 })
-export class AdminModule { }
+export class AdminModule {
+}

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
-import {SmartInfoComponent, SmartInfoItem} from '../../lib/smart-info/smart-info.component';
+import {SmartInfoComponent} from '../../lib/smart-info/smart-info.component';
 import {SmartRequestService} from '../../lib/smart-request.service';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {NzCardComponent} from 'ng-zorro-antd/card';
 import {Title} from '@angular/platform-browser';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
@@ -29,23 +29,10 @@ import {TemplateBase} from '../template-base.component';
   styleUrl: './info.component.scss',
   inputs: ['app', 'page', 'content', 'params', 'data']
 })
-export class InfoComponent extends TemplateBase{
+export class InfoComponent extends TemplateBase {
 
   constructor(request: SmartRequestService, modal: NzModalService, route: ActivatedRoute, router: Router, title: Title) {
     super(request, modal, route, router, title)
-  }
-
-  override build() {
-    console.log("[info] build", this.page)
-    if (!this.content || this.content.template !== "info" )return
-    if (typeof this.content.load_func == "string") {
-      try {
-        //@ts-ignore
-        this.content.load_func = new Function('params', 'request', this.content.load_func as string)
-      } catch (e) {
-        console.error(e)
-      }
-    }
   }
 
 }

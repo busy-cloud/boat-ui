@@ -1,10 +1,8 @@
 import {SmartField} from '../lib/smart-editor/smart-editor.component';
 import {EChartsOption} from 'echarts';
-import {Params} from '@angular/router';
 import {SmartRequestService} from '../lib/smart-request.service';
 import {SmartInfoItem} from '../lib/smart-info/smart-info.component';
 import {ParamSearch, SmartTableColumn, SmartTableOperator} from '../lib/smart-table/smart-table.component';
-
 
 export type PageContent = Content & (
   TableContent |
@@ -31,8 +29,9 @@ export interface Content {
   span: string | number | null //占用宽度 总数24
   height?: number | string //高度
 
-  mount?: string | (() => void)
-  unmount?: string | (() => void)
+  //挂载 与 卸载
+  mount?: string | Function | (() => void)
+  unmount?: string | Function | (() => void)
 
   children?: PageContent[]
 }
@@ -64,30 +63,25 @@ export interface FormContent {
   template: 'form'
   fields: SmartField[]
 
-  load_url?: string
-  load_func?: string | Function | ((params: Params, request: SmartRequestService) => Promise<any>)
-  submit_url?: string
-  submit_func?: string | Function | ((data: any, request: SmartRequestService) => Promise<any>)
+  submit_api?: string
+  submit?: string | Function | ((data: any, request: SmartRequestService) => Promise<any>)
 }
 
 export interface InfoContent {
   template: 'info'
   items: SmartInfoItem[]
-
-  load_url?: string
-  load_func?: string | Function | ((params: Params, request: SmartRequestService) => Promise<any>)
 }
 
 export interface MarkdownContent {
   template: 'markdown'
   src?: string
-  src_func?: string | Function | ((params: Params, request: SmartRequestService) => Promise<any>)
 }
 
 export interface TableContent {
   template: 'table'
   columns: SmartTableColumn[]
   operators: SmartTableOperator[]
-  search_url?: string
-  search_func?: string | Function | ((event: ParamSearch, request: SmartRequestService) => Promise<any>)
+
+  search_api?: string
+  search?: string | Function | ((event: ParamSearch, request: SmartRequestService) => Promise<any>)
 }

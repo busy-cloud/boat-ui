@@ -8,8 +8,8 @@
         [datum]="data"
         [total]="total"
         [loading]="loading"
-        (query)="onQuery($event)"
-        (action)="executeTable($event)"
+        (query)="search($event)"
+        (action)="execute($event.action, $event.data, $event.index)"
       ></smart-table>
     </nz-card>
     <ng-template #extra>

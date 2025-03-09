@@ -18,7 +18,6 @@ import {
 import {LabelLayout, UniversalTransition} from 'echarts/features';
 import {CanvasRenderer} from 'echarts/renderers';
 import {NgxEchartsDirective, provideEchartsCore} from 'ngx-echarts';
-import {EChartsOption} from 'echarts';
 import {Title} from '@angular/platform-browser';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzCardComponent} from 'ng-zorro-antd/card';
@@ -48,7 +47,6 @@ echarts.use([
 ]);
 
 
-
 @Component({
   selector: 'app-chart',
   imports: [
@@ -68,7 +66,7 @@ echarts.use([
   styleUrl: './chart.component.scss',
   inputs: ['app', 'page', 'content', 'params', 'data']
 })
-export class ChartComponent extends TemplateBase{
+export class ChartComponent extends TemplateBase {
 
   //参数 EChartsOption
   chartOption: any = {}
@@ -84,14 +82,6 @@ export class ChartComponent extends TemplateBase{
 
   override build() {
     console.log("[chart] build", this.page, this.content)
-    // if (typeof this.content.load_func == "string") {
-    //   try {
-    //     //@ts-ignore
-    //     this.content.load_func = new Function('params', 'request', this.content.load_func as string)
-    //   } catch (e) {
-    //     console.error(e)
-    //   }
-    // }
 
     let content = this.content as ChartContent;
     if (!content) return
@@ -143,40 +133,14 @@ export class ChartComponent extends TemplateBase{
     this.chartHeight = content.height || 400
   }
 
-  // loadData() {
-  //   console.log("[chart] load data", this.page)
-  //   if (!this.content || this.content.template != "chart") return
-  //
-  //   //删除测试代码
-  //   //this.update(undefined)
-  //
-  //   if (isFunction(this.content.load_func)) {
-  //     this.loading = true
-  //     this.content.load_func(this.params, this.request).then((res: any) => {
-  //       //this.data = res;
-  //       this.update(res)
-  //     }).finally(() => {
-  //       this.loading = false
-  //
-  //     })
-  //   } else if (this.content.load_url) {
-  //     this.loading = true
-  //     let url = ReplaceLinkParams(this.content.load_url, this.params);
-  //     this.request.get(url).subscribe(res => {
-  //       if (res.error) return
-  //       //this.data = res.data
-  //       this.update(res.data)
-  //     }).add(() => {
-  //       this.loading = false
-  //     })
-  //   }
-  // }
+  override render(data: any) {
+    console.log('[chart] render', data)
+    const content = this.content as ChartContent;
+    if (!content) return
 
-  update(data: any) {
-    if (!this.content || this.content.template != 'chart') return
     let merge: any = {}
 
-    switch (this.content.type) {
+    switch (content.type) {
       case "pie":
         // 第一列为x轴，第一行为分组
         // data = [
@@ -207,8 +171,7 @@ export class ChartComponent extends TemplateBase{
         //series 不能merge
         if (this.chartOption.series?.length != data[0].length - 1) {
           this.chartOption.series = data[0].map((item: any) => {
-            //@ts-ignore
-            return {type: this.content.type}
+            return {type: content.type}
           })
           this.chartOption.series.pop()
         }

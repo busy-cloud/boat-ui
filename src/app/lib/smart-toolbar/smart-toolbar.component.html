@@ -18,7 +18,7 @@
         <nz-dropdown-menu #menu="nzDropdownMenu">
           <ul nz-menu>
             @for (item of field.dropdown; track item) {
-            <li nz-menu-item (click)="action.emit(item.action)">{{item.label}}</li>
+              <li nz-menu-item (click)="action.emit(item.action)">{{ item.label }}</li>
             }
           </ul>
         </nz-dropdown-menu>

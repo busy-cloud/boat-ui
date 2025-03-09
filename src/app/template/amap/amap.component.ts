@@ -40,7 +40,6 @@ export class AmapComponent extends TemplateBase {
     super(request, modal, route, router, title)
   }
 
-
   override build() {
     console.log("[amap] build", this.page)
     let content = this.content as AmapContent;

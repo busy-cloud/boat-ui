@@ -20,8 +20,8 @@ import {SmartEditorComponent, SmartField} from '../lib/smart-editor/smart-editor
 export class LoginComponent {
 
   fields: SmartField[] = [
-    {key: 'username', type:'text', label: '用户名', required: true},
-    {key: 'password', type:'password', label: '密码', required: true},
+    {key: 'username', type: 'text', label: '用户名', required: true},
+    {key: 'password', type: 'password', label: '密码', required: true},
   ]
 
   @ViewChild("editor", {static: true}) editor!: SmartEditorComponent;
@@ -30,12 +30,12 @@ export class LoginComponent {
               private ns: NzNotificationService,
               private request: SmartRequestService,
               private us: UserService,
-              ) {
+  ) {
   }
 
   submit() {
 
-    if (!this.editor.valid){
+    if (!this.editor.valid) {
       this.ns.error("错误", "无效账号密码")
       return
     }

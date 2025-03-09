@@ -1,4 +1,3 @@
-
 export function CompareObject(obj1: any, obj2: any): any {
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);

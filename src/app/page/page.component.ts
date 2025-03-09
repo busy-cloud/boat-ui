@@ -1,37 +1,18 @@
 import {Component, inject, Input} from '@angular/core';
-import {SmartRequestService} from '../../lib/smart-request.service';
+import {SmartRequestService} from '../lib/smart-request.service';
 import {ActivatedRoute, Params} from '@angular/router';
-import {TableComponent, TableContent} from '../../template/table/table.component';
-import {InfoComponent, InfoContent} from '../../template/info/info.component';
-import {FormComponent, FormContent} from '../../template/form/form.component';
-import {ChartComponent, ChartContent} from '../../template/chart/chart.component';
+import {TableComponent} from '../template/table/table.component';
+import {InfoComponent} from '../template/info/info.component';
+import {FormComponent} from '../template/form/form.component';
+import {ChartComponent} from '../template/chart/chart.component';
+import {AmapComponent} from '../template/amap/amap.component';
+import {MarkdownComponent} from '../template/markdown/markdown.component';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
 import {Title} from '@angular/platform-browser';
 import {isFunction} from 'rxjs/internal/util/isFunction';
-import {SmartField} from '../../lib/smart-editor/smart-editor.component';
 import {NzColDirective, NzRowDirective} from 'ng-zorro-antd/grid';
-import {MarkdownComponent, MarkdownContent} from '../../template/markdown/markdown.component';
 import {NZ_MODAL_DATA} from 'ng-zorro-antd/modal';
-import {AmapComponent, AmapContent} from '../../template/amap/amap.component';
-
-export type PageContent = Content & (
-  TableContent |
-  FormContent |
-  InfoContent |
-  ChartContent |
-  MarkdownContent |
-  AmapContent)
-
-export interface Content {
-  id: string
-  title: string
-  params?: any
-  params_func?: string | ((data: any) => any)
-  toolbar?: SmartField[]
-  span: string | number | null //占用宽度 总数24
-
-  children?: PageContent[]
-}
+import {PageContent} from '../template/template';
 
 @Component({
   selector: 'app-page',

@@ -2,10 +2,10 @@
   @if (content.template == 'amap') {
     <nz-card [nzTitle]="content.title" [nzExtra]="extra">
       <smart-toolbar *ngIf="content.toolbar" [fields]="content.toolbar" (action)="execute($event)"></smart-toolbar>
-      <div class="mapContainer" #mapContainer></div>
+      <div class="mapContainer" #mapContainer [style.height]="mapHeight"></div>
     </nz-card>
     <ng-template #extra>
-      <button nz-button nzType="link" (click)="loadData()">
+      <button nz-button nzType="text" (click)="loadData()">
         <span nz-icon nzType="reload" [nzSpin]="loading"></span>
         刷新
       </button>

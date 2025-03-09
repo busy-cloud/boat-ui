@@ -1,7 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
-import {SmartRequestService} from '../../lib/smart-request.service';
+import {SmartRequestService} from '../lib/smart-request.service';
 import {ActivatedRoute} from '@angular/router';
-import {SmartEditorComponent} from '../../lib/smart-editor/smart-editor.component';
+import {SmartEditorComponent} from '../lib/smart-editor/smart-editor.component';
 import {NzCardComponent} from 'ng-zorro-antd/card';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzNotificationService} from 'ng-zorro-antd/notification';

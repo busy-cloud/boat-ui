@@ -1,8 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {NzSpaceComponent, NzSpaceItemDirective} from "ng-zorro-antd/space";
-import {NzButtonComponent} from "ng-zorro-antd/button";
 import {NzIconDirective} from "ng-zorro-antd/icon";
-import {NzInputDirective, NzInputGroupComponent} from "ng-zorro-antd/input";
 import {Router} from "@angular/router";
 import {NzTableFilterList, NzTableModule, NzTableQueryParams} from "ng-zorro-antd/table";
 import {CommonModule} from "@angular/common";
@@ -10,7 +7,6 @@ import {NzPopconfirmDirective} from "ng-zorro-antd/popconfirm";
 import {FormsModule} from '@angular/forms';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 import {NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
-import {PageComponent} from '../../pages/page/page.component';
 import {SmartRequestService} from '../smart-request.service';
 
 export function ReplaceLinkParams(link: string, data: any): string {
@@ -70,6 +66,7 @@ export interface SmartAction {
   params?: any
   params_func?: string | Function | ((data: any) => any)
   script?: string | Function | ((data: any) => string)
+  app?: string
   page?: string
   dialog?: boolean
   external?: boolean

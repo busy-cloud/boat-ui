@@ -3,21 +3,29 @@ import {LoginComponent} from './login/login.component';
 import {UserService} from './user.service';
 import {inject} from '@angular/core';
 import {UnknownComponent} from './lib/unknown/unknown.component';
-import {PageComponent} from './pages/page/page.component';
-import {TableComponent} from './template/table/table.component';
-import {FormComponent} from './template/form/form.component';
-import {InfoComponent} from './template/info/info.component';
-import {ChartComponent} from './template/chart/chart.component';
+import {DashComponent} from './dash/dash.component';
+import {PageComponent} from './page/page.component';
+import {SettingComponent} from './setting/setting.component';
+import {AdminComponent} from './admin/admin.component';
 
 export const routes: Routes = [
   {path: '', pathMatch: 'full', redirectTo: '/admin'},
   {path: 'login', component: LoginComponent},
-  //{path: 'app/:app/page/:page', component: PageComponent},
   {
     path: 'admin',
-    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
-    canActivate: [loginGuard]
+    canActivate: [loginGuard],
+    component: AdminComponent,
+    children: [
+      {path: '', pathMatch: 'full', redirectTo: 'dash'},
+      {path: 'dash', component: DashComponent},
+      {path: 'page/:page', component: PageComponent},
+      {path: 'setting/:module', component: SettingComponent},
+      {path: '**', component: UnknownComponent},
+    ],
+    //子模块
+    //loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
   },
+  //{path: 'app/:app/page/:page', component: PageComponent},
   {path: '**', component: UnknownComponent},
 ];
 

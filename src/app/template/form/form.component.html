@@ -5,7 +5,7 @@
       <smart-editor #editor [fields]="content.fields" [values]="data"></smart-editor>
     </nz-card>
     <ng-template #extra>
-      <button nz-button nzType="link" nzType="primary" (click)="submit()">
+      <button nz-button nzType="text" nzType="primary" (click)="submit()">
         <span nz-icon nzType="save" [nzSpin]="submitting"></span>
         提交
       </button>

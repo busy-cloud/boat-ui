@@ -2,11 +2,9 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {NzDescriptionsModule} from "ng-zorro-antd/descriptions";
 import {NzProgressComponent} from "ng-zorro-antd/progress";
-import {Router} from "@angular/router";
 import {NzTagComponent} from "ng-zorro-antd/tag";
 import {SmartAction} from '../smart-table/smart-table.component';
-import {SmartRequestService} from '../smart-request.service';
-import {NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
+import {NzModalModule} from 'ng-zorro-antd/modal';
 
 
 export interface SmartInfoItem {

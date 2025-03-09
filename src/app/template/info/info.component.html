@@ -5,7 +5,7 @@
       <smart-info [fields]="content.items || []" [value]="data" (action)="execute($event)"></smart-info>
     </nz-card>
     <ng-template #extra>
-      <button nz-button (click)="loadData()">
+      <button nz-button nzType="link" (click)="loadData()">
         <span nz-icon nzType="reload" [nzSpin]="loading"></span>
         刷新
       </button>

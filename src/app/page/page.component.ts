@@ -14,6 +14,7 @@ import {NzColDirective, NzRowDirective} from 'ng-zorro-antd/grid';
 import {NZ_MODAL_DATA} from 'ng-zorro-antd/modal';
 import {PageContent} from '../template/template';
 import {StatisticComponent} from '../template/statistic/statistic.component';
+import {ObjectDeepCompare} from '../lib/utils';
 
 @Component({
   selector: 'app-page',
@@ -74,6 +75,7 @@ export class PageComponent {
           this.loadPage()
         })
         this.route.queryParams.subscribe(params => {
+          if (ObjectDeepCompare(params, this.params)) return
           this.params = params;
           //this.load()
         })

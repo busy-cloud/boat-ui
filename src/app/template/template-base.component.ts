@@ -117,7 +117,9 @@ export class TemplateBase {
   }
 
   render(data: any) {
-    this.data = data
+    setTimeout(()=>{
+      this.data = data
+    })
   }
 
   load() {

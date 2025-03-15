@@ -31,6 +31,8 @@ export class AmapComponent extends TemplateBase {
   map: any //AMap.Map;
   mapHeight = "200px"
 
+  AMap!: any //class
+
 
   override build() {
     console.log("[amap] build", this.page)
@@ -65,7 +67,7 @@ export class AmapComponent extends TemplateBase {
     loadMap({
       key: content.key || 'eb6a831c04b6dfedda190d6254febb58',
       version: '2.0',
-      plugins: ['AMap.Icon', 'AMap.Marker'],
+      plugins: ['AMap.Icon', 'AMap.Marker', 'AMap.MarkerCluster', 'AMap.MoveAnimation'],
       AMapUI: {
         version: '1.1',
         plugins: [],
@@ -85,6 +87,11 @@ export class AmapComponent extends TemplateBase {
       // this.geocoder = new AMap.Geocoder({ city: '' });
       // this.marker = new AMap.Marker();
 
+      // this.icon = new AMap.Icon({
+      //   image: "https://a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png",
+      //   imageSize: new AMap.Size(25, 30), // 图片大小
+      // });
+
       if (content.city)
         this.map.setCity(content.city)
 
@@ -92,5 +99,47 @@ export class AmapComponent extends TemplateBase {
     }).catch((e) => {
       console.log(e);
     });
+  }
+
+
+  override render(data: any) {
+    console.log('[amap] render', data)
+    let content = this.content as AmapContent;
+    if (!content) return
+
+    switch (content.type) {
+      case "line":
+        let path = data?.map((item: any) => item.position || [item.longitude, item.latitude])
+        let polyline = new this.AMap.Polyline({path: path})
+        this.map.add(polyline);
+        break
+      case "point":
+        let markers = data?.map(item => {
+          let marker = new this.AMap.Marker({
+            position: item.position || [item.longitude, item.latitude],
+            title: item.name || item.id,
+          })
+          //响应点击事件
+          marker.on("click", console.log)
+          return marker
+        })
+
+        this.map.add(markers);
+        break
+      case "cluster":
+        // let points = data?.map((item: any) => {
+        //
+        // })
+        // new this.AMap.MarkerCluster(map, points, {
+        //   gridSize: 80 // 聚合网格像素大小
+        // });
+        break
+      case "animation":
+        //绘制历史轨迹
+        
+        break
+    }
+
+    this.map.setFitView();
   }
 }

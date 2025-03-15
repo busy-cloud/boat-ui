@@ -48,6 +48,7 @@ export interface Content {
 export interface AmapContent {
   template: 'amap'
 
+  type: 'line'|'point'|'cluster'|'animation'
   key?: string
   secret?: string
   style?: string

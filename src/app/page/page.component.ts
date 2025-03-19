@@ -32,7 +32,6 @@ import {NzResultComponent} from 'ng-zorro-antd/result';
     AmapComponent,
     MarkdownComponent,
     StatisticComponent,
-    UnknownComponent,
     NzButtonComponent,
     NzResultComponent,
     RouterLink,

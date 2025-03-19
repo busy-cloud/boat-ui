@@ -16,7 +16,7 @@
       </nz-row>
     </nz-card>
     <ng-template #extra>
-      <button nz-button nzType="text" (click)="load()">
+      <button nz-button nzType="link" (click)="load()" class="load">
         <span nz-icon nzType="reload" [nzSpin]="loading"></span>
         刷新
       </button>

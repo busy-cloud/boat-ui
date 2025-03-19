@@ -29,8 +29,6 @@ import {ThemeService} from '../theme.service';
     NzSubMenuComponent,
     RouterLink,
     RouterOutlet,
-    NgForOf,
-    NzColorPickerComponent,
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'

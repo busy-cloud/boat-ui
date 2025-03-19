@@ -6,6 +6,9 @@ import {NzMenuDirective, NzMenuDividerDirective, NzMenuItemComponent, NzSubMenuC
 import {RouterLink, RouterOutlet} from '@angular/router';
 import {UserService} from '../user.service';
 import {SmartRequestService} from '../lib/smart-request.service';
+import {NzConfigService} from 'ng-zorro-antd/core/config';
+import {NzColor, NzColorPickerComponent} from 'ng-zorro-antd/color-picker';
+import {NgForOf} from '@angular/common';
 
 @Component({
   selector: 'app-admin',
@@ -24,6 +27,8 @@ import {SmartRequestService} from '../lib/smart-request.service';
     NzSubMenuComponent,
     RouterLink,
     RouterOutlet,
+    NgForOf,
+    NzColorPickerComponent,
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
@@ -36,13 +41,37 @@ export class AdminComponent {
     company: '南京本易物联网有限公司',
   }
 
+  colors = [
+    {value:'#188ffe',name:'商务蓝'},
+    {value:'#712ed0',name:'高贵紫'},
+    {value:'#13c0c1',name:'蓝绿色'},
+    {value:'#51c21b',name:'清新绿'},
+    {value:'#e92f96',name:'洋红色'},
+    {value:'#f3222e',name:'红色'},
+    {value:'#f88b17',name:'橙色'},
+    {value:'#f8d915',name:'黄色'},
+    {value:'#f8531d',name:'绯红色'},
+    {value:'#2f53ea',name:'极客蓝'},
+    {value:'#9fd712',name:'绿黄色'},
+    {value:'#f8ac15',name:'土豪金'},
+  ];
+
   menus: any[] = []
   settings: any[] = []
+  primaryColor: any
 
-  constructor(protected us: UserService, private request: SmartRequestService) {
+  constructor(protected us: UserService,
+              private request: SmartRequestService,
+              private nzConfigService: NzConfigService
+  ) {
     this.loadOem()
     this.loadMenu()
     this.loadSetting()
+
+    //主题色
+    this.primaryColor = localStorage.getItem("primaryColor")
+    if (this.primaryColor)
+      this.nzConfigService.set('theme', {primaryColor: this.primaryColor})
   }
 
   loadOem() {
@@ -64,5 +93,12 @@ export class AdminComponent {
       if (res.error) return
       this.settings = res.data
     })
+  }
+
+  onChangePrimaryColor(color: any) {
+    //主题色
+    this.primaryColor = color
+    localStorage.setItem("primaryColor", this.primaryColor)
+    this.nzConfigService.set('theme', {primaryColor: this.primaryColor})
   }
 }

@@ -114,7 +114,7 @@ export class AmapComponent extends TemplateBase {
         this.map.add(polyline);
         break
       case "point":
-        let markers = data?.map(item => {
+        let markers = data?.map((item: any) => {
           let marker = new this.AMap.Marker({
             position: item.position || [item.longitude, item.latitude],
             title: item.name || item.id,
@@ -136,7 +136,7 @@ export class AmapComponent extends TemplateBase {
         break
       case "animation":
         //绘制历史轨迹
-        
+
         break
     }
 

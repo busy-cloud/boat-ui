@@ -9,15 +9,14 @@ import {SettingComponent} from './setting/setting.component';
 import {AdminComponent} from './admin/admin.component';
 
 export const routes: Routes = [
-  {path: '', pathMatch: 'full', redirectTo: '/admin'},
+  //{path: '', pathMatch: 'full', redirectTo: ''},
   {path: 'login', component: LoginComponent},
   {
-    path: 'admin',
+    path: '',
     canActivate: [loginGuard],
     component: AdminComponent,
     children: [
-      {path: '', pathMatch: 'full', redirectTo: 'dash'},
-      {path: 'dash', component: DashComponent},
+      {path: '', pathMatch: 'full', redirectTo: 'page/dash'},
       {path: 'page/:page', component: PageComponent},
       {path: 'setting/:module', component: SettingComponent},
       {path: '**', component: UnknownComponent},

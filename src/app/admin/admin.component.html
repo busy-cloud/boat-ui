@@ -10,13 +10,6 @@
       <h1>{{ oem.name }}</h1>
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzOpen nzTitle="控制台" nzIcon="dashboard">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="dash">首页</a>
-          </li>
-        </ul>
-      </li>
       @for (menu of menus; track menu) {
         <li nz-submenu [nzTitle]="menu.name" [nzIcon]="menu.icon">
           <ul>

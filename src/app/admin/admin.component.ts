@@ -8,7 +8,9 @@ import {UserService} from '../user.service';
 import {SmartRequestService} from '../lib/smart-request.service';
 import {NzConfigService} from 'ng-zorro-antd/core/config';
 import {NzColor, NzColorPickerComponent} from 'ng-zorro-antd/color-picker';
-import {NgForOf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
+import {AppComponent} from '../app.component';
+import {ThemeService} from '../theme.service';
 
 @Component({
   selector: 'app-admin',
@@ -62,7 +64,8 @@ export class AdminComponent {
 
   constructor(protected us: UserService,
               private request: SmartRequestService,
-              private nzConfigService: NzConfigService
+              private nzConfigService: NzConfigService,
+              protected ts: ThemeService,
   ) {
     this.loadOem()
     this.loadMenu()
@@ -100,5 +103,9 @@ export class AdminComponent {
     this.primaryColor = color
     localStorage.setItem("primaryColor", this.primaryColor)
     this.nzConfigService.set('theme', {primaryColor: this.primaryColor})
+  }
+
+  onChangeTheme(theme: string) {
+    this.ts.changeTheme(theme)
   }
 }

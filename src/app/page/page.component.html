@@ -1,4 +1,10 @@
-@if (content) {
+@if (error) {
+  <nz-result nzStatus="404" [nzTitle]="error">
+    <div nz-result-extra class="extra">
+      <a nz-button nzType="primary" routerLink="/">返回首页</a>
+    </div>
+  </nz-result>
+} @else if (content) {
   @switch (content.template) {
     @case ("table") {
       <app-table [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-table>

@@ -1,6 +1,6 @@
 import {Component, inject, Input} from '@angular/core';
 import {SmartRequestService} from '../lib/smart-request.service';
-import {ActivatedRoute, Params} from '@angular/router';
+import {ActivatedRoute, Params, RouterLink} from '@angular/router';
 import {TableComponent} from '../template/table/table.component';
 import {InfoComponent} from '../template/info/info.component';
 import {FormComponent} from '../template/form/form.component';
@@ -15,6 +15,9 @@ import {NZ_MODAL_DATA} from 'ng-zorro-antd/modal';
 import {PageContent} from '../template/template';
 import {StatisticComponent} from '../template/statistic/statistic.component';
 import {ObjectDeepCompare} from '../lib/utils';
+import {UnknownComponent} from '../unknown/unknown.component';
+import {NzButtonComponent} from 'ng-zorro-antd/button';
+import {NzResultComponent} from 'ng-zorro-antd/result';
 
 @Component({
   selector: 'app-page',
@@ -29,6 +32,10 @@ import {ObjectDeepCompare} from '../lib/utils';
     AmapComponent,
     MarkdownComponent,
     StatisticComponent,
+    UnknownComponent,
+    NzButtonComponent,
+    NzResultComponent,
+    RouterLink,
   ],
   templateUrl: './page.component.html',
   standalone: true,
@@ -40,6 +47,8 @@ export class PageComponent {
   @Input() content!: PageContent
   @Input() params!: Params
   @Input() isChild = false
+
+  error = ''
 
   nzModalData: any = inject(NZ_MODAL_DATA, {optional: true});
 
@@ -85,6 +94,7 @@ export class PageComponent {
 
   loadPage() {
     console.log("[page] loadPage", this.app, this.page)
+    this.error = ''
 
     //@ts-ignore
     //this.content = undefined //清空页面
@@ -92,11 +102,17 @@ export class PageComponent {
     let url = "page/" + this.page
     if (this.app) url = url + this.app + "/" + this.page
     this.request.get(url).subscribe((res) => {
-      if (res.error) return
+      if (res.error) {
+        //console.log("load page error", res.error)
+        this.error = res.error
+        return
+      }
       this.content = res
       if (this.content.title)
         this.title.setTitle(this.content.title);
       this.build()
+    }, (error)=>{
+      this.error = error
     })
   }
 

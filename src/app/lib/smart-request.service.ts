@@ -36,7 +36,7 @@ export class SmartRequestService {
       // 捕捉异常，数据转换
       catchError(err => {
         if (err.status === 404) {
-          return of({error: '无效接口 ' + method + ' ' + uri});
+          return of({error: '404 not found: [' + method + '] ' + uri});
         } else if (err.status === 401) {
           // window.location.href = '/login';
           this.route.navigate(['/login']);

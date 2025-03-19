@@ -2,7 +2,7 @@ import {GuardResult, MaybeAsync, Router, Routes, UrlSegment} from '@angular/rout
 import {LoginComponent} from './login/login.component';
 import {UserService} from './user.service';
 import {inject} from '@angular/core';
-import {UnknownComponent} from './lib/unknown/unknown.component';
+import {UnknownComponent} from './unknown/unknown.component';
 import {DashComponent} from './dash/dash.component';
 import {PageComponent} from './page/page.component';
 import {SettingComponent} from './setting/setting.component';

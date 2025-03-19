@@ -7,7 +7,7 @@ import {TableComponent} from '../template/table/table.component';
 import {FormComponent} from '../template/form/form.component';
 import {InfoComponent} from '../template/info/info.component';
 import {ChartComponent} from '../template/chart/chart.component';
-import {UnknownComponent} from '../lib/unknown/unknown.component';
+import {UnknownComponent} from '../unknown/unknown.component';
 
 
 export const routes: Routes = [

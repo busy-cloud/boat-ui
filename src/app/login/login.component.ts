@@ -47,7 +47,7 @@ export class LoginComponent {
         return
       }
       this.us.set(res.data)
-      this.router.navigateByUrl('admin')
+      this.router.navigateByUrl('/')
     })
   }
 }

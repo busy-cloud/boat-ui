@@ -3,7 +3,7 @@ import {NzContentComponent, NzHeaderComponent, NzLayoutComponent, NzSiderCompone
 import {NzDropDownDirective, NzDropdownMenuComponent} from 'ng-zorro-antd/dropdown';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzMenuDirective, NzMenuDividerDirective, NzMenuItemComponent, NzSubMenuComponent} from 'ng-zorro-antd/menu';
-import {RouterLink, RouterOutlet} from '@angular/router';
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {UserService} from '../user.service';
 import {SmartRequestService} from '../lib/smart-request.service';
 import {NzConfigService} from 'ng-zorro-antd/core/config';
@@ -63,6 +63,7 @@ export class AdminComponent {
   constructor(protected us: UserService,
               private request: SmartRequestService,
               private nzConfigService: NzConfigService,
+              private router: Router,
               protected ts: ThemeService,
   ) {
     this.loadOem()
@@ -105,5 +106,11 @@ export class AdminComponent {
 
   onChangeTheme(theme: string) {
     this.ts.changeTheme(theme)
+  }
+
+  logout() {
+    this.request.get("logout").subscribe(res=>{
+      this.router.navigateByUrl("/login")
+    })
   }
 }

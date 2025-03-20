@@ -32,7 +32,7 @@
         }
         @default {
           @if (f.action) {
-            <a (click)="action.emit(f.action)">{{ value[value.key] }}</a>
+            <a (click)="action.emit(f.action)">{{ value[f.key] }}</a>
           } @else {
             {{ value[f.key] }}
           }

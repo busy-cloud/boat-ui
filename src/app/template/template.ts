@@ -84,7 +84,8 @@ export interface FormContent {
   fields: SmartField[]
 
   submit_api?: string
-  submit?: string | Function | ((data: any, request: SmartRequestService) => Promise<any>)
+  submit?: string | Function | ((data: any) => Promise<any>)
+  submit_success?: string | Function | ((data: any) => any)
 }
 
 export interface InfoContent {

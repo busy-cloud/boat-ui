@@ -73,6 +73,7 @@ export class ChartComponent extends TemplateBase {
 
   override build() {
     console.log("[chart] build", this.page, this.content)
+    super.build()
 
     let content = this.content as ChartContent;
     if (!content) return

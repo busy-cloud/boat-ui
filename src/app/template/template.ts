@@ -46,6 +46,9 @@ export interface Content {
   //卸载
   unmount?: string | Function | (() => void)
 
+  //注册成员
+  methods?: { [key: string]: (string | Function | (() => any)) }
+
   //子页面
   children?: PageContent[]
 }

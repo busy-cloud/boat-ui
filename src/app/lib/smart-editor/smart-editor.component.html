@@ -68,7 +68,6 @@
       <nz-tree-select nzShowSearch nzCheckable [formControl]="control"
                       [nzNodes]="field.tree || empty"
                       [nzMultiple]="field.multiple"
-                      (nzTreeCheckBoxChange)="field.change?.($event)"
                       [nzPlaceHolder]="field.placeholder || ''"></nz-tree-select>
     }
     @case ('color') {

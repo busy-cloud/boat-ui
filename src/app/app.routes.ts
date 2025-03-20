@@ -18,6 +18,7 @@ export const routes: Routes = [
     children: [
       {path: '', pathMatch: 'full', redirectTo: 'page/dash'},
       {path: 'page/:page', component: PageComponent},
+      {path: 'page/:app/:page', component: PageComponent},
       {path: 'setting/:module', component: SettingComponent},
       {path: '**', component: UnknownComponent},
     ],

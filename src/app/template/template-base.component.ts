@@ -25,7 +25,7 @@ export class TemplateBase {
 
   app: string = this.route.snapshot.params['app']
   page: string = this.route.snapshot.params['page']
-  params: Params =  this.route.snapshot.queryParams
+  params: Params = this.route.snapshot.queryParams
   content!: PageContent
   isChild = false
 
@@ -46,7 +46,7 @@ export class TemplateBase {
     this.unmount()
   }
 
-  mount(){
+  mount() {
     if (typeof this.content.mount == "string" && this.content.mount.length > 0) {
       try {
         this.content.mount = new Function(this.content.mount)
@@ -59,7 +59,7 @@ export class TemplateBase {
     }
   }
 
-  unmount(){
+  unmount() {
     if (typeof this.content.unmount == "string" && this.content.unmount.length > 0) {
       try {
         this.content.unmount = new Function(this.content.unmount)
@@ -79,14 +79,14 @@ export class TemplateBase {
       this.mount()
       this.load()
     } else {
-      if (this.page) this.loadPage()
+      if (this.page) this.load_page()
       this.route.params.subscribe(params => {
         if (this.app == params['app'] && this.page == params['page']) return
         this.app = params['app'];
         this.page = params['page'];
         //更新页面
         this.unmount()
-        this.loadPage() //重新加载
+        this.load_page() //重新加载
       })
       this.route.queryParams.subscribe(params => {
         if (ObjectDeepCompare(params, this.params)) return
@@ -96,7 +96,7 @@ export class TemplateBase {
     }
   }
 
-  loadPage() {
+  load_page() {
     console.log("[base] loadPage", this.page)
     let url = "page/" + this.page
     if (this.app) url = url + this.app + "/" + this.page
@@ -114,10 +114,30 @@ export class TemplateBase {
   //abstract build(): void
   build() {
     console.log("[base] build")
+
+    //编译成员
+    if (this.content.methods != undefined) {
+      Object.keys(this.content.methods).forEach(method => {
+        let func = this.content.methods?.[method]
+        if (typeof func == "string") {
+          try {
+            let fn = new Function(func)
+            fn.bind(this)
+            //@ts-ignore
+            this[method] = fn
+          } catch (e) {
+            console.error(e)
+          }
+        } else {
+          //@ts-ignore
+          this[method] = func
+        }
+      })
+    }
   }
 
   render(data: any) {
-    setTimeout(()=>{
+    setTimeout(() => {
       this.data = data
     })
   }
@@ -143,6 +163,10 @@ export class TemplateBase {
         this.loading = false
       })
     }
+  }
+
+  navigate(uri: string) {
+    this.router.navigateByUrl(uri).then()
   }
 
 
@@ -180,7 +204,11 @@ export class TemplateBase {
         break
 
       case 'page':
-        this.router.navigate(["page", action.page], {queryParams: params})
+        if (action.app)
+          this.router.navigate(["page", action.app, action.page], {queryParams: params})
+        else
+          this.router.navigate(["page", action.page], {queryParams: params})
+
         //TODO 要支持子页面
 
         break

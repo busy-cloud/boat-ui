@@ -36,6 +36,8 @@ export class AmapComponent extends TemplateBase {
 
   override build() {
     console.log("[amap] build", this.page)
+    super.build()
+
     let content = this.content as AmapContent;
     if (!content) return
 

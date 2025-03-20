@@ -24,6 +24,7 @@ import {Router} from '@angular/router';
 import {NzModalService} from 'ng-zorro-antd/modal';
 import {SmartRequestService} from '../smart-request.service';
 import {NzFlexDirective} from 'ng-zorro-antd/flex';
+import {NzPopconfirmDirective} from 'ng-zorro-antd/popconfirm';
 
 @Component({
   selector: 'smart-toolbar',
@@ -55,6 +56,7 @@ import {NzFlexDirective} from 'ng-zorro-antd/flex';
     NzMenuDirective,
     NzMenuItemComponent,
     NzFlexDirective,
+    NzPopconfirmDirective,
   ],
   templateUrl: './smart-toolbar.component.html',
   styleUrl: './smart-toolbar.component.scss'

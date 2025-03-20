@@ -99,7 +99,8 @@ export class PageComponent {
     //this.content = undefined //清空页面
 
     let url = "page/" + this.page
-    if (this.app) url = url + this.app + "/" + this.page
+    if (this.app)
+      url = "page/" + this.app + "/" + this.page
     this.request.get(url).subscribe((res) => {
       if (res.error) {
         //console.log("load page error", res.error)

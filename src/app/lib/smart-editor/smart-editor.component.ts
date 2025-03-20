@@ -86,6 +86,7 @@ export interface SmartField {
   tree?: SmartTreeOption[] //树形选择
 
   change?: (value: any) => void //监测变化
+  change_action?: SmartAction
 
   time?: boolean //日期控件 显示时间
   time_format?: string
@@ -102,6 +103,7 @@ export interface SmartField {
   icon?: string //按钮类型
   text?: string
   action?: SmartAction //响应
+  confirm?: string //确认提醒
 
   //菜单相关
   dropdown?: {
@@ -229,6 +231,7 @@ export function createControl(f: SmartField, value: any = undefined): FormContro
 })
 export class SmartEditorComponent implements OnInit {
   @Output() change = new EventEmitter<any>();
+  @Output() action = new EventEmitter<SmartAction>();
 
   group: FormGroup = new FormGroup({})
 
@@ -296,6 +299,8 @@ export class SmartEditorComponent implements OnInit {
       //订阅变化
       if (f.change)
         fs[f.key].valueChanges.subscribe((res: any) => f.change?.(res))
+      if (f.change_action)
+        fs[f.key].valueChanges.subscribe((res: any) => this.action.emit(f.change_action))
     })
     return this.fb.group(fs)
   }

@@ -6,6 +6,7 @@ import {NzTagComponent} from "ng-zorro-antd/tag";
 import {SmartAction} from '../smart-table/smart-table.component';
 import {NzModalModule} from 'ng-zorro-antd/modal';
 import {NzBytesPipe} from 'ng-zorro-antd/pipes';
+import {NzSwitchComponent} from 'ng-zorro-antd/switch';
 
 
 export interface SmartInfoItem {

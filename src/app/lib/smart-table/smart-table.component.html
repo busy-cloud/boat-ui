@@ -39,6 +39,9 @@
         @case ("bytes") {
           {{ data[item.key] | nzBytes }}
         }
+        @case ("bool") {
+          {{ data[item.key] ? '是' : '否' }}
+        }
         @case ("boolean") {
           {{ data[item.key] ? '是' : '否' }}
         }
@@ -47,6 +50,12 @@
         }
         @case ('tags') {
           <nz-tag *ngFor="let t of data[item.key]">{{ t }}</nz-tag>
+        }
+        @case ("json") {
+          {{ data[item.key] | json }}
+        }
+        @case ("object") {
+          {{ data[item.key] | json }}
         }
         @default {
           @if (item.action) {

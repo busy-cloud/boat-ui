@@ -11,6 +11,7 @@ import {NzModalRef} from 'ng-zorro-antd/modal';
 import {TemplateBase} from '../template-base.component';
 import {FormContent} from '../template';
 import {LinkReplaceParams} from '../../lib/utils';
+import {SmartInfoComponent} from '../../lib/smart-info/smart-info.component';
 
 
 @Component({
@@ -32,7 +33,7 @@ import {LinkReplaceParams} from '../../lib/utils';
 export class FormComponent extends TemplateBase {
   modalRef = inject(NzModalRef, {optional: true})
 
-  @ViewChild("editor", {static: true}) editor!: SmartEditorComponent;
+  @ViewChild("editor", {static: false}) editor!: SmartEditorComponent;
 
   submitting = false;
 

@@ -4,11 +4,19 @@
     <span>
     @switch (field.type) {
       @case ('button') {
-        <!--文本-->
-        <button nz-button (click)="action.emit(field.action)">
-          <span nz-icon [nzType]="field.icon" *ngIf="field.icon"></span>
-          {{ field.label }}
-        </button>
+        @if (field.confirm) {
+          <button nz-button nz-popconfirm
+                  [nzPopconfirmTitle]="field.confirm"
+                  (nzOnConfirm)="action.emit(field.action)">
+                  <i *ngIf="field.icon" nz-icon [nzType]="field.icon"></i>
+            {{ field.label }}
+              </button>
+        } @else {
+          <button nz-button (click)="action.emit(field.action)">
+            <span nz-icon [nzType]="field.icon" *ngIf="field.icon"></span>
+            {{ field.label }}
+          </button>
+        }
       }
       @case ('dropdown') {
         <button nz-button nz-dropdown [nzDropdownMenu]="menu">

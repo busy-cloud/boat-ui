@@ -5,6 +5,7 @@ import {SmartInfoItem} from '../lib/smart-info/smart-info.component';
 import {ParamSearch, SmartTableColumn, SmartTableOperator} from '../lib/smart-table/smart-table.component';
 
 export type PageContent = Content & (
+  BlankContent |
   TableContent |
   FormContent |
   InfoContent |
@@ -12,6 +13,10 @@ export type PageContent = Content & (
   MarkdownContent |
   StatisticContent |
   AmapContent)
+
+export interface BlankContent {
+  template?: 'blank' | ''
+}
 
 export interface Content {
   //子页面
@@ -48,7 +53,7 @@ export interface Content {
 export interface AmapContent {
   template: 'amap'
 
-  type: 'line'|'point'|'cluster'|'animation'
+  type: 'line' | 'point' | 'cluster' | 'animation'
   key?: string
   secret?: string
   style?: string
@@ -66,6 +71,7 @@ export interface ChartContent {
   tooltip?: boolean
   time?: boolean
   radar?: { [key: string]: number }
+  gauge?: { key?: string }
   options: EChartsOption
 }
 

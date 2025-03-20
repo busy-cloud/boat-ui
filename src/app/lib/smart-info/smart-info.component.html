@@ -3,23 +3,30 @@
   @for (f of fields; track f) {
     <nz-descriptions-item [nzTitle]="f.label" [nzSpan]="f.span || 1" (click)="action.emit(f.action)">
       @switch (f.type) {
-        @case ('text') {
-          {{ value[f.key] }}
+        @case ("date") {
+          {{ value[f.key] | date: f.format || 'yyyy-MM-dd HH:mm:ss' }}
         }
-        @case ('select') {
-          {{ f.options?.[value[f.key]] || value[f.key] }}
+        @case ("number") {
+          {{ value[f.key] | number: f.format || '1.0-2' }}
         }
-        @case ('date') {
-          {{ value[f.key] | date: 'yyyy-MM-dd HH:mm:ss' }}
+        @case ("bytes") {
+          {{ value[f.key] | nzBytes }}
+        }
+        @case ("boolean") {
+          {{ value[f.key] ? '是' : '否' }}
         }
         @case ('progress') {
-          <nz-progress [nzPercent]="value[f.key]"></nz-progress>
+          <nz-progress [nzPercent]="parseInt(value[f.key])"></nz-progress>
         }
         @case ('tags') {
           <nz-tag *ngFor="let t of value[f.key]">{{ t }}</nz-tag>
         }
         @default {
-          {{ value[f.key] }}
+          @if (f.action) {
+            <a (click)="action.emit(f.action)">{{ value[value.key] }}</a>
+          } @else {
+            {{ value[f.key] }}
+          }
         }
       }
     </nz-descriptions-item>

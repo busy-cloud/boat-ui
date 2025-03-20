@@ -9,6 +9,9 @@ import {isFunction} from 'rxjs/internal/util/isFunction';
 import {NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
 import {SmartRequestService} from '../smart-request.service';
 import {LinkReplaceParams} from '../utils';
+import {NzBytesPipe} from 'ng-zorro-antd/pipes';
+import {NzProgressComponent} from 'ng-zorro-antd/progress';
+import {NzTagComponent} from 'ng-zorro-antd/tag';
 
 export function GetActionLink(action: SmartAction, data: any) {
   if (!action.link) return ""
@@ -68,6 +71,8 @@ export interface SmartActionRow {
 export interface SmartTableColumn {
   key: string
   label: string
+  type?: string
+  format?: string
   keyword?: boolean
   sortable?: boolean
   filter?: NzTableFilterList
@@ -117,6 +122,9 @@ export interface ParamSearch {
     NzPopconfirmDirective,
     NzModalModule,
     NzIconDirective,
+    NzBytesPipe,
+    NzProgressComponent,
+    NzTagComponent,
   ],
   templateUrl: './smart-table.component.html',
   styleUrl: './smart-table.component.scss'
@@ -176,4 +184,5 @@ export class SmartTableComponent implements OnInit {
     this.query.emit(this.body)
   }
 
+  protected readonly parseInt = parseInt;
 }

@@ -34,8 +34,10 @@ export class TableComponent extends TemplateBase {
 
   $event: ParamSearch = {filter: {}}
 
+  searched = false
+
   search($event?: ParamSearch) {
-    console.log("[table] query", this.page)
+    console.log("[table] search", this.page)
     const content = this.content as TableContent
     if (!content) return
 
@@ -52,6 +54,7 @@ export class TableComponent extends TemplateBase {
       }
     }
     if (isFunction(content.search)) {
+      this.searched =  true
       this.loading = true
       content.search($event, this.request).then((res: any) => {
         this.data = res.data
@@ -60,6 +63,7 @@ export class TableComponent extends TemplateBase {
         this.loading = false
       })
     } else if (content.search_api) {
+      this.searched =  true
       this.loading = true
       let url = LinkReplaceParams(content.search_api, this.params);
       this.request.post(url, $event).subscribe(res => {
@@ -73,7 +77,10 @@ export class TableComponent extends TemplateBase {
   }
 
   refresh() {
-    this.search()
+    if (this.searched)
+      this.search()
+    else if (this.content.data_api)
+      this.load()
   }
 
 }

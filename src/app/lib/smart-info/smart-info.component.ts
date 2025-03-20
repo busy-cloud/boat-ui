@@ -5,12 +5,14 @@ import {NzProgressComponent} from "ng-zorro-antd/progress";
 import {NzTagComponent} from "ng-zorro-antd/tag";
 import {SmartAction} from '../smart-table/smart-table.component';
 import {NzModalModule} from 'ng-zorro-antd/modal';
+import {NzBytesPipe} from 'ng-zorro-antd/pipes';
 
 
 export interface SmartInfoItem {
   key: string
-  type?: string
   label: string
+  type?: string
+  format?: string
   span?: number
   action?: SmartAction
   options?: { [p: string | number]: any }
@@ -25,6 +27,7 @@ export interface SmartInfoItem {
     NzProgressComponent,
     NzTagComponent,
     NzModalModule,
+    NzBytesPipe,
   ],
   templateUrl: './smart-info.component.html',
   styleUrl: './smart-info.component.scss'
@@ -37,4 +40,6 @@ export class SmartInfoComponent {
 
   constructor() {
   }
+
+  protected readonly parseInt = parseInt;
 }

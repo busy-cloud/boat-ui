@@ -29,12 +29,32 @@
   <tr *ngFor="let data of table.data; let i=index">
 
     <td *ngFor="let item of columns" [nzEllipsis]="item.ellipsis" [nzBreakWord]="item.break">
-      @if (item.date) {
-        {{ data[item.key] | date: 'yyyy-MM-dd HH:mm:ss' }}
-      } @else if (item.action) {
-        <a (click)="action.emit({action:item.action, data:data, index: i})">{{ data[item.key] }}</a>
-      } @else {
-        {{ data[item.key] }}
+      @switch (item.type) {
+        @case ("date") {
+          {{ data[item.key] | date: item.format || 'yyyy-MM-dd HH:mm:ss' }}
+        }
+        @case ("number") {
+          {{ data[item.key] | number: item.format || '1.0-2' }}
+        }
+        @case ("bytes") {
+          {{ data[item.key] | nzBytes }}
+        }
+        @case ("boolean") {
+          {{ data[item.key] ? '是' : '否' }}
+        }
+        @case ('progress') {
+          <nz-progress [nzPercent]="parseInt(data[item.key])"></nz-progress>
+        }
+        @case ('tags') {
+          <nz-tag *ngFor="let t of data[item.key]">{{ t }}</nz-tag>
+        }
+        @default {
+          @if (item.action) {
+            <a (click)="action.emit({action:item.action, data:data, index: i})">{{ data[item.key] }}</a>
+          } @else {
+            {{ data[item.key] }}
+          }
+        }
       }
     </td>
 

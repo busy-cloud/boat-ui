@@ -6,6 +6,9 @@
   </nz-result>
 } @else if (content) {
   @switch (content.template) {
+    @case (undefined) {}
+    @case ("") {}
+    @case ("blank") {}
     @case ("table") {
       <app-table [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-table>
     }

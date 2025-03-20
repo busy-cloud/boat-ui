@@ -55,7 +55,7 @@ export class TemplateBase {
       }
     }
     if (isFunction(this.content.mount)) {
-      this.content.mount()
+      this.content.mount.call(this)
     }
   }
 
@@ -68,7 +68,7 @@ export class TemplateBase {
       }
     }
     if (isFunction(this.content.unmount)) {
-      this.content.unmount()
+      this.content.unmount.call(this)
     }
   }
 

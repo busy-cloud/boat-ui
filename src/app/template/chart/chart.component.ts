@@ -180,6 +180,11 @@ export class ChartComponent extends TemplateBase {
         //只有一个值
         // data = [[15]]
         //data = 15
+        if (content.gauge) {
+          if (content.gauge.key)
+            data = data[content.gauge.key]
+        }
+        data = parseInt(data)
         merge.dataset = {source: [[data]]}
         break
     }

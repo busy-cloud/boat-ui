@@ -65,6 +65,7 @@ export interface ChartContent {
   template: 'chart'
   type: 'line' | 'bar' | 'pie' | 'gauge' | 'radar'
   //title: string;
+  dark?: boolean
   theme?: string
   height?: number
   legend?: boolean

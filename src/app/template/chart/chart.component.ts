@@ -117,10 +117,18 @@ export class ChartComponent extends TemplateBase {
         break
     }
 
+
     this.chartOption = chartOption
     console.log(this.chartOption)
 
-    this.chartTheme = content.theme || "macarons"
+    if (content.theme)
+      this.chartTheme = content.theme
+    else if (content.dark || document.documentElement.classList.contains("dark"))
+      this.chartTheme = "dark"
+    else
+      this.chartTheme = "macarons"
+
+
     this.chartHeight = content.height || 400
   }
 

@@ -5,7 +5,7 @@ import (
   "github.com/busy-cloud/boat/web"
 )
 
-//go:embed dist/boat-ui/browser
+//go:embed dist/browser
 var www embed.FS
 
 func init() {

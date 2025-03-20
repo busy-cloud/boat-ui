@@ -4,7 +4,6 @@
       <smart-toolbar *ngIf="content.toolbar" [fields]="content.toolbar" (action)="execute($event)"></smart-toolbar>
       <div echarts [options]="chartOption"
            [merge]="mergeOption"
-           [loading]="loading"
            [theme]="chartTheme"
            [style.height]="chartHeight+'px'"
       ></div>

@@ -3,7 +3,7 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import {SmartRequestService} from '../lib/smart-request.service';
 import {NzModalService} from 'ng-zorro-antd/modal';
 import {Title} from '@angular/platform-browser';
-import {GetActionLink, GetActionParams, SmartAction} from '../lib/smart-table/smart-table.component';
+import {SmartAction} from '../lib/smart-table/smart-table.component';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 import {PageContent} from './template';
 import {PageComponent} from '../page/page.component';
@@ -173,12 +173,12 @@ export class TemplateBase {
   execute(action: SmartAction, data?: any, index?: number) {
     if (!action) return
 
-    let params = GetActionParams(action, data || this.data)
+    let params = this.get_action_params(action, data || this.data)
 
     switch (action.type) {
       case 'link':
 
-        let uri = GetActionLink(action, data || this.data)
+        let uri = this.get_action_link(action, data || this.data)
         let query = new URLSearchParams(params).toString()
         let url = uri + '?' + query
 
@@ -228,6 +228,44 @@ export class TemplateBase {
         break
 
     }
+  }
+
+
+
+  get_action_link(action: SmartAction, data: any) {
+    if (!action.link) return ""
+
+    // 先进行正则替换
+    let link = LinkReplaceParams(action.link, data)
+
+    // 计算函数
+    if (typeof action.link_func == "string" && action.link_func.length > 0) {
+      try {
+        action.link_func = new Function(action.link_func)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    if (isFunction(action.link_func)) {
+      link = action.link_func.call(this, data)
+    }
+    return link
+  }
+
+  get_action_params(action: SmartAction, data: any): any {
+    let params = action.params
+    // 计算函数
+    if (typeof action.params_func == "string" && action.params_func.length > 0) {
+      try {
+        action.params_func = new Function('data', action.params_func)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    if (isFunction(action.params_func)) {
+      params = action.params_func.call(this, data)
+    }
+    return params
   }
 
 }

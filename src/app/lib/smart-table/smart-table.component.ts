@@ -13,41 +13,6 @@ import {NzBytesPipe} from 'ng-zorro-antd/pipes';
 import {NzProgressComponent} from 'ng-zorro-antd/progress';
 import {NzTagComponent} from 'ng-zorro-antd/tag';
 
-export function GetActionLink(action: SmartAction, data: any) {
-  if (!action.link) return ""
-
-  // 先进行正则替换
-  let link = LinkReplaceParams(action.link, data)
-
-  // 计算函数
-  if (typeof action.link_func == "string" && action.link_func.length > 0) {
-    try {
-      action.link_func = new Function(action.link_func)
-    } catch (e) {
-      console.error(e)
-    }
-  }
-  if (isFunction(action.link_func)) {
-    link = action.link_func(data)
-  }
-  return link
-}
-
-export function GetActionParams(action: SmartAction, data: any): any {
-  let params = action.params
-  // 计算函数
-  if (typeof action.params_func == "string" && action.params_func.length > 0) {
-    try {
-      action.params_func = new Function('data', action.params_func)
-    } catch (e) {
-      console.error(e)
-    }
-  }
-  if (isFunction(action.params_func)) {
-    params = action.params_func(data)
-  }
-  return params
-}
 
 export interface SmartAction {
   type: 'link' | 'script' | 'page' | 'dialog'

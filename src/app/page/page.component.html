@@ -37,10 +37,10 @@
   @if (content.children) {
     <div nz-row>
       @for (p of content.children; track p) {
-        <div nz-col [nzSpan]="p.span" [nzMd]="p.span" nzXs="24" nzSm="24">
-          <app-page [app]="p.app||''"
-                    [page]="p.page||''"
-                    [content]="p"
+        <div nz-col [nzSpan]="p.span || 24" [nzMd]="p.span || 24" nzXs="24" nzSm="24">
+          <app-page [app]="p.app"
+                    [page]="p.page"
+                    [content]="p.content"
                     [params]="p.params || params"
                     [isChild]="true"></app-page>
         </div>

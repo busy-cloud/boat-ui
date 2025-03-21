@@ -50,7 +50,16 @@ export interface Content {
   methods?: { [key: string]: (string | Function | (() => any)) }
 
   //子页面
-  children?: PageContent[]
+  children?: ChildPage[]
+}
+
+export interface ChildPage {
+  app?: string
+  page?: string
+  span?: number
+  content?: PageContent
+  params?: any
+  params_func?: string | Function | ((data: any) => any)
 }
 
 export interface AmapContent {

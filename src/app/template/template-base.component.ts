@@ -23,10 +23,10 @@ export class TemplateBase {
   router = inject(Router)
   title = inject(Title)
 
-  app: string = this.route.snapshot.params['app']
-  page: string = this.route.snapshot.params['page']
-  params: Params = this.route.snapshot.queryParams
-  content!: PageContent
+  app?: string = this.route.snapshot.params['app']
+  page?: string = this.route.snapshot.params['page']
+  params?: Params = this.route.snapshot.queryParams
+  content?: PageContent
   isChild = false
 
   data: any = []
@@ -47,28 +47,28 @@ export class TemplateBase {
   }
 
   mount() {
-    if (typeof this.content.mount == "string" && this.content.mount.length > 0) {
+    if (typeof this.content?.mount == "string" && this.content.mount.length > 0) {
       try {
         this.content.mount = new Function(this.content.mount)
       } catch (e) {
         console.error(e)
       }
     }
-    if (isFunction(this.content.mount)) {
-      this.content.mount.call(this)
+    if (isFunction(this.content?.mount)) {
+      this.content?.mount.call(this)
     }
   }
 
   unmount() {
-    if (typeof this.content.unmount == "string" && this.content.unmount.length > 0) {
+    if (typeof this.content?.unmount == "string" && this.content.unmount.length > 0) {
       try {
         this.content.unmount = new Function(this.content.unmount)
       } catch (e) {
         console.error(e)
       }
     }
-    if (isFunction(this.content.unmount)) {
-      this.content.unmount.call(this)
+    if (isFunction(this.content?.unmount)) {
+      this.content?.unmount.call(this)
     }
   }
 
@@ -103,7 +103,7 @@ export class TemplateBase {
     this.request.get(url).subscribe((res) => {
       if (res.error) return
       this.content = res
-      if (this.content.title)
+      if (this.content?.title && !this.isChild)
         this.title.setTitle(this.content.title);
       this.build()
       this.mount()
@@ -116,9 +116,9 @@ export class TemplateBase {
     console.log("[base] build")
 
     //编译成员
-    if (this.content.methods != undefined) {
+    if (this.content?.methods != undefined) {
       Object.keys(this.content.methods).forEach(method => {
-        let func = this.content.methods?.[method]
+        let func = this.content?.methods?.[method]
         if (typeof func == "string") {
           try {
             let fn = new Function(func)
@@ -146,13 +146,13 @@ export class TemplateBase {
     console.log("[base] load data", this.page)
 
     //初始化数据
-    if (this.content.data) {
+    if (this.content?.data) {
       //this.data = this.content.data
       this.render(this.content.data)
     }
 
     //通过api加载数据
-    if (this.content.data_api) {
+    if (this.content?.data_api) {
       this.loading = true
       let url = LinkReplaceParams(this.content.data_api, this.params);
       this.request.get(url).subscribe(res => {

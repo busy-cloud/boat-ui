@@ -43,9 +43,9 @@ export class AmapComponent extends TemplateBase {
 
 
     //初始化高度
-    if (typeof this.content.height == "string") {
+    if (typeof this.content?.height == "string") {
       this.mapHeight = this.content.height
-    } else if (typeof this.content.height == "number") {
+    } else if (typeof this.content?.height == "number") {
       this.mapHeight = this.content.height + "px"
     } else {
       this.mapHeight = "200px"

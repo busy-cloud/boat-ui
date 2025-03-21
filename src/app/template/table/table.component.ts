@@ -79,7 +79,7 @@ export class TableComponent extends TemplateBase {
   refresh() {
     if (this.searched)
       this.search()
-    else if (this.content.data_api)
+    else if (this.content?.data_api)
       this.load()
   }
 

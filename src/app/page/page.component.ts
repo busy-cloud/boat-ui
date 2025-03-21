@@ -15,7 +15,6 @@ import {NZ_MODAL_DATA} from 'ng-zorro-antd/modal';
 import {PageContent} from '../template/template';
 import {StatisticComponent} from '../template/statistic/statistic.component';
 import {ObjectDeepCompare} from '../lib/utils';
-import {UnknownComponent} from '../unknown/unknown.component';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzResultComponent} from 'ng-zorro-antd/result';
 
@@ -41,10 +40,10 @@ import {NzResultComponent} from 'ng-zorro-antd/result';
   styleUrl: './page.component.scss',
 })
 export class PageComponent {
-  @Input() app!: string
-  @Input() page!: string
-  @Input() content!: PageContent
-  @Input() params!: Params
+  @Input() app?: string
+  @Input() page?: string
+  @Input() content?: PageContent
+  @Input() params?: Params
   @Input() isChild = false
 
   error = ''
@@ -75,7 +74,7 @@ export class PageComponent {
     } else {
       if (this.page) this.loadPage()
       //弹窗之外，需要监听路由参数
-      if (!this.nzModalData) {
+      if (!this.nzModalData && !this.isChild) {
         this.route.params.subscribe(params => {
           if (this.app == params['app'] && this.page == params['page']) return
           this.app = params['app'];
@@ -108,10 +107,10 @@ export class PageComponent {
         return
       }
       this.content = res
-      if (this.content.title)
+      if (this.content?.title)
         this.title.setTitle(this.content.title);
       this.build()
-    }, (error)=>{
+    }, (error) => {
       this.error = error
     })
   }
@@ -127,6 +126,8 @@ export class PageComponent {
           console.error(e)
         }
       }
+
+      //是不是算的有点早了。。。
       if (isFunction(c.params_func)) {
         c.params = c.params_func(this.params)
       }

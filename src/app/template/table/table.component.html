@@ -13,7 +13,7 @@
       ></smart-table>
     </nz-card>
     <ng-template #extra>
-      <button nz-button nzType="link" (click)="refresh()" class="load" *ngIf="content.data_api || content.search || content.search_api">
+      <button nz-button nzType="link" (click)="refresh()" class="load" *ngIf="content.load_api || content.search || content.search_api">
         <span nz-icon nzType="reload" [nzSpin]="loading"></span>
         刷新
       </button>

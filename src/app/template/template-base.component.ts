@@ -163,24 +163,24 @@ export class TemplateBase {
     }
 
     //通过api加载数据
-    if (this.content.data_api) {
+    if (this.content.load_api) {
       this.loading = true
-      let url = LinkReplaceParams(this.content.data_api, this.params);
+      let url = LinkReplaceParams(this.content.load_api, this.params);
       this.request.get(url).subscribe(res => {
         if (res.error) return
         //this.data = res.data
         this.render(res.data)
 
         //处理提交成功
-        if (typeof this.content?.data_success == "string" && this.content.data_success.length > 0) {
+        if (typeof this.content?.load_success == "string" && this.content.load_success.length > 0) {
           try {
-            this.content.data_success = new Function("data", this.content.data_success)
+            this.content.load_success = new Function("data", this.content.load_success)
           } catch (e) {
             console.error(e)
           }
         }
-        if (isFunction(this.content?.data_success)) {
-          this.content?.data_success.call(this, res.data)
+        if (isFunction(this.content?.load_success)) {
+          this.content?.load_success.call(this, res.data)
         }
       }).add(() => {
         this.loading = false

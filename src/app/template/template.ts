@@ -27,9 +27,10 @@ export interface Content {
 
   //初始化数据
   data?: any
+  
   //数据接口
-  data_api?: string
-  data_success?: string | Function | ((data: any) => any)
+  load_api?: string
+  load_success?: string | Function | ((data: any) => any)
 
   //作为子页面时的参数（无用）
   params?: any

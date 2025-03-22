@@ -29,6 +29,7 @@ export interface Content {
   data?: any
   //数据接口
   data_api?: string
+  data_success?: string | Function | ((data: any) => any)
 
   //作为子页面时的参数（无用）
   params?: any
@@ -47,7 +48,7 @@ export interface Content {
   unmount?: string | Function | (() => void)
 
   //注册成员
-  methods?: { [key: string]: (string | Function | (() => any)) }
+  methods?: { [key: string]: (string | Function | (() => any) | string[])  }
 
   //子页面
   children?: ChildPage[]

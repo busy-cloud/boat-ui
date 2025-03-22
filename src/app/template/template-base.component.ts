@@ -128,6 +128,15 @@ export class TemplateBase {
           } catch (e) {
             console.error(e)
           }
+        } else if (Array.isArray(func)) {
+          try {
+            let fn = new Function(...func)
+            fn.bind(this)
+            //@ts-ignore
+            this[method] = fn
+          } catch (e) {
+            console.error(e)
+          }
         } else {
           //@ts-ignore
           this[method] = func
@@ -145,20 +154,34 @@ export class TemplateBase {
   load() {
     console.log("[base] load data", this.page)
 
+    if (!this.content) return
+
     //初始化数据
-    if (this.content?.data) {
+    if (this.content.data) {
       //this.data = this.content.data
       this.render(this.content.data)
     }
 
     //通过api加载数据
-    if (this.content?.data_api) {
+    if (this.content.data_api) {
       this.loading = true
       let url = LinkReplaceParams(this.content.data_api, this.params);
       this.request.get(url).subscribe(res => {
         if (res.error) return
         //this.data = res.data
         this.render(res.data)
+
+        //处理提交成功
+        if (typeof this.content?.data_success == "string" && this.content.data_success.length > 0) {
+          try {
+            this.content.data_success = new Function("data", this.content.data_success)
+          } catch (e) {
+            console.error(e)
+          }
+        }
+        if (isFunction(this.content?.data_success)) {
+          this.content?.data_success.call(this, res.data)
+        }
       }).add(() => {
         this.loading = false
       })
@@ -229,7 +252,6 @@ export class TemplateBase {
 
     }
   }
-
 
 
   get_action_link(action: SmartAction, data: any) {

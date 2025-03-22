@@ -272,6 +272,16 @@ export class SmartEditorComponent implements OnInit {
     return this._values
   }
 
+  rebuild() {
+    if (this._fields && this._fields.length) {
+      setTimeout(() => {
+        //this.group = this.build(this._fields, this.group.value)
+        this.group = this.build(this._fields, this._values)
+        this.group.valueChanges.subscribe(res => this.change.emit(res))
+      }, 50)
+    }
+  }
+
   //构建表单
   build(fields: SmartField[], values: any): FormGroup {
     //console.log("[SmartEditor] build", fields, values)

@@ -80,6 +80,7 @@ export class PageComponent {
           this.app = params['app'];
           this.page = params['page'];
           this.loadPage()
+          this.content = undefined
         })
         this.route.queryParams.subscribe(params => {
           if (ObjectDeepCompare(params, this.params)) return

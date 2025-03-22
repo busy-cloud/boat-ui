@@ -27,7 +27,7 @@ export interface Content {
 
   //初始化数据
   data?: any
-  
+
   //数据接口
   load_api?: string
   load_success?: string | Function | ((data: any) => any)

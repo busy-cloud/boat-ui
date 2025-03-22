@@ -87,6 +87,7 @@ export class TemplateBase {
         //更新页面
         this.unmount()
         this.load_page() //重新加载
+        this.data = []
       })
       this.route.queryParams.subscribe(params => {
         if (ObjectDeepCompare(params, this.params)) return

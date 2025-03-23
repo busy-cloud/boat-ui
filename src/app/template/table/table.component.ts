@@ -71,8 +71,8 @@ export class TableComponent extends TemplateBase {
       this.searched = true
       this.loading = true
       content.search($event, this.request).then((res: any) => {
-        this.data = res.data
-        this.total = res.total || res.data.length
+        this.data = res.data || []
+        this.total = res.total || res.data?.length || 0
       }).finally(() => {
         this.loading = false
       })
@@ -82,8 +82,8 @@ export class TableComponent extends TemplateBase {
       let url = LinkReplaceParams(content.search_api, this.params);
       this.request.post(url, $event).subscribe(res => {
         if (res.error) return
-        this.data = res.data
-        this.total = res.total || res.data.length
+        this.data = res.data || []
+        this.total = res.total || res.data?.length || 0
       }).add(() => {
         this.loading = false
       })

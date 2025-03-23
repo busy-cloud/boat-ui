@@ -72,14 +72,15 @@ export class PageComponent {
       //this.ts.setTitle(this.content.title);
       this.build()
     } else {
-      if (this.page) this.loadPage()
+      if (this.page) this.load_page()
       //弹窗之外，需要监听路由参数
       if (!this.nzModalData && !this.isChild) {
         this.route.params.subscribe(params => {
           if (this.app == params['app'] && this.page == params['page']) return
           this.app = params['app'];
           this.page = params['page'];
-          this.loadPage()
+          this.load_page()
+
           this.content = undefined
         })
         this.route.queryParams.subscribe(params => {
@@ -91,7 +92,7 @@ export class PageComponent {
     }
   }
 
-  loadPage() {
+  load_page() {
     console.log("[page] loadPage", this.app, this.page)
     this.error = ''
 

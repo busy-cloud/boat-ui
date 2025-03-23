@@ -81,6 +81,9 @@ export class TemplateBase {
       this.load()
     } else {
       if (this.page) this.load_page()
+
+      //订阅路由参数（TODO 以下页面可能冗余了，与page.component.ts重复）
+      if (this.isChild) return
       this.route.params.subscribe(params => {
         if (this.app == params['app'] && this.page == params['page']) return
         this.app = params['app'];

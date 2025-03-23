@@ -2,16 +2,18 @@
   @if (content.template == 'statistic') {
     <nz-card [nzTitle]="content.title" [nzExtra]="extra">
       <smart-toolbar *ngIf="content.toolbar" [fields]="content.toolbar" (action)="execute($event)"></smart-toolbar>
-      <nz-row [nzGutter]="16">
+      <nz-row [nzGutter]="[10,10]">
         @for (item of content.items; track item) {
-        <nz-col [nzSpan]="12" [nzMd]="item.span || 8" [nzXs]="24">
-          <nz-statistic
-            [nzValue]="(data?.[item.key] | number: item.format || '1.0-2')!"
-            [nzTitle]="item.label"
-            [nzPrefix]="item.prefix"
-            [nzSuffix]="item.suffix"
-          ></nz-statistic>
-        </nz-col>
+          <nz-col [nzSpan]="12" [nzMd]="item.span || 8" [nzXs]="24">
+            <nz-card>
+              <nz-statistic
+                [nzValue]="(data?.[item.key] | number: item.format || '1.0-2')!"
+                [nzTitle]="item.label"
+                [nzPrefix]="item.prefix"
+                [nzSuffix]="item.suffix"
+              ></nz-statistic>
+            </nz-card>
+          </nz-col>
         }
       </nz-row>
     </nz-card>

@@ -108,7 +108,7 @@ export class PageComponent {
         return
       }
       this.content = res
-      if (this.content?.title)
+      if (this.content?.title && !this.isChild)
         this.title.setTitle(this.content.title);
       this.build()
     }, (error) => {

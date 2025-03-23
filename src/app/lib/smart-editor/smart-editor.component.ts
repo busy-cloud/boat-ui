@@ -276,7 +276,8 @@ export class SmartEditorComponent implements OnInit {
     if (this._fields && this._fields.length) {
       setTimeout(() => {
         //this.group = this.build(this._fields, this.group.value)
-        this.group = this.build(this._fields, this._values)
+        let value = Object.assign({}, this._values, this.group.value)
+        this.group = this.build(this._fields, value)
         this.group.valueChanges.subscribe(res => this.change.emit(res))
       }, 50)
     }

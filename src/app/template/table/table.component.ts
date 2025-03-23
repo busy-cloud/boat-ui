@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {ParamSearch, SmartTableComponent} from '../../lib/smart-table/smart-table.component';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 import {NzCardComponent} from 'ng-zorro-antd/card';
@@ -29,10 +29,16 @@ import {LinkReplaceParams} from '../../lib/utils';
   inputs: ['app', 'page', 'content', 'params', 'data', 'isChild']
 })
 export class TableComponent extends TemplateBase {
+  @ViewChild("toolbar", {static: false}) toolbar!: SmartToolbarComponent;
+  @ViewChild("table", {static: false}) table!: SmartTableComponent;
 
   total = 0
 
   $event: ParamSearch = {filter: {}}
+
+  filter = {}
+  keywords = []
+  keyword = ""
 
   searched = false
 
@@ -45,6 +51,15 @@ export class TableComponent extends TemplateBase {
     if (!$event) $event = this.$event
     else this.$event = $event
 
+    //继承条件
+    Object.assign($event.filter, this.filter)
+    //关键字
+    $event.keyword = {}
+    content.keywords?.forEach((key) => {
+      if ($event?.keyword)
+        $event.keyword[key] = this.keyword
+    })
+
     //搜索
     if (typeof content.search == "string" && content.search.length > 0) {
       try {
@@ -54,7 +69,7 @@ export class TableComponent extends TemplateBase {
       }
     }
     if (isFunction(content.search)) {
-      this.searched =  true
+      this.searched = true
       this.loading = true
       content.search($event, this.request).then((res: any) => {
         this.data = res.data
@@ -63,7 +78,7 @@ export class TableComponent extends TemplateBase {
         this.loading = false
       })
     } else if (content.search_api) {
-      this.searched =  true
+      this.searched = true
       this.loading = true
       let url = LinkReplaceParams(content.search_api, this.params);
       this.request.post(url, $event).subscribe(res => {

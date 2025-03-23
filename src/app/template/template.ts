@@ -113,6 +113,7 @@ export interface TableContent {
   template: 'table'
   columns: SmartTableColumn[]
   operators: SmartTableOperator[]
+  keywords?: string[]
 
   search_api?: string
   search?: string | Function | ((event: ParamSearch, request: SmartRequestService) => Promise<any>)

@@ -77,6 +77,9 @@ export class PageComponent {
       if (!this.nzModalData && !this.isChild) {
         this.route.params.subscribe(params => {
           if (this.app == params['app'] && this.page == params['page']) return
+
+          console.log("[page] page change")
+
           this.app = params['app'];
           this.page = params['page'];
           this.load_page()
@@ -85,6 +88,9 @@ export class PageComponent {
         })
         this.route.queryParams.subscribe(params => {
           if (ObjectDeepCompare(params, this.params)) return
+
+          console.log("[page] query change")
+
           this.params = params;
           //this.load()
         })

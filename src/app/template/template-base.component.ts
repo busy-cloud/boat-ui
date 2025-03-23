@@ -86,6 +86,9 @@ export class TemplateBase {
       if (this.isChild) return
       this.route.params.subscribe(params => {
         if (this.app == params['app'] && this.page == params['page']) return
+
+        console.log("[base] page change")
+
         this.app = params['app'];
         this.page = params['page'];
         //更新页面
@@ -98,6 +101,9 @@ export class TemplateBase {
       })
       this.route.queryParams.subscribe(params => {
         if (ObjectDeepCompare(params, this.params)) return
+
+        console.log("[base] query change")
+
         this.params = params;
         this.load() //重新加载
       })

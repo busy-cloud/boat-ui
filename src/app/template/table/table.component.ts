@@ -37,7 +37,6 @@ export class TableComponent extends TemplateBase {
   $event: ParamSearch = {filter: {}}
 
   filter = {}
-  keywords = []
   keyword = ""
 
   searched = false

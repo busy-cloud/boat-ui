@@ -5,10 +5,8 @@ import {NzTableFilterList, NzTableModule, NzTableQueryParams} from "ng-zorro-ant
 import {CommonModule} from "@angular/common";
 import {NzPopconfirmDirective} from "ng-zorro-antd/popconfirm";
 import {FormsModule} from '@angular/forms';
-import {isFunction} from 'rxjs/internal/util/isFunction';
 import {NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
 import {SmartRequestService} from '../smart-request.service';
-import {LinkReplaceParams} from '../utils';
 import {NzBytesPipe} from 'ng-zorro-antd/pipes';
 import {NzProgressComponent} from 'ng-zorro-antd/progress';
 import {NzTagComponent} from 'ng-zorro-antd/tag';
@@ -17,10 +15,11 @@ import {NzTagComponent} from 'ng-zorro-antd/tag';
 export interface SmartAction {
   type: 'link' | 'script' | 'page' | 'dialog'
   link?: string
-  link_func?: string | Function | ((data: any) => string)
+  link_func?: string | Function | ((data: any, index: number) => string)
   params?: any
-  params_func?: string | Function | ((data: any) => any)
-  script?: string | Function | ((data: any) => string)
+  params_func?: string | Function | ((data: any, index: number) => any)
+  script?: string | Function | ((data: any, index: number) => string)
+  after_close?: string | Function | ((result: any, data: any, index: number) => string) //dialog回调
   app?: string
   page?: string
   dialog?: boolean

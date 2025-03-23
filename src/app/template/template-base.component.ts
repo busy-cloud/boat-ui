@@ -1,7 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {SmartRequestService} from '../lib/smart-request.service';
-import {NzModalService} from 'ng-zorro-antd/modal';
+import {NzModalRef, NzModalService} from 'ng-zorro-antd/modal';
 import {Title} from '@angular/platform-browser';
 import {SmartAction} from '../lib/smart-table/smart-table.component';
 import {isFunction} from 'rxjs/internal/util/isFunction';
@@ -22,6 +22,7 @@ export class TemplateBase {
   route = inject(ActivatedRoute)
   router = inject(Router)
   title = inject(Title)
+  modelRef = inject(NzModalRef, {optional: true})
 
   app?: string = this.route.snapshot.params['app']
   page?: string = this.route.snapshot.params['page']
@@ -200,12 +201,12 @@ export class TemplateBase {
   execute(action: SmartAction, data?: any, index?: number) {
     if (!action) return
 
-    let params = this.get_action_params(action, data || this.data)
+    let params = this.get_action_params(action, data || this.data, index || 0)
 
     switch (action.type) {
       case 'link':
 
-        let uri = this.get_action_link(action, data || this.data)
+        let uri = this.get_action_link(action, data || this.data, index || 0)
         let query = new URLSearchParams(params).toString()
         let url = uri + '?' + query
 
@@ -226,7 +227,7 @@ export class TemplateBase {
           }
         }
         if (isFunction(action.script)) {
-          action.script.call(this, data || this.data, index)
+          action.script.call(this, data || this.data, index || 0)
         }
         break
 
@@ -251,6 +252,18 @@ export class TemplateBase {
           nzFooter: null,
           //nzCloseIcon: 'close-circle',
           //nzMaskClosable: false
+        }).afterClose.subscribe(res => {
+          //关闭的回调
+          if (typeof action.after_close == "string" && action.after_close.length > 0) {
+            try {
+              action.after_close = new Function("result", "data", "index", action.after_close)
+            } catch (e) {
+              console.error(e)
+            }
+          }
+          if (isFunction(action.after_close)) {
+            action.after_close.call(this, res, data || this.data, index || 0)
+          }
         })
         break
 
@@ -258,7 +271,7 @@ export class TemplateBase {
   }
 
 
-  get_action_link(action: SmartAction, data: any) {
+  get_action_link(action: SmartAction, data: any, index: number) {
     if (!action.link) return ""
 
     // 先进行正则替换
@@ -273,12 +286,12 @@ export class TemplateBase {
       }
     }
     if (isFunction(action.link_func)) {
-      link = action.link_func.call(this, data)
+      link = action.link_func.call(this, data, index)
     }
     return link
   }
 
-  get_action_params(action: SmartAction, data: any): any {
+  get_action_params(action: SmartAction, data: any, index: number): any {
     let params = action.params
     // 计算函数
     if (typeof action.params_func == "string" && action.params_func.length > 0) {
@@ -289,7 +302,7 @@ export class TemplateBase {
       }
     }
     if (isFunction(action.params_func)) {
-      params = action.params_func.call(this, data)
+      params = action.params_func.call(this, data, index)
     }
     return params
   }

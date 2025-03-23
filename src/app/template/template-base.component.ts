@@ -74,6 +74,8 @@ export class TemplateBase {
   }
 
   init() {
+    //由于外层是page，每次都会把content先加载完成，所以这里content不可能为空
+
     //如果是input传入，则是作为组件使用
     if (this.content) {
       this.build()
@@ -111,7 +113,7 @@ export class TemplateBase {
   }
 
   load_page() {
-    console.log("[base] loadPage", this.page)
+    console.log("[base] load page", this.page)
     let url = "page/" + this.page
     if (this.app) url = url + this.app + "/" + this.page
     this.request.get(url).subscribe((res) => {

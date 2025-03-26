@@ -110,6 +110,15 @@ export interface SmartField {
     label: string,
     action: SmartAction,
   }[]
+
+  //显示的条件
+  condition?: SmartFieldCondition
+}
+
+export interface SmartFieldCondition {
+  key: string
+  type: '=' | '==' | '>' | '>=' | '<' | '<=' | '!=' | '<>' | '~=' | 'in' | 'out'
+  value: any
 }
 
 function getDefault(field: SmartField): any {
@@ -415,5 +424,45 @@ export class SmartEditorComponent implements OnInit {
 
   arrayRemove(array: FormArray, i: number) {
     array.removeAt(i);
+  }
+
+  calc_condition(group: FormGroup, condition: SmartFieldCondition) {
+    let value: any = group.get(condition.key)?.value
+    console.log('calc_condition', condition, value)
+
+    switch (condition.type) {
+      case "=":
+      case "==":
+        return value == condition.value
+      case "!=":
+      case "~=":
+      case "<>":
+        return value != condition.value
+      case "<":
+        return value < condition.value
+      case "<=":
+        return value <= condition.value
+      case ">=":
+        return value >= condition.value
+      case ">":
+        return value > condition.value
+      case "in":
+        for (let i=0; i<condition.value.length; i++) {
+          if (value == condition.value[i]) {
+            return true
+          }
+        }
+        return false
+      case "out":
+        for (let i=0; i<condition.value.length; i++) {
+          if (value == condition.value[i]) {
+            return false
+          }
+        }
+        return true
+    }
+
+
+    return false;
   }
 }

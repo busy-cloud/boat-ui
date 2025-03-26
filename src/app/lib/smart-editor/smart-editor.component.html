@@ -248,7 +248,10 @@
 <!-- 表单组模板 -->
 <ng-template #groupTpl let-fields="fields" let-group="group">
   @for (field of fields; track field) {
-    @if (!field.hidden) {
+    @if (field.hidden || field.condition && !calc_condition(group, field.condition)) {
+      <!-- 什么也不用干 -->
+    }
+    @else{
       <nz-form-item>
         <nz-form-label *ngIf="field.label" [nzSm]="6" [nzXs]="24" [nzRequired]="field.required" [nzFor]="field.key">
           {{ field.label }}

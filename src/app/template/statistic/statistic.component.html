@@ -1,7 +1,7 @@
 @if (content) {
   @if (content.template == 'statistic') {
     <nz-card [nzTitle]="content.title" [nzExtra]="extra">
-      <smart-toolbar *ngIf="content.toolbar" [fields]="content.toolbar" (action)="execute($event)"></smart-toolbar>
+      <smart-toolbar #toolbar *ngIf="content.toolbar" [fields]="content.toolbar" [values]="toolbarValue" (action)="execute($event)"></smart-toolbar>
       <nz-row [nzGutter]="[10,10]">
         @for (item of content.items; track item) {
           <nz-col [nzSpan]="12" [nzMd]="item.span || 8" [nzXs]="24">
@@ -11,6 +11,7 @@
                 [nzTitle]="item.label"
                 [nzPrefix]="item.prefix"
                 [nzSuffix]="item.suffix"
+                (click)="item.action && execute(item.action, item)"
               ></nz-statistic>
             </nz-card>
           </nz-col>

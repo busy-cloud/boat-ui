@@ -32,6 +32,8 @@ export class TableComponent extends TemplateBase {
   @ViewChild("toolbar", {static: false}) toolbar!: SmartToolbarComponent;
   @ViewChild("table", {static: false}) table!: SmartTableComponent;
 
+  toolbarValue = {}
+
   total = 0
 
   $event: ParamSearch = {filter: {}}

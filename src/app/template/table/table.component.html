@@ -1,7 +1,7 @@
 @if (content) {
   @if (content.template == 'table') {
     <nz-card [nzTitle]="content.title" [nzExtra]="extra">
-      <smart-toolbar #toolbar *ngIf="content.toolbar" [fields]="content.toolbar" (action)="execute($event)"></smart-toolbar>
+      <smart-toolbar #toolbar *ngIf="content.toolbar" [fields]="content.toolbar" [values]="toolbarValue" (action)="execute($event)"></smart-toolbar>
       <smart-table #table
         [columns]="content.columns"
         [operators]="content.operators"

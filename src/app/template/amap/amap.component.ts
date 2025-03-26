@@ -25,8 +25,9 @@ import {AmapContent} from '../template';
   //inputs: ['app', 'page', 'content', 'params', 'data', 'isChild']
 })
 export class AmapComponent extends TemplateBase {
-
+  @ViewChild("toolbar", {static: false}) toolbar!: SmartToolbarComponent;
   @ViewChild("mapContainer", {static: false}) mapContainer!: ElementRef;
+  toolbarValue = {}
 
   map: any //AMap.Map;
   mapHeight = "200px"

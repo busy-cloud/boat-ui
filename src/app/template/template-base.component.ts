@@ -9,6 +9,8 @@ import {PageContent} from './template';
 import {PageComponent} from '../page/page.component';
 import {LinkReplaceParams, ObjectDeepCompare} from '../lib/utils';
 
+import dayjs from 'dayjs'
+
 @Component({
   selector: 'app-template',
   imports: [],
@@ -17,6 +19,8 @@ import {LinkReplaceParams, ObjectDeepCompare} from '../lib/utils';
   inputs: ['app', 'page', 'content', 'params', 'data', 'isChild']
 })
 export class TemplateBase {
+  dayjs: any = dayjs //引入dayjs
+
   request = inject(SmartRequestService)
   modal = inject(NzModalService)
   route = inject(ActivatedRoute)
@@ -33,6 +37,10 @@ export class TemplateBase {
   data: any = []
 
   loading = false
+
+  constructor() {
+    //console.log("base constructor", this.dayjs())
+  }
 
 
   ngAfterViewInit() {
@@ -255,6 +263,7 @@ export class TemplateBase {
       case 'dialog':
         this.modal.create({
           nzContent: PageComponent,
+          nzWidth: "80%",
           nzData: {
             app: action.app,
             page: action.page,

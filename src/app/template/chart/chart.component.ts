@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 
 //echarts 相关引入
 import * as echarts from 'echarts/core';
@@ -63,6 +63,8 @@ echarts.use([
   //inputs: ['app', 'page', 'content', 'params', 'data', 'isChild']
 })
 export class ChartComponent extends TemplateBase {
+  @ViewChild("toolbar", {static: false}) toolbar!: SmartToolbarComponent;
+  toolbarValue = {}
 
   //参数 EChartsOption
   chartOption: any = {}
@@ -99,6 +101,13 @@ export class ChartComponent extends TemplateBase {
       case "pie":
         break
       case "line":
+        if (content.time)
+          chartOption.xAxis = {type: 'time'}
+        if (!chartOption.xAxis)
+          chartOption.xAxis = {type: 'category'}
+        if (!chartOption.yAxis)
+          chartOption.yAxis = {type: 'value'}
+        break
       case "bar":
         if (!chartOption.xAxis)
           chartOption.xAxis = {type: 'category'}

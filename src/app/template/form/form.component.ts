@@ -33,7 +33,9 @@ import {SmartInfoComponent} from '../../lib/smart-info/smart-info.component';
 export class FormComponent extends TemplateBase {
   modalRef = inject(NzModalRef, {optional: true})
 
+  @ViewChild("toolbar", {static: false}) toolbar!: SmartToolbarComponent;
   @ViewChild("editor", {static: false}) editor!: SmartEditorComponent;
+  toolbarValue = {}
 
   submitting = false;
 

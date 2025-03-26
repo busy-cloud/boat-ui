@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {SmartInfoComponent} from '../../lib/smart-info/smart-info.component';
 import {NzCardComponent} from 'ng-zorro-antd/card';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
@@ -26,6 +26,8 @@ import {TemplateBase} from '../template-base.component';
   //inputs: ['app', 'page', 'content', 'params', 'data', 'isChild']
 })
 export class InfoComponent extends TemplateBase {
+  @ViewChild("toolbar", {static: false}) toolbar!: SmartToolbarComponent;
+  toolbarValue = {}
 
 
 }

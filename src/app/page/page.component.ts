@@ -92,7 +92,10 @@ export class PageComponent {
           console.log("[page] query change")
 
           this.params = params;
+
           //this.load()
+          this.load_page()
+          this.content = undefined
         })
       }
     }

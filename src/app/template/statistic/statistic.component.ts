@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {TemplateBase} from '../template-base.component';
 import {NzCardComponent} from 'ng-zorro-antd/card';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
@@ -29,5 +29,7 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
   //inputs: ['app', 'page', 'content', 'params', 'data', 'isChild']
 })
 export class StatisticComponent extends TemplateBase {
+  @ViewChild("toolbar", {static: false}) toolbar!: SmartToolbarComponent;
+  toolbarValue = {}
 
 }

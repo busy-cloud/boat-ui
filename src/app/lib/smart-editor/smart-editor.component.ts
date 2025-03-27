@@ -428,7 +428,7 @@ export class SmartEditorComponent implements OnInit {
 
   calc_condition(group: FormGroup, condition: SmartFieldCondition) {
     let value: any = group.get(condition.key)?.value
-    console.log('calc_condition', condition, value)
+    //console.log('calc_condition', condition, value)
 
     switch (condition.type) {
       case "=":

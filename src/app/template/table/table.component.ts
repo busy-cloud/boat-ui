@@ -42,7 +42,8 @@ export class TableComponent extends TemplateBase {
   keyword = ""
 
   override load($event?: ParamSearch) {
-    if (!$event && !this.$event) return
+    if (!$event && !this.$event) return //避免重复调用
+
     console.log("[table] search", this.page)
     const content = this.content as TableContent
     if (!content) return
@@ -87,6 +88,7 @@ export class TableComponent extends TemplateBase {
         this.loading = false
       })
     } else {
+      //调用 load_api
       super.load()
     }
   }

@@ -32,6 +32,8 @@ export interface Content {
   load_api?: string
   load_success?: string | Function | ((data: any) => any)
 
+  auto_refresh?: number
+
   //作为子页面时的参数（无用）
   params?: any
   params_func?: string | Function | ((data: any) => any)

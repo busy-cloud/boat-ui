@@ -8,12 +8,12 @@
         [datum]="data"
         [total]="total"
         [loading]="loading"
-        (query)="search($event)"
+        (query)="load($event)"
         (action)="execute($event.action, $event.data, $event.index)"
       ></smart-table>
     </nz-card>
     <ng-template #extra>
-      <button nz-button nzType="link" (click)="refresh()" class="load" *ngIf="content.load_api || content.search || content.search_api">
+      <button nz-button nzType="link" (click)="load()" class="load" *ngIf="content.load_api || content.search || content.search_api">
         <span nz-icon nzType="reload" [nzSpin]="loading"></span>
         刷新
       </button>

@@ -38,6 +38,8 @@ export class TemplateBase {
 
   loading = false
 
+  auto_refresh_interval = 0
+
   constructor() {
     //console.log("base constructor", this.dayjs())
   }
@@ -56,6 +58,12 @@ export class TemplateBase {
   }
 
   mount() {
+    //自动刷新
+    if (typeof this.content?.auto_refresh === "number" && this.content.auto_refresh > 0) {
+      this.auto_refresh_interval = setInterval(()=>this.load(), this.content.auto_refresh * 1000)
+    }
+
+
     if (typeof this.content?.mount == "string" && this.content.mount.length > 0) {
       try {
         this.content.mount = new Function(this.content.mount)
@@ -69,6 +77,10 @@ export class TemplateBase {
   }
 
   unmount() {
+    //自动刷新
+    if (this.auto_refresh_interval)
+      clearInterval(this.auto_refresh_interval)
+
     if (typeof this.content?.unmount == "string" && this.content.unmount.length > 0) {
       try {
         this.content.unmount = new Function(this.content.unmount)
@@ -127,7 +139,7 @@ export class TemplateBase {
     this.request.get(url).subscribe((res) => {
       if (res.error) return
       this.content = res
-      if (this.content?.title && !this.isChild)
+      if (this.content?.title && !this.isChild && !this.modelRef)
         this.title.setTitle(this.content.title);
       this.build()
       this.mount()

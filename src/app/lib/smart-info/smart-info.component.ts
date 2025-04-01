@@ -7,6 +7,7 @@ import {SmartAction} from '../smart-table/smart-table.component';
 import {NzModalModule} from 'ng-zorro-antd/modal';
 import {NzBytesPipe} from 'ng-zorro-antd/pipes';
 import {NzSwitchComponent} from 'ng-zorro-antd/switch';
+import {NzAvatarComponent} from 'ng-zorro-antd/avatar';
 
 
 export interface SmartInfoItem {
@@ -29,6 +30,7 @@ export interface SmartInfoItem {
     NzTagComponent,
     NzModalModule,
     NzBytesPipe,
+    NzAvatarComponent,
   ],
   templateUrl: './smart-info.component.html',
   styleUrl: './smart-info.component.scss'

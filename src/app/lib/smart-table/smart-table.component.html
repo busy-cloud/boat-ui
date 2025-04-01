@@ -57,6 +57,12 @@
         @case ("object") {
           {{ data[item.key] | json }}
         }
+        @case ("icon") {
+          <nz-avatar nzShape="square" nzIcon="file-image" [nzSrc]="data[item.key]"></nz-avatar>
+        }
+        @case ("avatar") {
+          <nz-avatar nzIcon="user" [nzSrc]="data[item.key]"></nz-avatar>
+        }
         @default {
           @if (item.action) {
             <a (click)="action.emit({action:item.action, data:data, index: i})">{{ data[item.key] }}</a>

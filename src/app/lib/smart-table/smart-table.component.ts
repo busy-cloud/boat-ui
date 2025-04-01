@@ -10,6 +10,7 @@ import {SmartRequestService} from '../smart-request.service';
 import {NzBytesPipe} from 'ng-zorro-antd/pipes';
 import {NzProgressComponent} from 'ng-zorro-antd/progress';
 import {NzTagComponent} from 'ng-zorro-antd/tag';
+import {NzAvatarComponent} from 'ng-zorro-antd/avatar';
 
 
 export interface SmartAction {
@@ -89,6 +90,7 @@ export interface ParamSearch {
     NzBytesPipe,
     NzProgressComponent,
     NzTagComponent,
+    NzAvatarComponent,
   ],
   templateUrl: './smart-table.component.html',
   styleUrl: './smart-table.component.scss'

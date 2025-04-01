@@ -30,6 +30,12 @@
         @case ("object") {
           {{ value[f.key] | json }}
         }
+        @case ("icon") {
+          <nz-avatar nzShape="square" nzIcon="file-image" [nzSrc]="value[f.key]"></nz-avatar>
+        }
+        @case ("avatar") {
+          <nz-avatar nzIcon="user" [nzSrc]="value[f.key]"></nz-avatar>
+        }
         @default {
           @if (f.action) {
             <a (click)="action.emit(f.action)">{{ value[f.key] }}</a>

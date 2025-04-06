@@ -113,6 +113,13 @@
         <!--时间-->
         <nz-time-picker [formControlName]="field.key" [nzPlaceHolder]="field.placeholder || ''"></nz-time-picker>
       }
+      @case ('upload') {
+        {{ field.label||'' }}
+        <!--文件-->
+          <nz-upload [nzAction]="field.upload" [nzShowUploadList]="false" [nzDisabled]="!!field.disabled">
+            <button nz-button nzType="primary" [disabled]="!!field.disabled">上传</button>
+          </nz-upload>
+      }
       @case ('file') {
         {{ field.label||'' }}
         <!--文件-->

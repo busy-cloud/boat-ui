@@ -51,10 +51,13 @@ export interface Content {
   unmount?: string | Function | (() => void)
 
   //注册成员
-  methods?: { [key: string]: (string | Function | (() => any) | string[])  }
+  methods?: { [key: string]: (string | Function | (() => any) | string[]) }
 
   //子页面
   children?: ChildPage[]
+
+  //标签式子页面
+  tabs?: TabPage[]
 }
 
 export interface ChildPage {
@@ -65,6 +68,16 @@ export interface ChildPage {
   params?: any
   params_func?: string | Function | ((data: any) => any)
 }
+
+export interface TabPage {
+  title?: string;
+  app?: string
+  page?: string
+  content?: PageContent
+  params?: any
+  params_func?: string | Function | ((data: any) => any)
+}
+
 
 export interface AmapContent {
   template: 'amap'

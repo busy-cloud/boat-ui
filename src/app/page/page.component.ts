@@ -17,6 +17,7 @@ import {StatisticComponent} from '../template/statistic/statistic.component';
 import {ObjectDeepCompare} from '../lib/utils';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzResultComponent} from 'ng-zorro-antd/result';
+import {NzTabComponent, NzTabDirective, NzTabSetComponent} from 'ng-zorro-antd/tabs';
 
 @Component({
   selector: 'app-page',
@@ -34,6 +35,9 @@ import {NzResultComponent} from 'ng-zorro-antd/result';
     NzButtonComponent,
     NzResultComponent,
     RouterLink,
+    NzTabSetComponent,
+    NzTabComponent,
+    NzTabDirective,
   ],
   templateUrl: './page.component.html',
   standalone: true,

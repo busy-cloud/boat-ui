@@ -6,9 +6,12 @@
   </nz-result>
 } @else if (content) {
   @switch (content.template) {
-    @case (undefined) {}
-    @case ("") {}
-    @case ("blank") {}
+    @case (undefined) {
+    }
+    @case ("") {
+    }
+    @case ("blank") {
+    }
     @case ("table") {
       <app-table [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-table>
     }
@@ -28,7 +31,8 @@
       <app-markdown [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-markdown>
     }
     @case ("statistic") {
-      <app-statistic [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-statistic>
+      <app-statistic [app]="app" [page]="page" [content]="content" [params]="params"
+                     [isChild]="isChild"></app-statistic>
     }
     @default {
       未知类型模板
@@ -46,6 +50,21 @@
         </div>
       }
     </div>
+  }
+  @if (content.tabs) {
+    <nz-tabset nzSize="large">
+      @for (p of content.tabs; track p) {
+        <nz-tab [nzTitle]="p.title || 'untitled'">
+          <ng-template nz-tab>
+            <app-page [app]="p.app"
+                      [page]="p.page"
+                      [content]="p.content"
+                      [params]="p.params || params"
+                      [isChild]="true"></app-page>
+          </ng-template>
+        </nz-tab>
+      }
+    </nz-tabset>
   }
 } @else {
   <nz-spin nzSimple></nz-spin>

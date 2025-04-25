@@ -12,7 +12,7 @@ import {Title} from '@angular/platform-browser';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 import {NzColDirective, NzRowDirective} from 'ng-zorro-antd/grid';
 import {NZ_MODAL_DATA} from 'ng-zorro-antd/modal';
-import {PageContent} from '../template/template';
+import {ChildPage, PageContent, TabPage} from '../template/template';
 import {StatisticComponent} from '../template/statistic/statistic.component';
 import {ObjectDeepCompare} from '../lib/utils';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
@@ -130,9 +130,49 @@ export class PageComponent {
     })
   }
 
+  // calc_params(c: ChildPage | TabPage): any {
+  //   //这里会反复地调用， 所以缓存一下
+  //   if (c.params) return c.params;
+  //
+  //   console.log("calc_params", c, this)
+  //
+  //   if (isFunction(c.params_func)) {
+  //     try {
+  //       //@ts-ignore
+  //       c.params = c.params_func.call(this, this.params)
+  //     } catch (e) {
+  //       console.error(e)
+  //       c.params = {}
+  //     }
+  //   }
+  //
+  //   if (!c.params) {
+  //     c.params = this.params
+  //   }
+  //
+  //   return c.params
+  // }
+
   build() {
     console.log("[page] build", this.app, this.page)
+
     this.content?.children?.forEach(c => {
+      if (typeof c.params_func == "string") {
+        try {
+          //@ts-ignore
+          c.params_func = new Function('params', c.params_func as string)
+        } catch (e) {
+          console.error(e)
+        }
+      }
+
+      //是不是算的有点早了。。。
+      if (isFunction(c.params_func)) {
+        c.params = c.params_func(this.params)
+      }
+    })
+
+    this.content?.tabs?.forEach(c => {
       if (typeof c.params_func == "string") {
         try {
           //@ts-ignore

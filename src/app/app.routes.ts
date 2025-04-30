@@ -7,6 +7,7 @@ import {DashComponent} from './dash/dash.component';
 import {PageComponent} from './page/page.component';
 import {SettingComponent} from './setting/setting.component';
 import {AdminComponent} from './admin/admin.component';
+import {ImportComponent} from './import/import.component';
 
 export const routes: Routes = [
   //{path: '', pathMatch: 'full', redirectTo: ''},
@@ -20,6 +21,7 @@ export const routes: Routes = [
       {path: 'page/:page', component: PageComponent},
       {path: 'page/:app/:page', component: PageComponent},
       {path: 'setting/:module', component: SettingComponent},
+      {path: 'import', component: ImportComponent},
       {path: '**', component: UnknownComponent},
     ],
     //子模块

@@ -18,6 +18,7 @@ import {ObjectDeepCompare} from '../lib/utils';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzResultComponent} from 'ng-zorro-antd/result';
 import {NzTabComponent, NzTabDirective, NzTabSetComponent} from 'ng-zorro-antd/tabs';
+import {ImportComponent} from '../template/import/import.component';
 
 @Component({
   selector: 'app-page',
@@ -38,6 +39,7 @@ import {NzTabComponent, NzTabDirective, NzTabSetComponent} from 'ng-zorro-antd/t
     NzTabSetComponent,
     NzTabComponent,
     NzTabDirective,
+    ImportComponent,
   ],
   templateUrl: './page.component.html',
   standalone: true,

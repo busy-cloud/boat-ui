@@ -1,0 +1,49 @@
+@if (content) {
+  @if (content.template == 'import') {
+    <nz-card [nzTitle]="content.title" [nzExtra]="extra">
+
+      <nz-upload [nzCustomRequest]="onUploadRequest" [nzShowUploadList]="true"
+                 nzFileType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+        <button nz-button>
+          <i nz-icon nzType="upload"></i>
+          上传文件
+        </button>
+      </nz-upload>
+
+      <nz-table #header nzSize="small" [nzData]="content.columns" nzShowPagination="false">
+
+      </nz-table>
+
+
+      <nz-table #table nzSize="small" [nzData]="datum" nzShowPagination="false">
+        <thead>
+        <tr>
+          <th *ngFor="let item of datum[0]">
+            {{ item }}
+          </th>
+          <th>上传</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let data of table.data; let i=index">
+          <td *ngFor="let d of data; let j=index">{{ d }}</td>
+          <td>结果</td>
+        </tr>
+        </tbody>
+      </nz-table>
+
+
+    </nz-card>
+    <ng-template #extra>
+      <button nz-button nzType="primary" (click)="submit()">
+        <span nz-icon nzType="save" [nzSpin]="submitting"></span>
+        开始上传
+      </button>
+    </ng-template>
+  } @else {
+    模板类型应该是import
+  }
+} @else {
+  <nz-spin nzSimple></nz-spin>
+}
+

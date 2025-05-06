@@ -7,6 +7,8 @@ import {ParamSearch, SmartAction, SmartTableColumn, SmartTableOperator} from '..
 export type PageContent = Content & (
   BlankContent |
   TableContent |
+  ImportContent |
+  ExportContent |
   FormContent |
   InfoContent |
   ChartContent |
@@ -148,4 +150,20 @@ export interface Statistic {
   prefix?: string
   suffix?: string
   action?: SmartAction
+}
+
+export interface ImportContent {
+  template: 'import'
+  columns: SmartTableColumn[],
+
+  submit_api?: string
+  submit?: string | Function | ((data: any) => Promise<any>)
+}
+
+export interface ExportContent {
+  template: 'export'
+  columns: SmartTableColumn[],
+
+  search_api?: string
+  search?: string | Function | ((event: ParamSearch, request: SmartRequestService) => Promise<any>)
 }

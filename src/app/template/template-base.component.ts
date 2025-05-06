@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, EventEmitter, inject} from '@angular/core';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {SmartRequestService} from '../lib/smart-request.service';
 import {NzModalRef, NzModalService} from 'ng-zorro-antd/modal';
@@ -18,7 +18,7 @@ import dayjs from 'dayjs'
   standalone: true,
   inputs: ['app', 'page', 'content', 'params', 'data', 'isChild']
 })
-export class TemplateBase {
+export class TemplateBase{
   dayjs: any = dayjs //引入dayjs
 
   request = inject(SmartRequestService)
@@ -41,6 +41,7 @@ export class TemplateBase {
   auto_refresh_interval = 0
 
   constructor() {
+    //super();
     //console.log("base constructor", this.dayjs())
   }
 
@@ -51,6 +52,7 @@ export class TemplateBase {
 
   ngOnInit(): void {
     //this.mount()
+
   }
 
   ngOnDestroy(): void {
@@ -58,11 +60,13 @@ export class TemplateBase {
   }
 
   mount() {
+    //@ts-ignore
+    this.onMount?.call(this)
+
     //自动刷新
     if (typeof this.content?.auto_refresh === "number" && this.content.auto_refresh > 0) {
       this.auto_refresh_interval = setInterval(()=>this.load(), this.content.auto_refresh * 1000)
     }
-
 
     if (typeof this.content?.mount == "string" && this.content.mount.length > 0) {
       try {
@@ -77,6 +81,9 @@ export class TemplateBase {
   }
 
   unmount() {
+    //@ts-ignore
+    this.onUnmount?.call(this)
+
     //自动刷新
     if (this.auto_refresh_interval)
       clearInterval(this.auto_refresh_interval)

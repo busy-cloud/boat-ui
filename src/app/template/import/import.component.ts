@@ -1,9 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {NzUploadComponent, NzUploadXHRArgs} from 'ng-zorro-antd/upload';
 import {read, utils} from 'xlsx';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {Subscription} from 'rxjs';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgForOf} from '@angular/common';
 import {
   NzTableCellDirective,
   NzTableComponent,
@@ -15,11 +15,11 @@ import {TemplateBase} from '../template-base.component';
 import {NzCardComponent} from 'ng-zorro-antd/card';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
-import {SmartInfoComponent} from '../../lib/smart-info/smart-info.component';
-import {SmartToolbarComponent} from '../../lib/smart-toolbar/smart-toolbar.component';
-import {FormContent, ImportContent} from '../template';
+import {ImportContent} from '../template';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 import {LinkReplaceParams} from '../../lib/utils';
+import {NzSelectComponent} from 'ng-zorro-antd/select';
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-import',
@@ -32,10 +32,11 @@ import {LinkReplaceParams} from '../../lib/utils';
     NzTbodyComponent,
     NzTheadComponent,
     NzTrDirective,
-    NgIf,
     NzCardComponent,
     NzIconDirective,
     NzSpinComponent,
+    NzSelectComponent,
+    ReactiveFormsModule,
   ],
   templateUrl: './import.component.html',
   standalone: true,
@@ -43,6 +44,21 @@ import {LinkReplaceParams} from '../../lib/utils';
 })
 export class ImportComponent extends TemplateBase {
   datum: any = []
+
+  group: FormGroup = new FormGroup([])
+  options: any = [{value: -1, label: '-'}]
+
+  fb = inject(FormBuilder)
+  headers: any = {}
+
+  onMount() {
+    console.log("[import]", "onMount")
+
+    const content = this.content as ImportContent
+    if (!content) return
+
+    this.buildForm()
+  }
 
   onUploadRequest = (args: NzUploadXHRArgs): Subscription => {
     console.log("onUploadRequest", args);
@@ -53,7 +69,7 @@ export class ImportComponent extends TemplateBase {
     reader.onload = () => {
       //args.onSuccess?.(true, args.file, args)
     }
-    reader.onerror = err =>{
+    reader.onerror = err => {
       args.onError?.(err, args.file)
     }
     reader.onprogress = ev => {
@@ -66,12 +82,45 @@ export class ImportComponent extends TemplateBase {
       let sheet = wb.Sheets[wb.SheetNames[0]]
       let aoa = utils.sheet_to_json(sheet, {header: 1})
       this.datum = aoa
+
+      //this.buildForm()
+      this.findValues()
     }
     //@ts-ignore
     reader.readAsArrayBuffer(args.file)
     return sub
   }
 
+  buildForm() {
+    const content = this.content as ImportContent
+    if (!content) return
+
+    let group: any = {}
+    content.columns.forEach(c => {
+      group[c.key] = new FormControl(-1) //[-1];
+    })
+    this.group = this.fb.group(group)
+
+  }
+
+  findValues() {
+    let row: any = this.datum[0] || []
+
+    this.options = [{value: -1, label: '-'}]
+    row.forEach((h: string, i: number) => {
+      let ss = h.split("/")
+      let key = (ss.length > 1) ? ss[1] : ss[0]
+
+      //识别列名
+      let c = this.group.get(key)
+      if (c) {
+        c.setValue(i)
+      }
+      //this.headers[key] = i
+
+      this.options.push({value: i, label: h,})
+    })
+  }
 
   submitting = false;
 
@@ -112,7 +161,6 @@ export class ImportComponent extends TemplateBase {
       })
     }
   }
-
 
 
 }

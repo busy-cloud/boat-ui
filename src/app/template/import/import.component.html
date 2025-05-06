@@ -10,11 +10,28 @@
         </button>
       </nz-upload>
 
+      <!--表头选择-->
+      <form [formGroup]="group">
       <nz-table #header nzSize="small" [nzData]="content.columns" nzShowPagination="false">
-
+        <thead>
+        <tr>
+          <th *ngFor="let col of header.data">
+            {{ col.label || col.key }}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td *ngFor="let col of header.data">
+            <nz-select [formControlName]="col.key" [nzOptions]="options"></nz-select>
+          </td>
+        </tr>
+        </tbody>
       </nz-table>
+      </form>
 
 
+      <!--数据-->
       <nz-table #table nzSize="small" [nzData]="datum" nzShowPagination="false">
         <thead>
         <tr>

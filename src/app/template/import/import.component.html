@@ -22,7 +22,7 @@
             </p>
             <p class="ant-upload-text">点击上传或拖拽文件到这里</p>
             <p class="ant-upload-hint">
-              目前仅支持Excel 2007以上格式，即*.xlsx后缀。表格中第一行为表头，建议先下载模板。
+              仅支持*.xlsx格式（请使用WPS或Excel2007更高版本编辑），表格中第一行为表头，建议先下载模板。
             </p>
           </nz-upload>
 
@@ -109,7 +109,7 @@
         <!--完成-->
         @if (current === 4) {
 
-          <nz-result nzStatus="success" nzTitle="上传完成" [nzSubTitle]="report"></nz-result>
+          <nz-result [nzStatus]="resultStatus" [nzTitle]="resultTitle" [nzSubTitle]="resultReport"></nz-result>
 
           <div class="footer">
             <button nz-button nzType="link" (click)="downloadSucceed()" *ngIf="succeed.length">下载成功记录</button>

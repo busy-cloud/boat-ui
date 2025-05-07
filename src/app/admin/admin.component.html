@@ -35,11 +35,13 @@
   <nz-layout>
     <nz-header>
       <div class="app-header">
-        <span class="header-trigger"
+        <span class="header-trigger" title="折叠菜单"
               nz-icon
               (click)="isCollapsed = !isCollapsed"
               [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
         ></span>
+        <span class="header-icon" title="回退" nz-icon nzType="arrow-left" (click)="location.back()"></span>
+        <span class="header-icon" title="前进" nz-icon nzType="arrow-right" (click)="location.forward()"></span>
         <div class="header-content">
 
         </div>

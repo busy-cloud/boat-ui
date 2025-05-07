@@ -20,10 +20,10 @@ import {isFunction} from 'rxjs/internal/util/isFunction';
 import {LinkReplaceParams} from '../../lib/utils';
 import {NzSelectComponent} from 'ng-zorro-antd/select';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
-import {NzStepComponent, NzStepsComponent} from 'ng-zorro-antd/steps';
+import {NzStatusType, NzStepComponent, NzStepsComponent} from 'ng-zorro-antd/steps';
 import {NzProgressComponent} from 'ng-zorro-antd/progress';
 import {NzNotificationService} from 'ng-zorro-antd/notification';
-import {NzResultComponent} from 'ng-zorro-antd/result';
+import {NzResultComponent, NzResultStatusType} from 'ng-zorro-antd/result';
 import dayjs from 'dayjs';
 
 @Component({
@@ -77,7 +77,9 @@ export class ImportComponent extends TemplateBase {
   //   //this.buildForm()
   // }
 
-  report = ""
+  resultStatus: NzResultStatusType = "success"
+  resultTitle = '上传完成'
+  resultReport = ""
 
 
   onUploadRequest = (args: NzUploadXHRArgs): Subscription => {
@@ -250,7 +252,11 @@ export class ImportComponent extends TemplateBase {
     //完成
     this.current = 4
 
-    this.report = `总计${this.values.length}条，已经上传${this.succeed.length}条，失败${this.failed.length}条`
+    if (this.failed.length>0) {
+      this.resultStatus = "error"
+      this.resultTitle = '上传失败'
+    }
+    this.resultReport = `总计${this.values.length}条，已经上传${this.succeed.length}条，失败${this.failed.length}条`
   }
 
   async uploadRow(row: any) {

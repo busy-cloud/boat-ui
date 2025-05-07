@@ -8,9 +8,10 @@ import {UserService} from '../user.service';
 import {SmartRequestService} from '../lib/smart-request.service';
 import {NzConfigService} from 'ng-zorro-antd/core/config';
 import {NzColor, NzColorPickerComponent} from 'ng-zorro-antd/color-picker';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgForOf, NgIf, Location} from '@angular/common';
 import {AppComponent} from '../app.component';
 import {ThemeService} from '../theme.service';
+import {NzButtonComponent} from 'ng-zorro-antd/button';
 
 @Component({
   selector: 'app-admin',
@@ -29,6 +30,7 @@ import {ThemeService} from '../theme.service';
     NzSubMenuComponent,
     RouterLink,
     RouterOutlet,
+    NzButtonComponent,
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.scss'
@@ -65,6 +67,7 @@ export class AdminComponent {
               private nzConfigService: NzConfigService,
               private router: Router,
               protected ts: ThemeService,
+              protected location: Location,
   ) {
     this.loadOem()
     this.loadMenu()

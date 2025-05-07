@@ -158,6 +158,8 @@ export interface ImportContent {
 
   submit_api?: string
   submit?: string | Function | ((data: any) => Promise<any>)
+
+  finish?: string | Function | ((data: any) => any)
 }
 
 export interface ExportContent {
@@ -166,4 +168,6 @@ export interface ExportContent {
 
   search_api?: string
   search?: string | Function | ((event: ParamSearch, request: SmartRequestService) => Promise<any>)
+
+  finish?: string | Function | ((data: any) => any)
 }

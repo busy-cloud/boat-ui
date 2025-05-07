@@ -159,7 +159,9 @@ export class ImportComponent extends TemplateBase {
     this.group.patchValue(headers)
   }
 
-  downloadTemplate() {
+  downloadTemplate($event: Event) {
+    $event.stopPropagation()
+
     const content = this.content as ImportContent
     if (!content) return
 
@@ -278,7 +280,19 @@ export class ImportComponent extends TemplateBase {
   }
 
   finish() {
+    const content = this.content as ImportContent
+    if (!content) return
 
+    if (typeof content.finish == "string" && content.finish.length > 0) {
+      try {
+        content.finish = new Function("data", content.finish)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    if (isFunction(content.finish)) {
+      content.finish.call(this, this.data)
+    }
   }
 
   downloadSucceed() {

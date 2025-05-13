@@ -6,13 +6,15 @@ import {Router} from '@angular/router';
 import {UserService} from '../user.service';
 import {SmartRequestService} from '../lib/smart-request.service';
 import {SmartEditorComponent, SmartField} from '../lib/smart-editor/smart-editor.component';
+import {NzButtonComponent} from 'ng-zorro-antd/button';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     SmartEditorComponent,
-    NzCardComponent
+    NzCardComponent,
+    NzButtonComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'

@@ -7,9 +7,7 @@ import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {UserService} from '../user.service';
 import {SmartRequestService} from '../lib/smart-request.service';
 import {NzConfigService} from 'ng-zorro-antd/core/config';
-import {NzColor, NzColorPickerComponent} from 'ng-zorro-antd/color-picker';
-import {NgForOf, NgIf, Location} from '@angular/common';
-import {AppComponent} from '../app.component';
+import {Location} from '@angular/common';
 import {ThemeService} from '../theme.service';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 
@@ -37,6 +35,7 @@ import {NzButtonComponent} from 'ng-zorro-antd/button';
 })
 export class AdminComponent {
   isCollapsed = false;
+
   oem: any = {
     name: 'BOAT',
     logo: '/boat.svg',

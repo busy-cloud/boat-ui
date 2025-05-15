@@ -6,10 +6,12 @@ import {UnknownComponent} from './unknown/unknown.component';
 import {PageComponent} from './page/page.component';
 import {SettingComponent} from './setting/setting.component';
 import {AdminComponent} from './admin/admin.component';
+import {DesktopComponent} from './desktop/desktop.component';
 
 export const routes: Routes = [
   //{path: '', pathMatch: 'full', redirectTo: ''},
   {path: 'login', component: LoginComponent},
+  {path: 'desktop', canActivate: [loginGuard], component: DesktopComponent},
   {
     path: '',
     canActivate: [loginGuard],

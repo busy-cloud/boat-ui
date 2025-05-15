@@ -13,9 +13,10 @@
       @for (menu of menus; track menu) {
         <li nz-submenu [nzTitle]="menu.name" [nzIcon]="menu.icon">
           <ul>
-            @for (item of menu.items; track item) {
+            @for (item of menu.children; track item) {
               <li nz-menu-item nzMatchRouter nzMatchRouterExact>
-                <a [routerLink]="item.url" [queryParams]="item.query">{{ item.name }}</a>
+                <a [routerLink]="item.url" [queryParams]="item.query"
+                   [target]="item.external?'_blank':'_self'">{{ item.name }}</a>
               </li>
             }
           </ul>
@@ -53,25 +54,25 @@
           <ul nz-menu>
             <li nz-menu-item>个人中心</li>
             <li nz-menu-item>修改密码</li>
-<!--            <li nz-submenu nzTitle="主题色" nzDisabled>-->
-<!--              <ul>-->
-<!--                <li nz-menu-item *ngFor="let color of colors"-->
-<!--                    [style.color]="color.value" (click)="onChangePrimaryColor(color.value)" >-->
-<!--                  {{ color.name  || color.value }}-->
-<!--                </li>-->
-<!--                <li nz-menu-item>-->
-<!--                  <nz-color-picker nzSize="small"-->
-<!--                                   [nzValue]="primaryColor"-->
-<!--                                   (nzOnChange)="onChangePrimaryColor($event.color)"></nz-color-picker>-->
-<!--                </li>-->
-<!--              </ul>-->
-<!--            </li>-->
+            <!--            <li nz-submenu nzTitle="主题色" nzDisabled>-->
+            <!--              <ul>-->
+            <!--                <li nz-menu-item *ngFor="let color of colors"-->
+            <!--                    [style.color]="color.value" (click)="onChangePrimaryColor(color.value)" >-->
+            <!--                  {{ color.name  || color.value }}-->
+            <!--                </li>-->
+            <!--                <li nz-menu-item>-->
+            <!--                  <nz-color-picker nzSize="small"-->
+            <!--                                   [nzValue]="primaryColor"-->
+            <!--                                   (nzOnChange)="onChangePrimaryColor($event.color)"></nz-color-picker>-->
+            <!--                </li>-->
+            <!--              </ul>-->
+            <!--            </li>-->
             <li nz-menu-divider></li>
             <li nz-menu-item (click)="logout()">退出</li>
           </ul>
         </nz-dropdown-menu>
         <span class="theme">
-          @if (ts.theme == "dark"){
+          @if (ts.theme == "dark") {
             <nz-icon nzType="sun" nzTheme="outline" title="亮色主题" (click)="onChangeTheme('default')"/>
           } @else if (ts.theme == "default") {
             <nz-icon nzType="moon" nzTheme="outline" title="暗色主题" (click)="onChangeTheme('dark')"/>

@@ -3,21 +3,21 @@
      cdkDrag [cdkDragFreeDragPosition]="dragPosition">
 
   <div class="modal-center"
-       appFullscreen (screen)="fullscreen()"
+       appFullscreen (screen)="maximize()"
        (setIndex)="zindex()" [ngStyle]="{ width: width, height: height }">
 
-    <div class="modal-main" (dblclick)="cancel()">
+    <div class="modal-main" (dblclick)="close()">
       <div class="modal-right-bottom"></div>
       <div class="modal-top" cdkDragHandle (click)="zindex()">
         <div class="modal-title">{{ title }}</div>
         <div nz-space>
-          <button *nzSpaceItem nz-button nzType="default" nzSize="small" (click)="addTab()">
+          <button *nzSpaceItem nz-button nzType="default" nzSize="small" (click)="minimize()">
             <i nz-icon nzType="minus" nzTheme="outline"></i>
           </button>
-          <button *nzSpaceItem nz-button nzType="default" (click)="fullscreen()" nzSize="small">
+          <button *nzSpaceItem nz-button nzType="default" nzSize="small" (click)="maximize()">
             <i nz-icon nzType="border" nzTheme="outline"></i>
           </button>
-          <button *nzSpaceItem nz-button nzType="default" nzSize="small" (click)="cancel()">
+          <button *nzSpaceItem nz-button nzType="default" nzSize="small" (click)="close()">
             <i nz-icon nzType="close" nzTheme="outline"></i>
           </button>
         </div>
@@ -26,28 +26,7 @@
       <div class="modal-alert">
         <div class="modal-detail-content">
           <div class="modal-details">
-            <iframe
-              style="position: relative"
-              *ngIf="tabData.length === 1"
-              [src]="tabData[0].url"
-            ></iframe>
-            <div class="modal-tab">
-              <nz-tabset
-                style="height: 100%"
-                nzType="card"
-                *ngIf="tabData.length !== 1"
-              >
-                <nz-tab
-                  *ngFor="let tab of tabData"
-                  [nzTitle]="tab.name"
-                >
-                  <iframe
-                    style="position: relative"
-                    [src]="tab.url"
-                  ></iframe>
-                </nz-tab>
-              </nz-tabset>
-            </div>
+            <iframe style="position: relative" [src]="_url"></iframe>
           </div>
         </div>
       </div>

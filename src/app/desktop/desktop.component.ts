@@ -31,8 +31,13 @@ import {WindowComponent} from './window.component';
 export class DesktopComponent {
   title: any;
   show: any;
+
+  apps: any[] = []
+
   entries: any = [];
   items: any[] = [];
+
+
   userInfo: any;
   showMenu = false;
   appIndex: any = {};

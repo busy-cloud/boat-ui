@@ -34,14 +34,21 @@ export class WindowComponent implements OnInit {
   @Input() index: any;
   @Input() title: any;
   @Input() show: any;
+
+  _url: SafeResourceUrl;
+
   width: any = '60vw';
   height: any = '50vh';
+
   dragPosition = {x: 0, y: 0};
+
   dynamic = false;
   items: any[] = [];
-  @Output() close = new EventEmitter();
-  @Output() hide = new EventEmitter();
+
+  @Output() onClose = new EventEmitter();
+  @Output() onHide = new EventEmitter();
   @Output() setIndex = new EventEmitter();
+
 
   constructor(private msg: NzMessageService, private san: DomSanitizer) {
   }
@@ -55,29 +62,27 @@ export class WindowComponent implements OnInit {
     this.setIndex.emit(this.title);
   }
 
-  @Input() set entries(arr: any) {
-    arr.forEach((item: { url: SafeResourceUrl; path: string }) => {
-      item.url = this.san.bypassSecurityTrustResourceUrl(item.path);
-    });
-    this.tabData = arr;
+  @Input() set url(url: string) {
+      this._url = this.san.bypassSecurityTrustResourceUrl(url);
   }
 
-  cancel() {
-    this.close.emit(this.title);
+  close() {
+    this.onClose.emit(this.title);
     this.width = '60vw';
     this.height = '50vh';
   }
 
-  addTab() {
-    this.hide.emit(this.title);
+  minimize() {
+    this.onHide.emit(this.title);
   }
 
   showTab() {
   }
 
-  fullscreen() {
+  maximize() {
     this.dynamic = !this.dynamic;
     this.dragPosition = {x: 0, y: 0};
+
     if (this.dynamic) {
       this.width = '100vw';
       this.height = '100vh';

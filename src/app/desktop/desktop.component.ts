@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import {Router, RouterLink} from '@angular/router';
+import {NzModalModule, NzModalRef, NzModalService} from 'ng-zorro-antd/modal';
 import { UserService } from '../user.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import {SmartRequestService} from '../lib/smart-request.service';
@@ -9,6 +9,10 @@ import {NzColDirective, NzRowDirective} from 'ng-zorro-antd/grid';
 import {NgForOf, NgIf} from '@angular/common';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {WindowComponent} from './window.component';
+import {NzDropDownDirective, NzDropdownMenuComponent} from 'ng-zorro-antd/dropdown';
+import {NzMenuDirective, NzMenuItemComponent, NzSubMenuComponent} from 'ng-zorro-antd/menu';
+import {NzConfigService} from 'ng-zorro-antd/core/config';
+import {ThemeService} from '../theme.service';
 
 @Component({
   selector: 'app-desktop',
@@ -24,7 +28,14 @@ import {WindowComponent} from './window.component';
     NzFooterComponent,
     NzIconDirective,
     WindowComponent,
-    NgIf
+    NgIf,
+    NzModalModule,
+    NzDropDownDirective,
+    NzDropdownMenuComponent,
+    NzMenuDirective,
+    NzMenuItemComponent,
+    NzSubMenuComponent,
+    RouterLink,
   ],
   standalone: true
 })
@@ -33,6 +44,17 @@ export class DesktopComponent {
   show: any;
 
   apps: any[] = []
+
+  oem: any = {
+    name: 'BOAT',
+    logo: '/boat.svg',
+    company: '南京本易物联网有限公司',
+  }
+
+  menus: any[] = []
+  settings: any[] = []
+  primaryColor: any
+
 
   entries: any = [];
   items: any[] = [];
@@ -45,16 +67,44 @@ export class DesktopComponent {
   constructor(
     private router: Router,
     private rs: SmartRequestService,
+              private nzConfigService: NzConfigService,
+              protected ts: ThemeService,
     private ms: NzModalService,
     private us: UserService,
     private msg: NzMessageService
   ) {
-    this.userInfo = us && us.user;
-    // this._as.apps
-    //   ? this._as.apps.filter((item: any, index) => {
-    //     this.appIndex[item.name] = index;
-    //   })
-    //   : '';
+        this.loadOem()
+    this.loadMenu()
+    this.loadSetting()
+
+
+    //主题色
+    this.primaryColor = localStorage.getItem("primaryColor")
+    if (this.primaryColor)
+      this.nzConfigService.set('theme', {primaryColor: this.primaryColor})
+
+  }
+
+
+  loadOem() {
+    this.rs.get("oem").subscribe((res) => {
+      if (res.error) return
+      Object.assign(this.oem, res.data);
+    })
+  }
+
+  loadMenu() {
+    this.rs.get("menus").subscribe((res) => {
+      if (res.error) return
+      this.menus = res.data
+    })
+  }
+
+  loadSetting() {
+    this.rs.get("settings").subscribe((res) => {
+      if (res.error) return
+      this.settings = res.data
+    })
   }
 
   hide(mes: any) {

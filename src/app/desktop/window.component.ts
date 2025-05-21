@@ -35,7 +35,7 @@ export class WindowComponent implements OnInit {
   @Input() title: any;
   @Input() show: any;
 
-  _url: SafeResourceUrl;
+  _url!: SafeResourceUrl;
 
   width: any = '60vw';
   height: any = '50vh';
@@ -63,7 +63,7 @@ export class WindowComponent implements OnInit {
   }
 
   @Input() set url(url: string) {
-      this._url = this.san.bypassSecurityTrustResourceUrl(url);
+    this._url = this.san.bypassSecurityTrustResourceUrl(url);
   }
 
   close() {

@@ -1,10 +1,6 @@
 <nz-layout class="layout">
   <nz-header class="header">
-    <!--    标题栏-->
-    <!--    <div class="system">-->
-    <!--      <img class="logo" [src]="os.oem.logo" alt="logo"/>-->
-    <!--      <span class="title">{{ os.oem.title }}</span>-->
-    <!--    </div>-->
+    {{ oem.name }}
   </nz-header>
   <nz-content class="content">
     <nz-row [nzGutter]="[{ xs: 8, sm: 16, md: 24 },{ xs: 8, sm: 16, md: 24 }]">
@@ -22,16 +18,31 @@
   </nz-content>
 
   <nz-footer class="footer">
-    <div>
-      开始菜单
-    </div>
-
+    <span class="start" nz-dropdown nzTrigger="click" [nzDropdownMenu]="start" nzPlacement="topRight">
+      <i nz-icon nzType="control"></i>
+      开始
+    </span>
+    <nz-dropdown-menu #start>
+      <ul nz-menu nzTheme="light">
+        @for (menu of menus; track menu) {
+          <li nz-submenu [nzTitle]="menu.name" [nzIcon]="menu.icon">
+            <ul>
+              @for (item of menu.items; track item) {
+                <li nz-menu-item (click)="open(item)">
+                  {{ item.name }}
+                </li>
+              }
+            </ul>
+          </li>
+        }
+      </ul>
+    </nz-dropdown-menu>
 
     <div class="tab">
       @for (item of items; track item.id) {
         <!-- *ngIf="item.tab" -->
-        <div class="tab-btn">
-          <a (click)="showTab(item.title)">{{ item.title }}</a>
+        <div class="tab-btn" (click)="showTab(item.title)">
+          {{ item.title }}
         </div>
       }
     </div>
@@ -39,9 +50,8 @@
 </nz-layout>
 
 
-
 @for (item of items; track item.id) {
-  <app-window [index]="item.index" [title]="item.title" [show]="item.show" [entries]="item.entries"
+  <app-window [index]="item.index" [title]="item.title" [show]="item.show"
               (onHide)="hide($event)" (onClose)="close($event)" (setIndex)="setIndex($event)">
   </app-window>
 }

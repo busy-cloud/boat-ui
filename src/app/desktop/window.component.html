@@ -6,7 +6,7 @@
        appFullscreen (screen)="maximize()"
        (setIndex)="zindex()" [ngStyle]="{ width: width, height: height }">
 
-    <div class="modal-main" (dblclick)="close()">
+    <div class="modal-main" (dblclick)="maximize()">
       <div class="modal-right-bottom"></div>
       <div class="modal-top" cdkDragHandle (click)="zindex()">
         <div class="modal-title">{{ title }}</div>

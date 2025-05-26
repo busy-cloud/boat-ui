@@ -13,7 +13,7 @@
       @for (menu of menus; track menu) {
         <li nz-submenu [nzTitle]="menu.name" [nzIcon]="menu.icon">
           <ul>
-            @for (item of menu.children; track item) {
+            @for (item of menu.items; track item) {
               <li nz-menu-item nzMatchRouter nzMatchRouterExact>
                 <a [routerLink]="item.url" [queryParams]="item.query"
                    [target]="item.external?'_blank':'_self'">{{ item.name }}</a>

@@ -1,36 +1,46 @@
-import {Component, EventEmitter, inject} from '@angular/core';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import {Component, inject} from '@angular/core';
+import {Router} from '@angular/router';
 import {SmartRequestService} from '../lib/smart-request.service';
-import {NzModalRef, NzModalService} from 'ng-zorro-antd/modal';
+import {NzModalModule, NzModalRef, NzModalService} from 'ng-zorro-antd/modal';
 import {Title} from '@angular/platform-browser';
 import {SmartAction} from '../lib/smart-table/smart-table.component';
 import {isFunction} from 'rxjs/internal/util/isFunction';
 import {PageContent} from './template';
 import {PageComponent} from '../page/page.component';
-import {LinkReplaceParams, ObjectDeepCompare} from '../lib/utils';
+import {LinkReplaceParams} from '../lib/utils';
 
 import dayjs from 'dayjs'
 
 @Component({
   selector: 'app-template',
-  imports: [],
+  imports: [
+    NzModalModule,
+  ],
   template: '',
   standalone: true,
-  inputs: ['app', 'page', 'content', 'params', 'data', 'isChild']
+  inputs: ['page', 'content', 'params', 'data', 'isChild']
 })
-export class TemplateBase{
+export class TemplateBase {
   dayjs: any = dayjs //引入dayjs
 
   request = inject(SmartRequestService)
   modal = inject(NzModalService)
-  route = inject(ActivatedRoute)
   router = inject(Router)
   title = inject(Title)
   modelRef = inject(NzModalRef, {optional: true})
 
-  app?: string = this.route.snapshot.params['app']
-  page?: string = this.route.snapshot.params['page']
-  params?: Params = this.route.snapshot.queryParams
+  page?: string
+
+  _params?: any
+  set params(p: any) {
+    this._params = p;
+    this.load()
+  }
+
+  get params(): any {
+    return this._params;
+  }
+
   content?: PageContent
   isChild = false
 
@@ -65,7 +75,7 @@ export class TemplateBase{
 
     //自动刷新
     if (typeof this.content?.auto_refresh === "number" && this.content.auto_refresh > 0) {
-      this.auto_refresh_interval = setInterval(()=>this.load(), this.content.auto_refresh * 1000)
+      this.auto_refresh_interval = setInterval(() => this.load(), this.content.auto_refresh * 1000)
     }
 
     if (typeof this.content?.mount == "string" && this.content.mount.length > 0) {
@@ -109,40 +119,14 @@ export class TemplateBase{
       this.mount()
       this.load()
     } else {
-      if (this.page) this.load_page()
-
-      //订阅路由参数（TODO 以下页面可能冗余了，与page.component.ts重复）
-      if (this.isChild) return
-      this.route.params.subscribe(params => {
-        if (this.app == params['app'] && this.page == params['page']) return
-
-        console.log("[base] page change")
-
-        this.app = params['app'];
-        this.page = params['page'];
-        //更新页面
-        this.unmount()
-        this.load_page() //重新加载
-
-        //清空数据
-        this.data = undefined
-        this.content = undefined
-      })
-      this.route.queryParams.subscribe(params => {
-        if (ObjectDeepCompare(params, this.params)) return
-
-        console.log("[base] query change")
-
-        this.params = params;
-        this.load() //重新加载
-      })
+      if (this.page)
+        this.load_page()
     }
   }
 
   load_page() {
     console.log("[base] load page", this.page)
     let url = "page/" + this.page
-    if (this.app) url = url + this.app + "/" + this.page
     this.request.get(url).subscribe((res) => {
       if (res.error) return
       this.content = res
@@ -270,13 +254,7 @@ export class TemplateBase{
         break
 
       case 'page':
-        if (action.app)
-          this.router.navigate(["page", action.app, action.page], {queryParams: params})
-        else
-          this.router.navigate(["page", action.page], {queryParams: params})
-
-        //TODO 要支持子页面
-
+        this.router.navigate(["/page/" + action.page], {queryParams: params})
         break
 
       case 'dialog':
@@ -284,7 +262,6 @@ export class TemplateBase{
           nzContent: PageComponent,
           nzWidth: "80%",
           nzData: {
-            app: action.app,
             page: action.page,
             params: params
           },

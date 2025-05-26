@@ -5,48 +5,14 @@
     </div>
   </nz-result>
 } @else if (content) {
-  @switch (content.template) {
-    @case (undefined) {
-    }
-    @case ("") {
-    }
-    @case ("blank") {
-    }
-    @case ("table") {
-      <app-table [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-table>
-    }
-    @case ("import") {
-      <app-import [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-import>
-    }
-    @case ("info") {
-      <app-info [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-info>
-    }
-    @case ("form") {
-      <app-form [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-form>
-    }
-    @case ("chart") {
-      <app-chart [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-chart>
-    }
-    @case ("amap") {
-      <app-amap [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-amap>
-    }
-    @case ("markdown") {
-      <app-markdown [app]="app" [page]="page" [content]="content" [params]="params" [isChild]="isChild"></app-markdown>
-    }
-    @case ("statistic") {
-      <app-statistic [app]="app" [page]="page" [content]="content" [params]="params"
-                     [isChild]="isChild"></app-statistic>
-    }
-    @default {
-      未知类型模板
-    }
-  }
-  @if (content.children) {
+  <div #container></div>
+
+
+    @if (content.children) {
     <div nz-row>
       @for (p of content.children; track p) {
         <div nz-col [nzSpan]="p.span || 24" [nzMd]="p.span || 24" nzXs="24" nzSm="24">
-          <app-page [app]="p.app"
-                    [page]="p.page"
+          <app-page [page]="p.page"
                     [content]="p.content"
                     [params]="p.params || params"
                     [isChild]="true"></app-page>
@@ -59,8 +25,7 @@
       @for (p of content.tabs; track p) {
         <nz-tab [nzTitle]="p.title || 'untitled'">
           <ng-template nz-tab>
-            <app-page [app]="p.app"
-                      [page]="p.page"
+            <app-page [page]="p.page"
                       [content]="p.content"
                       [params]="p.params || params"
                       [isChild]="true"></app-page>

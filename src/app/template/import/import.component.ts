@@ -20,11 +20,12 @@ import {isFunction} from 'rxjs/internal/util/isFunction';
 import {LinkReplaceParams} from '../../lib/utils';
 import {NzSelectComponent} from 'ng-zorro-antd/select';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
-import {NzStatusType, NzStepComponent, NzStepsComponent} from 'ng-zorro-antd/steps';
+import {NzStepComponent, NzStepsComponent} from 'ng-zorro-antd/steps';
 import {NzProgressComponent} from 'ng-zorro-antd/progress';
 import {NzNotificationService} from 'ng-zorro-antd/notification';
 import {NzResultComponent, NzResultStatusType} from 'ng-zorro-antd/result';
 import dayjs from 'dayjs';
+
 
 @Component({
   selector: 'app-import',
@@ -100,15 +101,15 @@ export class ImportComponent extends TemplateBase {
     reader.onloadend = (e: Event) => {
       args.onSuccess?.(true, args.file, args)
 
-      let wb = read(reader.result)
-      let sheet = wb.Sheets[wb.SheetNames[0]]
-      let aoa = utils.sheet_to_json(sheet, {header: 1})
-      this.datum = aoa
 
+        let wb = read(reader.result)
+        let sheet = wb.Sheets[wb.SheetNames[0]]
+        let aoa = utils.sheet_to_json(sheet, {header: 1})
+        this.datum = aoa
 
-      this.buildForm()
-      this.findValues()
-      this.current = 1
+        this.buildForm()
+        this.findValues()
+        this.current = 1
 
       //this.buildForm()
       //this.findValues()
@@ -171,17 +172,19 @@ export class ImportComponent extends TemplateBase {
       if (c.label) return c.label + '/' + c.key
       else return c.key
     })
-    const sheet = utils.aoa_to_sheet([aoa])
-    const wb = utils.book_new();
-    utils.book_append_sheet(wb, sheet)
 
-    // if(!wb.Props) wb.Props = {};
-    // wb.Props.Title = "Template";
-    // wb.Props.Author = "Boat";
 
-    //const filename = (this.app||'') + (this.page||'') + "-template.xlsx"
-    const filename = [this.app, this.page, "template.xlsx"].filter(i => i).join("-")
-    writeFile(wb, filename, {compression: true});
+      const sheet = utils.aoa_to_sheet([aoa])
+      const wb = utils.book_new();
+      utils.book_append_sheet(wb, sheet)
+
+      // if(!wb.Props) wb.Props = {};
+      // wb.Props.Title = "Template";
+      // wb.Props.Author = "Boat";
+
+      //const filename = (this.app||'') + (this.page||'') + "-template.xlsx"
+      const filename = [this.page?.replaceAll(/\//g, "-"), "template.xlsx"].filter(i => i).join("-")
+      writeFile(wb, filename, {compression: true});
   }
 
   back() {
@@ -252,7 +255,7 @@ export class ImportComponent extends TemplateBase {
     //完成
     this.current = 4
 
-    if (this.failed.length>0) {
+    if (this.failed.length > 0) {
       this.resultStatus = "error"
       this.resultTitle = '上传失败'
     }
@@ -302,18 +305,18 @@ export class ImportComponent extends TemplateBase {
   }
 
   downloadSucceed() {
-    const sheet = utils.json_to_sheet(this.succeed)
-    const wb = utils.book_new();
-    utils.book_append_sheet(wb, sheet)
-    const filename = [this.app, this.page, dayjs().format('YYYYMMDDHHmmss'), "succeed.xlsx"].filter(i => i).join("-")
-    writeFile(wb, filename, {compression: true});
+      const sheet = utils.json_to_sheet(this.succeed)
+      const wb = utils.book_new();
+      utils.book_append_sheet(wb, sheet)
+      const filename = [this.page?.replaceAll(/\//g, "-"), dayjs().format('YYYYMMDDHHmmss'), "succeed.xlsx"].filter(i => i).join("-")
+      writeFile(wb, filename, {compression: true});
   }
 
   downloadFailed() {
-    const sheet = utils.json_to_sheet(this.failed)
-    const wb = utils.book_new();
-    utils.book_append_sheet(wb, sheet)
-    const filename = [this.app, this.page, dayjs().format('YYYYMMDDHHmmss'), "failed.xlsx"].filter(i => i).join("-")
-    writeFile(wb, filename, {compression: true});
+      const sheet = utils.json_to_sheet(this.failed)
+      const wb = utils.book_new();
+      utils.book_append_sheet(wb, sheet)
+      const filename = [this.page?.replaceAll(/\//g, "-"), dayjs().format('YYYYMMDDHHmmss'), "failed.xlsx"].filter(i => i).join("-")
+      writeFile(wb, filename, {compression: true});
   }
 }

@@ -26,7 +26,7 @@ import {LinkReplaceParams} from '../../lib/utils';
   templateUrl: './table.component.html',
   standalone: true,
   styleUrl: './table.component.scss',
-  inputs: ['app', 'page', 'content', 'params', 'data', 'isChild']
+  inputs: ['page', 'content', 'params', 'data', 'isChild']
 })
 export class TableComponent extends TemplateBase {
   @ViewChild("toolbar", {static: false}) toolbar!: SmartToolbarComponent;

@@ -8,7 +8,7 @@ import {SettingComponent} from './setting/setting.component';
 import {AdminComponent} from './admin/admin.component';
 import {DesktopComponent} from './desktop/desktop.component';
 
-export const routes: Routes = [
+export const routes1: Routes = [
   //{path: '', pathMatch: 'full', redirectTo: ''},
   {path: 'login', component: LoginComponent},
   {path: 'desktop', canActivate: [loginGuard], component: DesktopComponent},
@@ -29,6 +29,18 @@ export const routes: Routes = [
   //{path: 'app/:app/page/:page', component: PageComponent},
   {path: '**', component: UnknownComponent},
 ];
+
+export const routes: Routes = [
+  {path: 'login', component: LoginComponent},
+  {path: '', component: DesktopComponent, canActivate: [loginGuard]},
+  {
+    path: 'page/:page', pathMatch: "prefix", component: PageComponent, canActivate: [loginGuard],
+    //children是为了匹配子目录
+    children: [{path: '**', component: UnknownComponent}]
+  },
+  {path: '**', component: UnknownComponent},
+]
+
 
 function loginGuard(router: Router, segments: UrlSegment[]): MaybeAsync<GuardResult> {
   let us = inject(UserService)

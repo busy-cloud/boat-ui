@@ -102,6 +102,9 @@
   line-height: 40px;
   display: flex;
 
+  user-select: none;
+  cursor: pointer;
+
   .start{
     //width: 80px;
     //padding: 0 20px;

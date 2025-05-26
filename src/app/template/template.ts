@@ -22,7 +22,6 @@ export interface BlankContent {
 
 export interface Content {
   //子页面
-  app?: string
   page?: string
 
   title?: string
@@ -63,7 +62,6 @@ export interface Content {
 }
 
 export interface ChildPage {
-  app?: string
   page?: string
   span?: number
   content?: PageContent
@@ -73,7 +71,6 @@ export interface ChildPage {
 
 export interface TabPage {
   title?: string;
-  app?: string
   page?: string
   content?: PageContent
   params?: any

@@ -1,55 +1,43 @@
-import {Component, inject, Input} from '@angular/core';
+import {
+  Component,
+  inject,
+  Input,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
 import {SmartRequestService} from '../lib/smart-request.service';
-import {ActivatedRoute, Params, RouterLink} from '@angular/router';
-import {TableComponent} from '../template/table/table.component';
-import {InfoComponent} from '../template/info/info.component';
-import {FormComponent} from '../template/form/form.component';
-import {ChartComponent} from '../template/chart/chart.component';
-import {AmapComponent} from '../template/amap/amap.component';
-import {MarkdownComponent} from '../template/markdown/markdown.component';
+import {ActivatedRoute, NavigationEnd, Params, Router, RouterLink} from '@angular/router';
 import {NzSpinComponent} from 'ng-zorro-antd/spin';
 import {Title} from '@angular/platform-browser';
 import {isFunction} from 'rxjs/internal/util/isFunction';
-import {NzColDirective, NzRowDirective} from 'ng-zorro-antd/grid';
-import {NZ_MODAL_DATA} from 'ng-zorro-antd/modal';
-import {ChildPage, PageContent, TabPage} from '../template/template';
-import {StatisticComponent} from '../template/statistic/statistic.component';
+import {NzGridModule} from 'ng-zorro-antd/grid';
+import {NZ_MODAL_DATA, NzModalModule} from 'ng-zorro-antd/modal';
+import {PageContent} from '../template/template';
 import {ObjectDeepCompare} from '../lib/utils';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzResultComponent} from 'ng-zorro-antd/result';
-import {NzTabComponent, NzTabDirective, NzTabSetComponent} from 'ng-zorro-antd/tabs';
-import {ImportComponent} from '../template/import/import.component';
+import {NzTabsModule} from 'ng-zorro-antd/tabs';
 
 @Component({
   selector: 'app-page',
   imports: [
-    TableComponent,
-    InfoComponent,
-    FormComponent,
-    ChartComponent,
     NzSpinComponent,
-    NzRowDirective,
-    NzColDirective,
-    AmapComponent,
-    MarkdownComponent,
-    StatisticComponent,
     NzButtonComponent,
     NzResultComponent,
+    NzGridModule,
     RouterLink,
-    NzTabSetComponent,
-    NzTabComponent,
-    NzTabDirective,
-    ImportComponent,
+    NzTabsModule,
+    NzModalModule,
   ],
   templateUrl: './page.component.html',
   standalone: true,
   styleUrl: './page.component.scss',
 })
 export class PageComponent {
-  @Input() app?: string
   @Input() page?: string
   @Input() content?: PageContent
   @Input() params?: Params
+
   @Input() isChild = false
 
   error = ''
@@ -58,19 +46,20 @@ export class PageComponent {
 
   constructor(protected request: SmartRequestService,
               protected route: ActivatedRoute,
-              protected title: Title,
+              protected router: Router,
+              protected title: Title
               //@Optional() protected nzModalData: NZ_MODAL_DATA
   ) {
     //优先使用弹窗参数
     if (this.nzModalData) {
-      this.app = this.nzModalData.app;
       this.page = this.nzModalData.page;
       this.params = this.nzModalData.params;
     } else {
-      this.app = route.snapshot.params['app'];
-      this.page = route.snapshot.params['page'];
+      //this.page = route.snapshot.params['page'];
+      this.page = location.pathname.substring(6)
       this.params = route.snapshot.queryParams;
     }
+    console.log("page constructor", this.page, this.params)
   }
 
   ngAfterViewInit(): void {
@@ -79,44 +68,57 @@ export class PageComponent {
       this.build()
     } else {
       if (this.page) this.load_page()
+
       //弹窗之外，需要监听路由参数
       if (!this.nzModalData && !this.isChild) {
-        this.route.params.subscribe(params => {
-          if (this.app == params['app'] && this.page == params['page']) return
-
-          console.log("[page] page change")
-
-          this.app = params['app'];
-          this.page = params['page'];
-          this.load_page()
-
-          this.content = undefined
+        this.router.events.subscribe(event=>{
+          if (event instanceof NavigationEnd) {
+            const page = location.pathname.substring(6)
+            //console.log("[page] NavigationEnd:", page);
+            if (this.page == page) return
+            console.log("[page] page change:", page);
+            this.page = page
+            this.load_page()
+          }
         })
+
+        // this.route.params.subscribe(params => {
+        //   const page = location.pathname.substring(6)
+        //   if (this.page == page) return
+        //
+        //   console.log("[page] page change:", page);
+        //
+        //   this.page = page
+        //   this.load_page()
+        // })
+        // this.route.params.subscribe(params => {
+        //   if (this.page == params['page']) return
+        //
+        //   console.log("[page] page change")
+        //
+        //   this.page = params['page'];
+        //   this.load_page()
+        //
+        //   this.content = undefined
+        // })
         this.route.queryParams.subscribe(params => {
           if (ObjectDeepCompare(params, this.params)) return
-
           console.log("[page] query change")
-
           this.params = params;
-
           //this.load()
-          this.load_page()
-          this.content = undefined
+          //this.load_page() //重新加载
         })
       }
     }
   }
 
   load_page() {
-    console.log("[page] loadPage", this.app, this.page)
+    console.log("[page] loadPage", this.page)
     this.error = ''
 
-    //@ts-ignore
-    //this.content = undefined //清空页面
+    this.content = undefined //清空页面
 
     let url = "page/" + this.page
-    if (this.app)
-      url = "page/" + this.app + "/" + this.page
     this.request.get(url).subscribe((res) => {
       if (res.error) {
         //console.log("load page error", res.error)
@@ -156,7 +158,9 @@ export class PageComponent {
   // }
 
   build() {
-    console.log("[page] build", this.app, this.page)
+    console.log("[page] build", this.page)
+
+    this.load_component(this.content?.template)
 
     this.content?.children?.forEach(c => {
       if (typeof c.params_func == "string") {
@@ -189,6 +193,50 @@ export class PageComponent {
         c.params = c.params_func(this.params)
       }
     })
+  }
+
+  @ViewChild('container', { read: ViewContainerRef }) container!: ViewContainerRef;
+  render_component(cmp: any): void {
+    const ref = this.container.createComponent(cmp)
+    ref.setInput("page", this.page)
+    ref.setInput("content", this.content)
+    ref.setInput("params", this.params)
+    ref.setInput("isChild", this.isChild)
+  }
+
+  load_component(tpl?: string) {
+    switch (tpl) {
+      case "table":
+        import("../template/table/table.component").then(m => this.render_component(m.TableComponent))
+        //this.render_component(TableComponent)
+        break
+      case "info":
+        import("../template/info/info.component").then(m => this.render_component(m.InfoComponent))
+        //this.render_component(InfoComponent)
+        break
+      case "form":
+        import("../template/form/form.component").then(m => this.render_component(m.FormComponent))
+        //this.render_component(FormComponent)
+        break
+      case "statistic":
+        import("../template/statistic/statistic.component").then(m => this.render_component(m.StatisticComponent))
+        //this.render_component(StatisticComponent)
+        break
+      case "chart":
+        import("../template/chart/chart.component").then(m => this.render_component(m.ChartComponent))
+        break
+      case "amap":
+        import("../template/amap/amap.component").then(m => this.render_component(m.AmapComponent))
+        break
+      case "markdown":
+        import("../template/markdown/markdown.component").then(m => this.render_component(m.MarkdownComponent))
+        break
+      case "import":
+        import("../template/import/import.component").then(m => this.render_component(m.ImportComponent))
+        break
+      default:
+        break
+    }
   }
 
 }

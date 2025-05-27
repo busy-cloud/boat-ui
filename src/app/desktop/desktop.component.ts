@@ -1,14 +1,14 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
-import {NzModalModule, NzModalRef, NzModalService} from 'ng-zorro-antd/modal';
-import { UserService } from '../user.service';
-import { NzMessageService } from 'ng-zorro-antd/message';
+import {NzModalModule, NzModalService} from 'ng-zorro-antd/modal';
+import {UserService} from '../user.service';
+import {NzMessageService} from 'ng-zorro-antd/message';
 import {SmartRequestService} from '../lib/smart-request.service';
 import {NzContentComponent, NzFooterComponent, NzHeaderComponent, NzLayoutComponent} from 'ng-zorro-antd/layout';
 import {NzColDirective, NzRowDirective} from 'ng-zorro-antd/grid';
 import {NgForOf, NgIf} from '@angular/common';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
-import {WindowComponent} from './window.component';
+import {WindowComponent, WindowDialog} from './window.component';
 import {NzDropDownDirective, NzDropdownMenuComponent} from 'ng-zorro-antd/dropdown';
 import {NzMenuDirective, NzMenuItemComponent, NzSubMenuComponent} from 'ng-zorro-antd/menu';
 import {NzConfigService} from 'ng-zorro-antd/core/config';
@@ -56,8 +56,8 @@ export class DesktopComponent {
   primaryColor: any
 
 
-  entries: any = [];
-  items: any[] = [];
+
+  windows: WindowDialog[] = [];
 
 
   userInfo: any;
@@ -67,13 +67,13 @@ export class DesktopComponent {
   constructor(
     private router: Router,
     private rs: SmartRequestService,
-              private nzConfigService: NzConfigService,
-              protected ts: ThemeService,
+    private nzConfigService: NzConfigService,
+    protected ts: ThemeService,
     private ms: NzModalService,
     private us: UserService,
     private msg: NzMessageService
   ) {
-        this.loadOem()
+    this.loadOem()
     this.loadMenu()
     this.loadSetting()
 
@@ -82,7 +82,6 @@ export class DesktopComponent {
     this.primaryColor = localStorage.getItem("primaryColor")
     if (this.primaryColor)
       this.nzConfigService.set('theme', {primaryColor: this.primaryColor})
-
   }
 
 
@@ -108,59 +107,63 @@ export class DesktopComponent {
   }
 
   hide(mes: any) {
-    this.items.filter((item: any, index: any) => {
+    this.windows.filter((item: any, index: any) => {
       if (item.title === mes) {
         item.show = false;
         item.tab = true;
       }
     });
   }
-  setIndex(mes: any) {
-    this.items.filter((item: any, index: any) => {
-      item.index = 0;
-      if (item.title === mes) {
-        item.index = 9999;
-      }
-    });
-  }
 
   close(mes: any) {
-    this.items.filter((item: any, index: any) => {
+    this.windows.filter((item: any, index: any) => {
       if (item.title === mes) {
-        this.items.splice(index, 1);
+        this.windows.splice(index, 1);
       }
     });
   }
 
-  showTab(mes: any) {
-    this.items.filter((item: any, index: any) => {
-      if (item.title === mes) {
+  activeTab(id: number) {
+    this.windows.filter((item: WindowDialog, index: any) => {
+      if (item.id === id) {
         item.show = true;
-        item.tab = false;
+        //item.tab = false;
       }
     });
-    this.setIndex(mes);
+    this.activeWindow(id);
   }
+
+  activeWindow(id: number) {
+    this.windows.filter((item: WindowDialog, index: any) => {
+      item.zIndex = 0;
+      if (item.id === id) {
+        item.zIndex = 9999;
+      }
+    });
+  }
+
+
+  idIncrement = 0
 
   open(app: any) {
+    console.log("open", app)
     if (window.innerWidth < 800) {
       this.router.navigate([app.entries[0].path]);
       return;
     }
 
-    if (
-      !this.items.some((item: any) => {
-        return item.title === app.name;
-      })
-    )
-      this.items.push({
-        show: true,
-        entries: app.entries,
-        title: app.name,
-        index: 0,
-      });
-    this.showTab(app.name);
-    this.setIndex(app.name);
+    let win: WindowDialog = {
+      show: true,
+      url: app.url,
+      title: app.name,
+      zIndex: 0,
+      id: this.idIncrement++,
+    }
+
+    this.windows.push(win);
+
+    this.activeTab(win.id);
+    this.activeWindow(win.id);
   }
 
 
@@ -172,7 +175,8 @@ export class DesktopComponent {
   logout() {
     this.rs
       .get('logout')
-      .subscribe((res) => {})
+      .subscribe((res) => {
+      })
       .add(() => this.router.navigateByUrl('/login'));
   }
 }

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output,} from '@angular/core';
+import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild,} from '@angular/core';
 import {NzMessageService} from 'ng-zorro-antd/message';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {NgForOf, NgIf, NgStyle} from '@angular/common';
@@ -8,6 +8,15 @@ import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzTabComponent, NzTabSetComponent} from 'ng-zorro-antd/tabs';
 import {FullscreenDirective} from '../fullscreen.directive';
+
+
+export interface WindowDialog {
+  show: boolean
+  url: string
+  title: string
+  zIndex: number
+  id: number
+}
 
 @Component({
   selector: 'app-window',
@@ -30,12 +39,23 @@ import {FullscreenDirective} from '../fullscreen.directive';
   standalone: true
 })
 export class WindowComponent implements OnInit {
+  san = inject(DomSanitizer)
+
   // index = 0;
-  @Input() index: any;
-  @Input() title: any;
-  @Input() show: any;
+  @Input() id: number = 0;
+  @Input() index: number = 0;
+  @Input() title: string = '';
+  @Input() show: boolean = false;
 
   _url!: SafeResourceUrl;
+  @Input() set url(u: string) {
+    this._url = this.san.bypassSecurityTrustResourceUrl(u)
+  }
+
+  @Output() onClose = new EventEmitter();
+  @Output() onHide = new EventEmitter();
+  @Output() onIndexChange = new EventEmitter<number>();
+
 
   width: any = '60vw';
   height: any = '50vh';
@@ -45,25 +65,13 @@ export class WindowComponent implements OnInit {
   dynamic = false;
   items: any[] = [];
 
-  @Output() onClose = new EventEmitter();
-  @Output() onHide = new EventEmitter();
-  @Output() setIndex = new EventEmitter();
-
-
-  constructor(private msg: NzMessageService, private san: DomSanitizer) {
-  }
-
   ngOnInit(): void {
   }
 
   tabData: any;
 
-  zindex() {
-    this.setIndex.emit(this.title);
-  }
-
-  @Input() set url(url: string) {
-    this._url = this.san.bypassSecurityTrustResourceUrl(url);
+  setIndex() {
+    this.onIndexChange.emit(this.id);
   }
 
   close() {
@@ -90,5 +98,16 @@ export class WindowComponent implements OnInit {
       this.width = '60vw';
       this.height = '50vh';
     }
+  }
+
+  @ViewChild('iframe') iframe!: ElementRef;
+
+  back(){
+    //console.log(this.iframe.nativeElement)
+    this.iframe.nativeElement.contentWindow.history.back()
+  }
+
+  forward(){
+    this.iframe.nativeElement.contentWindow.history.forward()
   }
 }

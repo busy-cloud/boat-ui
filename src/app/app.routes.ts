@@ -34,8 +34,8 @@ export const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: '', component: DesktopComponent, canActivate: [loginGuard]},
   {
-    path: 'page/:page', pathMatch: "prefix", component: PageComponent, canActivate: [loginGuard],
-    //children是为了匹配子目录
+    path: 'page', component: PageComponent, canActivate: [loginGuard],
+    //children是为了匹配子目录，无实际意义
     children: [{path: '**', component: UnknownComponent}]
   },
   {path: '**', component: UnknownComponent},

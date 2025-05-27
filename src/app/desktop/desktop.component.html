@@ -39,9 +39,9 @@
     </nz-dropdown-menu>
 
     <div class="tab">
-      @for (item of items; track item.id) {
+      @for (item of windows; track item.id) {
         <!-- *ngIf="item.tab" -->
-        <div class="tab-btn" (click)="showTab(item.title)">
+        <div class="tab-btn" (click)="activeTab(item.id)">
           {{ item.title }}
         </div>
       }
@@ -50,8 +50,8 @@
 </nz-layout>
 
 
-@for (item of items; track item.id) {
-  <app-window [index]="item.index" [title]="item.title" [show]="item.show"
-              (onHide)="hide($event)" (onClose)="close($event)" (setIndex)="setIndex($event)">
+@for (item of windows; track item.id) {
+  <app-window [id]="item.id"  [index]="item.zIndex" [title]="item.title" [url]="item.url" [show]="item.show"
+              (onHide)="hide($event)" (onClose)="close($event)" (onIndexChange)="activeWindow($event)">
   </app-window>
 }

@@ -7,7 +7,7 @@ import {NzSpaceComponent, NzSpaceItemDirective} from 'ng-zorro-antd/space';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzTabComponent, NzTabSetComponent} from 'ng-zorro-antd/tabs';
-import {FullscreenDirective} from '../fullscreen.directive';
+import {FullscreenDirective} from './fullscreen.directive';
 
 
 export interface WindowDialog {

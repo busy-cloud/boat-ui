@@ -46,7 +46,10 @@
     <div class="tab">
       @for (item of windows; track item.id) {
         <!-- *ngIf="item.tab" -->
-        <div class="tab-btn" (click)="activeTab(item.id)">
+        <div class="tab-btn"
+             (click)="activeTab(item.id)"
+             (dblclick)="onClose(item.id)"
+             [ngClass]="{active:item.zIndex>0}">
           {{ item.title }}
         </div>
       }

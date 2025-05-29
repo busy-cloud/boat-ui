@@ -6,13 +6,13 @@
        appFullscreen (screen)="maximize()"
        (setIndex)="setIndex()" [ngStyle]="{ width: width, height: height }">
 
-    <div class="modal-main" (dblclick)="maximize()">
+    <div class="modal-main">
 
       <div class="modal-right"></div>
       <div class="modal-bottom"></div>
       <div class="modal-right-bottom"></div>
 
-      <div class="modal-top" cdkDragHandle (click)="setIndex()">
+      <div class="modal-top" cdkDragHandle (click)="setIndex()" (dblclick)="maximize()">
 
         <div nz-space>
           <button *nzSpaceItem nz-button nzType="default" nzSize="small" (click)="back()" title="回退">

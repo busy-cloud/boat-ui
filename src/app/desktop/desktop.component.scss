@@ -132,14 +132,17 @@
     .tab-btn {
       color: white;
       background-color: #02172b;
-      border: 1px solid grey;
-      margin: 2px;
+      //border: 1px solid grey;
+      margin: 0 0 0 1px;
       padding: 2px 10px;
 
       display: flex;
       align-items: center;
       justify-content: center;
 
+      &.active {
+        background-color: #1a3f65;
+      }
     }
   }
 }

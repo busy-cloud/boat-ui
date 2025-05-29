@@ -1,11 +1,5 @@
-import {
-  Directive,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  OnInit,
-  Output,
-} from '@angular/core';
+import {Directive, ElementRef, EventEmitter, HostListener, OnInit, Output,} from '@angular/core';
+
 @Directive({
   selector: '[appFullscreen]',
   standalone: true
@@ -23,14 +17,15 @@ export class FullscreenDirective implements OnInit {
   t2 = 1;
   tempX = 0;
   tempY = 0;
-  shiftPosition = { x: 0, y: 0 };
+  shiftPosition = {x: 0, y: 0};
   element: any = null;
 
   constructor(private el: ElementRef) {
     this.element = this.el.nativeElement;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
 
   @HostListener('dblclick', ['$event']) onDoubleClick(event: any) {
@@ -39,18 +34,18 @@ export class FullscreenDirective implements OnInit {
 
   @HostListener('mousedown', ['$event']) onMousedown(event: any) {
     const elementRect = this.element.getBoundingClientRect();
-    const draw =
-      !this.dragDown &&
+
+    const draw = !this.dragDown &&
       event.clientX > elementRect.left &&
       event.clientX < elementRect.right - 120 &&
       event.clientY > elementRect.top &&
       event.clientY < elementRect.top + 37;
-    const resize =
-      !this.isDown &&
-      event.clientX > elementRect.right - 10 &&
-      event.clientX < elementRect.right &&
-      event.clientY > elementRect.bottom - 10 &&
-      event.clientY < elementRect.bottom;
+
+    const resize = !this.isDown &&
+      (event.clientX > elementRect.right - 10 &&
+        event.clientX < elementRect.right ||
+        event.clientY > elementRect.bottom - 10 &&
+        event.clientY < elementRect.bottom);
 
     if (draw) {
       this.dragDown = true;

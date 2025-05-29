@@ -5,8 +5,8 @@
   <nz-content class="content">
     <nz-row [nzGutter]="[{ xs: 8, sm: 16, md: 24 },{ xs: 8, sm: 16, md: 24 }]">
       @for (app of apps; track app.id) {
-        <nz-col class="app" (click)="open(app)" [nzXs]="8" [nzSm]="6" [nzMd]="4" [nzLg]="3">
-          <img class="icon" [src]="app.icon || '/assets/app.png'" alt="app"/>
+        <nz-col class="app" (click)="openIcon(app)" [nzXs]="8" [nzSm]="6" [nzMd]="4" [nzLg]="3">
+          <img class="icon" [src]="app.icon || '/app.png'" alt="app"/>
           <div class="name">
           <span class="inner">
               {{ app.name }}
@@ -28,13 +28,18 @@
           <li nz-submenu [nzTitle]="menu.name" [nzIcon]="menu.icon">
             <ul>
               @for (item of menu.items; track item) {
-                <li nz-menu-item (click)="open(item)">
+                <li nz-menu-item (click)="openMenu(item)">
                   {{ item.name }}
                 </li>
               }
             </ul>
           </li>
         }
+        <li nz-submenu nzTitle="视图" nzIcon="eye">
+          <ul>
+            <li nz-menu-item (click)="switchAdmin()">切换菜单模式</li>
+          </ul>
+        </li>
       </ul>
     </nz-dropdown-menu>
 
@@ -51,7 +56,7 @@
 
 
 @for (item of windows; track item.id) {
-  <app-window [id]="item.id"  [index]="item.zIndex" [title]="item.title" [url]="item.url" [show]="item.show"
-              (onHide)="hide($event)" (onClose)="close($event)" (onIndexChange)="activeWindow($event)">
+  <app-window [id]="item.id" [index]="item.zIndex" [title]="item.title" [url]="item.url" [show]="item.show"
+              (onHide)="onHide($event)" (onClose)="onClose($event)" (onIndexChange)="activeWindow($event)">
   </app-window>
 }

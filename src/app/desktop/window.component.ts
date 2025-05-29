@@ -75,13 +75,13 @@ export class WindowComponent implements OnInit {
   }
 
   close() {
-    this.onClose.emit(this.title);
+    this.onClose.emit(this.id);
     this.width = '60vw';
     this.height = '50vh';
   }
 
   minimize() {
-    this.onHide.emit(this.title);
+    this.onHide.emit(this.id);
   }
 
   showTab() {

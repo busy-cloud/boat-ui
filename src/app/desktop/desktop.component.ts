@@ -56,7 +56,6 @@ export class DesktopComponent {
   primaryColor: any
 
 
-
   windows: WindowDialog[] = [];
 
 
@@ -73,6 +72,7 @@ export class DesktopComponent {
     private us: UserService,
     private msg: NzMessageService
   ) {
+    this.loadApps()
     this.loadOem()
     this.loadMenu()
     this.loadSetting()
@@ -82,6 +82,13 @@ export class DesktopComponent {
     this.primaryColor = localStorage.getItem("primaryColor")
     if (this.primaryColor)
       this.nzConfigService.set('theme', {primaryColor: this.primaryColor})
+  }
+
+  loadApps() {
+    this.rs.get("app/list").subscribe((res) => {
+      if (res.error) return
+      this.apps = res.data;
+    })
   }
 
 
@@ -106,18 +113,18 @@ export class DesktopComponent {
     })
   }
 
-  hide(mes: any) {
+  onHide(id: any) {
     this.windows.filter((item: any, index: any) => {
-      if (item.title === mes) {
+      if (item.id === id) {
         item.show = false;
         item.tab = true;
       }
     });
   }
 
-  close(mes: any) {
+  onClose(id: any) {
     this.windows.filter((item: any, index: any) => {
-      if (item.title === mes) {
+      if (item.id === id) {
         this.windows.splice(index, 1);
       }
     });
@@ -145,7 +152,7 @@ export class DesktopComponent {
 
   idIncrement = 0
 
-  open(app: any) {
+  openMenu(app: any) {
     console.log("open", app)
     if (window.innerWidth < 800) {
       this.router.navigate([app.entries[0].path]);
@@ -166,6 +173,15 @@ export class DesktopComponent {
     this.activeWindow(win.id);
   }
 
+  openIcon(app: any) {
+    //打开第一个菜单页
+    if (app.menus?.length > 0) {
+      let items = app.menus[0].items;
+      if (items && items.length > 0) {
+        this.openMenu(items[0])
+      }
+    }
+  }
 
   setMenu(status: any, name: any) {
     //this._as.apps[this.appIndex[name]].status = !status;
@@ -178,5 +194,10 @@ export class DesktopComponent {
       .subscribe((res) => {
       })
       .add(() => this.router.navigateByUrl('/login'));
+  }
+
+  switchAdmin() {
+    localStorage.setItem("ui-mode", "admin")
+    window.location.href = "/"
   }
 }

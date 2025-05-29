@@ -7,7 +7,11 @@
        (setIndex)="setIndex()" [ngStyle]="{ width: width, height: height }">
 
     <div class="modal-main" (dblclick)="maximize()">
+
+      <div class="modal-right"></div>
+      <div class="modal-bottom"></div>
       <div class="modal-right-bottom"></div>
+
       <div class="modal-top" cdkDragHandle (click)="setIndex()">
 
         <div nz-space>

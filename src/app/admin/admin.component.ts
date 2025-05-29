@@ -115,4 +115,9 @@ export class AdminComponent {
       this.router.navigateByUrl("/login")
     })
   }
+
+  switchDesktop() {
+    localStorage.setItem("ui-mode", "desktop")
+    window.location.href = "/"
+  }
 }

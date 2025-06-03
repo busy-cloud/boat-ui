@@ -5,7 +5,7 @@
   <nz-content class="content">
     <nz-row [nzGutter]="[{ xs: 8, sm: 16, md: 24 },{ xs: 8, sm: 16, md: 24 }]">
       @for (app of apps; track app.id) {
-        <nz-col class="app" (click)="openIcon(app)" [nzXs]="8" [nzSm]="6" [nzMd]="4" [nzLg]="3">
+        <nz-col class="app" (click)="openMenu(app)" [nzXs]="8" [nzSm]="6" [nzMd]="4" [nzLg]="3">
           <img class="icon" [src]="app.icon || '/app.png'" alt="app"/>
           <div class="name">
           <span class="inner">
@@ -25,7 +25,7 @@
     <nz-dropdown-menu #start>
       <ul nz-menu nzTheme="light">
         @for (menu of menus; track menu) {
-          <li nz-submenu [nzTitle]="menu.name" [nzIcon]="menu.icon">
+          <li nz-submenu [nzTitle]="menu.name" [nzIcon]="menu.nz_icon">
             <ul>
               @for (item of menu.items; track item) {
                 <li nz-menu-item (click)="openMenu(item)">

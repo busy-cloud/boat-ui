@@ -86,7 +86,7 @@ export class DesktopComponent {
   }
 
   loadApps() {
-    this.rs.get("app/list").subscribe((res) => {
+    this.rs.get("shortcuts").subscribe((res) => {
       if (res.error) return
       this.apps = res.data;
     })
@@ -172,16 +172,6 @@ export class DesktopComponent {
 
     this.activeTab(win.id);
     this.activeWindow(win.id);
-  }
-
-  openIcon(app: any) {
-    //打开第一个菜单页
-    if (app.menus?.length > 0) {
-      let items = app.menus[0].items;
-      if (items && items.length > 0) {
-        this.openMenu(items[0])
-      }
-    }
   }
 
   setMenu(status: any, name: any) {

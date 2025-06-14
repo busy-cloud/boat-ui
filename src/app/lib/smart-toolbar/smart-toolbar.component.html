@@ -30,8 +30,11 @@
           </ul>
         </nz-dropdown-menu>
       }
+      @case ('label') {
+        {{ field.label }}
+      }
       @case ('text') {
-        {{ field.label||'' }}
+        {{ field.label || '' }}
         <!--文本-->
         <input nz-input [formControlName]="field.key"
                [minlength]="field.min || 0"
@@ -41,7 +44,7 @@
         <nz-autocomplete [nzDataSource]="field.auto" #auto></nz-autocomplete>
       }
       @case ('number') {
-        {{ field.label||'' }}
+        {{ field.label || '' }}
         <!--数值-->
         <nz-input-number [formControlName]="field.key"
                          [nzMin]="field.min===undefined ? -Infinity : field.min"
@@ -50,7 +53,7 @@
                          [nzPlaceHolder]="field.placeholder || ''"></nz-input-number>
       }
       @case ('slider') {
-        {{ field.label||'' }}
+        {{ field.label || '' }}
         <!--滑块-->
         <nz-slider [formControlName]="field.key"
                    [nzMin]="field.min || 0"
@@ -58,7 +61,7 @@
                    [nzStep]="field.step"></nz-slider>
       }
       @case ('radio') {
-        {{ field.label||'' }}
+        {{ field.label || '' }}
         <!--单选 有import Bug，先不支持-->
         <nz-radio-group [formControlName]="field.key" nzButtonStyle="solid">
                 <label nz-radio-button *ngFor="let o of field.options"
@@ -67,7 +70,7 @@
             </nz-radio-group>
       }
       @case ('select') {
-        {{ field.label||'' }}
+        {{ field.label || '' }}
         <!--选项-->
         <nz-select [formControlName]="field.key"
                    [nzOptions]="field.options || empty"
@@ -82,46 +85,46 @@
                         [nzPlaceHolder]="field.placeholder || ''"></nz-tree-select>
       }
       @case ('switch') {
-        {{ field.label||'' }}
+        {{ field.label || '' }}
         <!--开关-->
         <nz-switch [formControlName]="field.key"></nz-switch>
       }
       @case ('checkbox') {
-        {{ field.label||'' }}
+        {{ field.label || '' }}
         <!--开关-->
         <label nz-checkbox [formControlName]="field.key"></label>
       }
       @case ('slider') {
-        {{ field.label||'' }}
+        {{ field.label || '' }}
         <!--进度条-->
         <nz-slider [formControlName]="field.key"
                    [nzMax]="field.max" [nzMin]="field.min" [nzStep]="field.step"></nz-slider>
       }
       @case ('datetime') {
-        {{ field.label||'' }}
+        {{ field.label || '' }}
         <!--日期和时间-->
         <nz-date-picker nzShowTime [formControlName]="field.key"
                         [nzPlaceHolder]="field.placeholder || ''"></nz-date-picker>
       }
       @case ('date') {
-        {{ field.label||'' }}
+        {{ field.label || '' }}
         <!--日期-->
         <nz-date-picker [formControlName]="field.key" [nzPlaceHolder]="field.placeholder || ''"></nz-date-picker>
       }
       @case ('time') {
-        {{ field.label||'' }}
+        {{ field.label || '' }}
         <!--时间-->
         <nz-time-picker [formControlName]="field.key" [nzPlaceHolder]="field.placeholder || ''"></nz-time-picker>
       }
       @case ('upload') {
-        {{ field.label||'' }}
+        {{ field.label || '' }}
         <!--文件-->
-          <nz-upload [nzAction]="field.upload" [nzShowUploadList]="false" [nzDisabled]="!!field.disabled">
+        <nz-upload [nzAction]="field.upload" [nzShowUploadList]="false" [nzDisabled]="!!field.disabled">
             <button nz-button nzType="primary" [disabled]="!!field.disabled">上传</button>
           </nz-upload>
       }
       @case ('file') {
-        {{ field.label||'' }}
+        {{ field.label || '' }}
         <!--文件-->
         <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
           <input nz-input [formControlName]="field.key"
@@ -134,7 +137,7 @@
         </ng-template>
       }
       @case ('images') {
-        {{ field.label||'' }}
+        {{ field.label || '' }}
         <!--标签-->
         <nz-select nzMode="tags" [formControlName]="field.key"
                    [nzTokenSeparators]="[',','，', ' ', ';']"
@@ -147,7 +150,7 @@
         </nz-upload>
       }
       @default {
-        {{ field.label||'' }}
+        {{ field.label || '' }}
         未支持的组件
       }
     }

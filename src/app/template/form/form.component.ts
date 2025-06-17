@@ -11,7 +11,6 @@ import {NzModalRef} from 'ng-zorro-antd/modal';
 import {TemplateBase} from '../template-base.component';
 import {FormContent} from '../template';
 import {LinkReplaceParams} from '../../lib/utils';
-import {SmartInfoComponent} from '../../lib/smart-info/smart-info.component';
 
 
 @Component({
@@ -53,13 +52,14 @@ export class FormComponent extends TemplateBase {
       }
     }
     if (isFunction(content.submit)) {
-      this.submitting = true
-      content.submit.call(this, this.data).then((res: any) => {
-        //this.data = res;
-        //this.ns.success("提示", "提交成功")
-      }).finally(() => {
-        this.submitting = false
-      })
+      //this.submitting = true
+      content.submit.call(this, this.editor.value)
+      //   .then((res: any) => {
+      //   //this.data = res;
+      //   //this.ns.success("提示", "提交成功")
+      // }).finally(() => {
+      //   this.submitting = false
+      // })
     } else if (content.submit_api) {
       this.submitting = true
       let url = LinkReplaceParams(content.submit_api, this.params);

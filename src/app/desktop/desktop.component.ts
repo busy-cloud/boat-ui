@@ -10,7 +10,7 @@ import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {WindowComponent, WindowDialog} from './window.component';
 import {NzDropDownDirective, NzDropdownMenuComponent} from 'ng-zorro-antd/dropdown';
-import {NzMenuDirective, NzMenuItemComponent, NzSubMenuComponent} from 'ng-zorro-antd/menu';
+import {NzMenuDirective, NzMenuDividerDirective, NzMenuItemComponent, NzSubMenuComponent} from 'ng-zorro-antd/menu';
 import {NzConfigService} from 'ng-zorro-antd/core/config';
 import {ThemeService} from '../theme.service';
 
@@ -37,6 +37,7 @@ import {ThemeService} from '../theme.service';
     NzSubMenuComponent,
     RouterLink,
     NgClass,
+    NzMenuDividerDirective,
   ],
   standalone: true
 })
@@ -180,11 +181,9 @@ export class DesktopComponent {
   }
 
   logout() {
-    this.rs
-      .get('logout')
-      .subscribe((res) => {
-      })
-      .add(() => this.router.navigateByUrl('/login'));
+    localStorage.removeItem("token")
+    this.rs.get('logout').subscribe((res) => {
+    }).add(() => this.router.navigateByUrl('/login'));
   }
 
   switchAdmin() {

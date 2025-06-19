@@ -1,25 +1,25 @@
 import {Component, ViewChild} from '@angular/core';
-import {NzCardComponent} from 'ng-zorro-antd/card';
-import {NzNotificationService} from 'ng-zorro-antd/notification';
-import {Md5} from 'ts-md5';
-import {Router} from '@angular/router';
-import {UserService} from '../user.service';
-import {SmartRequestService} from '../lib/smart-request.service';
 import {SmartEditorComponent, SmartField} from '../lib/smart-editor/smart-editor.component';
+import {Router} from '@angular/router';
+import {NzNotificationService} from 'ng-zorro-antd/notification';
+import {SmartRequestService} from '../lib/smart-request.service';
+import {UserService} from '../user.service';
+import {Md5} from 'ts-md5';
+import {NzCardComponent} from 'ng-zorro-antd/card';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
+  selector: 'app-admin-login',
   imports: [
-    SmartEditorComponent,
     NzCardComponent,
+    SmartEditorComponent,
     NzButtonComponent
   ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  templateUrl: './admin-login.component.html',
+  standalone: true,
+  styleUrl: './admin-login.component.scss'
 })
-export class LoginComponent {
+export class AdminLoginComponent {
 
   fields: SmartField[] = [
     {key: 'username', type: 'text', label: '用户名', required: true},
@@ -43,22 +43,13 @@ export class LoginComponent {
     }
 
     let obj = this.editor.value
-    this.request.post("user/auth", {...obj, password: Md5.hashStr(obj.password)}).subscribe(res => {
+    this.request.post("login", {...obj, password: Md5.hashStr(obj.password)}).subscribe(res => {
       console.log("login", res)
       if (res.error) {
         return
       }
-
-      let data = res.data
-
-      //保存到localstorage中，每次请求都取一下，感觉怪怪的
-      if (data.token)
-        localStorage.setItem("token", data.token)
-      if (data.user)
-        this.us.set(data.user)
-
+      this.us.set(res.data)
       this.router.navigateByUrl('/')
-      //this.router.navigate(["/"])
     })
   }
 }

@@ -111,6 +111,7 @@ export class AdminComponent {
   }
 
   logout() {
+    localStorage.removeItem("token")
     this.request.get("logout").subscribe(res=>{
       this.router.navigateByUrl("/login")
     })

@@ -28,6 +28,13 @@ export class SmartRequestService {
     // 携带Cookie，保持session会话
     options.withCredentials = true;
 
+    //JWT
+    let token = localStorage.getItem("token")
+    if (token) {
+      options.headers = options.headers || {};
+      options.headers.Authorization = "Bearer "+token;
+    }
+
     //默认添加基础路径
     if (uri.substring(0, 1) != '/')
       uri = this.base + uri

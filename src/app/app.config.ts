@@ -14,7 +14,7 @@ import {provideHttpClient} from '@angular/common/http';
 registerLocaleData(zh);
 
 
-let mode = localStorage.getItem("ui-mode") || "desktop"
+let mode = localStorage.getItem("ui-mode")
 let routes = mode == "desktop" ? desktopRoutes: adminRoutes
 
 export const appConfig: ApplicationConfig = {

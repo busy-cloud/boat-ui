@@ -43,7 +43,7 @@ export class LoginComponent {
     }
 
     let obj = this.editor.value
-    this.request.post("user/auth", {...obj, password: Md5.hashStr(obj.password)}).subscribe(res => {
+    this.request.post("auth", {...obj, password: Md5.hashStr(obj.password)}).subscribe(res => {
       console.log("login", res)
       if (res.error) {
         return

@@ -7,11 +7,9 @@ import {PageComponent} from './page/page.component';
 import {SettingComponent} from './setting/setting.component';
 import {AdminComponent} from './admin/admin.component';
 import {DesktopComponent} from './desktop/desktop.component';
-import {AdminLoginComponent} from './admin-login/admin-login.component';
 
 export const adminRoutes: Routes = [
   //{path: '', pathMatch: 'full', redirectTo: ''},
-  {path: 'admin', component: AdminLoginComponent},
   {path: 'login', component: LoginComponent},
   {path: 'desktop', canActivate: [loginGuard], component: DesktopComponent},
   {
@@ -33,7 +31,6 @@ export const adminRoutes: Routes = [
 ];
 
 export const desktopRoutes: Routes = [
-  {path: 'admin', component: AdminLoginComponent},
   {path: 'login', component: LoginComponent},
   {path: '', component: DesktopComponent, canActivate: [loginGuard]},
   {

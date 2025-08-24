@@ -323,4 +323,45 @@ export class TemplateBase {
     return params
   }
 
+
+  export_json(data: any, filename: string) {
+    const jsonData = JSON.stringify(data, null, "\t");
+    const blob = new Blob([jsonData], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename + dayjs().format("-YYYYMMDDHHmmss") + ".json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  import_json(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let input = document.createElement('input');//js生成接收文件的DOM
+      input.type = "file";
+      input.click()
+      input.onchange = (e) => {
+        //@ts-ignore
+        let file = e.target?.files?.[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            let data = e.target?.result || ''
+            //console.log("import_json", data)
+            try {
+              let obj = JSON.parse(data.toString());
+              resolve(obj);
+            } catch (e) {
+              reject(e)
+            }
+          };
+          reader.readAsText(file); // 读取文件内容为文本
+        }
+      }
+    })
+  }
+
 }

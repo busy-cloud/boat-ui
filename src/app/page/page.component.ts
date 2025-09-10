@@ -1,8 +1,8 @@
 import {
-  Component,
+  Component, ComponentRef,
   inject,
-  Input,
-  ViewChild,
+  Input, Optional,
+  ViewChild, ViewChildren,
   ViewContainerRef
 } from '@angular/core';
 import {SmartRequestService} from '../lib/smart-request.service';
@@ -44,11 +44,14 @@ export class PageComponent {
 
   nzModalData: any = inject(NZ_MODAL_DATA, {optional: true});
 
+  componentRef!: ComponentRef<any>
+
+  @ViewChildren(PageComponent) children!: PageComponent[]
+
   constructor(protected request: SmartRequestService,
               protected route: ActivatedRoute,
               protected router: Router,
               protected title: Title
-              //@Optional() protected nzModalData: NZ_MODAL_DATA
   ) {
     //优先使用弹窗参数
     if (this.nzModalData) {
@@ -197,11 +200,16 @@ export class PageComponent {
 
   @ViewChild('container', { read: ViewContainerRef }) container!: ViewContainerRef;
   render_component(cmp: any): void {
-    const ref = this.container.createComponent(cmp)
-    ref.setInput("page", this.page)
-    ref.setInput("content", this.content)
-    ref.setInput("params", this.params)
-    ref.setInput("isChild", this.isChild)
+    this.componentRef = this.container.createComponent(cmp)
+    this.componentRef.setInput("page", this.page)
+    this.componentRef.setInput("content", this.content)
+    this.componentRef.setInput("params", this.params)
+    this.componentRef.setInput("isChild", this.isChild)
+    this.componentRef.setInput("pageComponent", this)
+
+    if (this.isChild) {
+
+    }
   }
 
   load_component(tpl?: string) {

@@ -18,7 +18,7 @@ import dayjs from 'dayjs'
   ],
   template: '',
   standalone: true,
-  inputs: ['page', 'content', 'params', 'data', 'isChild']
+  inputs: ['page', 'content', 'params', 'data', 'isChild', 'pageComponent']
 })
 export class TemplateBase {
   dayjs: any = dayjs //引入dayjs
@@ -28,6 +28,8 @@ export class TemplateBase {
   router = inject(Router)
   title = inject(Title)
   modelRef = inject(NzModalRef, {optional: true})
+
+  pageComponent!: PageComponent //页面容器
 
   page?: string
 

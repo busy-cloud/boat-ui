@@ -168,6 +168,7 @@
     }
     @case ('table') {
       <!--表格-->
+          @if (control.controls.length) {
       <nz-table nzSize="small" nzTemplateMode nzBordered>
         <!--表头-->
         <thead>
@@ -203,6 +204,11 @@
         </tr>
         </tbody>
       </nz-table>
+        } @else {          
+          <a title="添加" (click)="tableAdd(control, field.children)">
+            <i nz-icon nzType="plus"></i>添加
+          </a>
+        }
     }
     @case ('template') {
       <ng-container *ngTemplateOutlet="field.template; context: { field: field, control:control }">

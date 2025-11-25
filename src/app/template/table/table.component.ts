@@ -61,6 +61,9 @@ export class TableComponent extends TemplateBase {
         $event.keyword[key] = this.keyword
     })
 
+    //关联查询
+    $event.joins = content.joins || []
+
     //搜索
     if (typeof content.search == "string" && content.search.length > 0) {
       try {

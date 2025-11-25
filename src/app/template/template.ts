@@ -2,7 +2,7 @@ import {SmartField} from '../lib/smart-editor/smart-editor.component';
 import {EChartsOption} from 'echarts';
 import {SmartRequestService} from '../lib/smart-request.service';
 import {SmartInfoItem} from '../lib/smart-info/smart-info.component';
-import {ParamSearch, SmartAction, SmartTableColumn, SmartTableOperator} from '../lib/smart-table/smart-table.component';
+import {ParamJoin, ParamSearch, SmartAction, SmartTableColumn, SmartTableOperator} from '../lib/smart-table/smart-table.component';
 
 export type PageContent = Content & (
   BlankContent |
@@ -128,6 +128,7 @@ export interface TableContent {
   columns: SmartTableColumn[]
   operators: SmartTableOperator[]
   keywords?: string[]
+  joins?: ParamJoin[] //表关联
 
   search_api?: string
   search?: string | Function | ((event: ParamSearch, request: SmartRequestService) => Promise<any>)

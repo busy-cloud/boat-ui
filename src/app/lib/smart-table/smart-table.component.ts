@@ -69,12 +69,23 @@ export interface SmartTableParams {
   operators: SmartTableOperator[]
 }
 
+
+export interface ParamJoin {
+  table: string
+  local_field: string
+  foreign_field: string
+  field: string
+  as: string
+}
+
 export interface ParamSearch {
   filter: { [key: string]: any }
   skip?: number
   limit?: number
   sort?: { [key: string]: number }
   keyword?: { [key: string]: string }
+  fields?: string[]
+  joins?: ParamJoin[]
 }
 
 @Component({

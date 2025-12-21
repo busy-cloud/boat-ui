@@ -119,7 +119,7 @@
         <input nz-input [formControl]="control"
                [placeholder]="field.placeholder || ''"/></nz-input-group>
       <ng-template #suffixButton>
-        <nz-upload [nzAction]="field.upload" [nzShowUploadList]="false" [nzDisabled]="!!field.disabled"
+        <nz-upload [nzAction]="field.upload" [nzShowUploadList]="true" [nzDisabled]="!!field.disabled"
                    (nzChange)="handleUpload(control, $event)">
           <button nz-button nzType="primary" [disabled]="!!field.disabled">上传</button>
         </nz-upload>

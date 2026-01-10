@@ -1,15 +1,15 @@
-import {Component, ViewChild} from '@angular/core';
-import {ParamSearch, SmartTableComponent} from '../../lib/smart-table/smart-table.component';
-import {isFunction} from 'rxjs/internal/util/isFunction';
-import {NzCardComponent} from 'ng-zorro-antd/card';
-import {CommonModule} from '@angular/common';
-import {NzSpinComponent} from 'ng-zorro-antd/spin';
-import {NzButtonComponent} from 'ng-zorro-antd/button';
-import {NzIconDirective} from 'ng-zorro-antd/icon';
-import {SmartToolbarComponent} from '../../lib/smart-toolbar/smart-toolbar.component';
-import {TemplateBase} from '../template-base.component';
-import {TableContent} from '../template';
-import {LinkReplaceParams} from '../../lib/utils';
+import { Component, ViewChild } from '@angular/core';
+import { ParamSearch, SmartTableComponent } from '../../lib/smart-table/smart-table.component';
+import { isFunction } from 'rxjs/internal/util/isFunction';
+import { NzCardComponent } from 'ng-zorro-antd/card';
+import { CommonModule } from '@angular/common';
+import { NzSpinComponent } from 'ng-zorro-antd/spin';
+import { NzButtonComponent } from 'ng-zorro-antd/button';
+import { NzIconDirective } from 'ng-zorro-antd/icon';
+import { SmartToolbarComponent } from '../../lib/smart-toolbar/smart-toolbar.component';
+import { TemplateBase } from '../template-base.component';
+import { TableContent } from '../template';
+import { LinkReplaceParams } from '../../lib/utils';
 
 
 @Component({
@@ -29,8 +29,8 @@ import {LinkReplaceParams} from '../../lib/utils';
   inputs: ['page', 'content', 'params', 'data', 'isChild']
 })
 export class TableComponent extends TemplateBase {
-  @ViewChild("toolbar", {static: false}) toolbar!: SmartToolbarComponent;
-  @ViewChild("table", {static: false}) table!: SmartTableComponent;
+  @ViewChild("toolbar", { static: false }) toolbar!: SmartToolbarComponent;
+  @ViewChild("table", { static: false }) table!: SmartTableComponent;
 
   toolbarValue = {}
 
@@ -54,11 +54,12 @@ export class TableComponent extends TemplateBase {
 
     //继承条件
     Object.assign($event.filter, this.filter)
+
     //关键字
-    $event.keyword = {}
+    $event.filter["$or"] = {}
     content.keywords?.forEach((key) => {
-      if ($event?.keyword)
-        $event.keyword[key] = this.keyword
+      if (this.keyword)
+        $event.filter["$or"][key] = "%"+this.keyword+"%"
     })
 
     //关联查询

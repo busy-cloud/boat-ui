@@ -53,6 +53,12 @@ export class DesktopComponent {
     company: '南京本易物联网有限公司',
   }
 
+  version: any = {
+    version: '',
+    build: '',
+    git: '',
+  }
+
   menus: any[] = []
   settings: any[] = []
   primaryColor: any
@@ -93,6 +99,13 @@ export class DesktopComponent {
     })
   }
 
+
+  loadVersion() {
+    this.rs.get("version").subscribe((res) => {
+      if (res.error) return
+      Object.assign(this.version, res.data);
+    })
+  }
 
   loadOem() {
     this.rs.get("oem").subscribe((res) => {

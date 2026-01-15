@@ -41,6 +41,12 @@ export class AdminComponent {
     logo: '/boat.svg',
     company: '南京本易物联网有限公司',
   }
+  version: any = {
+    version: '',
+    build: '',
+    git: '',
+    runtime: '',
+  }
 
   colors = [
     {value:'#188ffe',name:'商务蓝'},
@@ -71,6 +77,7 @@ export class AdminComponent {
     this.loadOem()
     this.loadMenu()
     this.loadSetting()
+    this.loadVersion()
 
     //主题色
     this.primaryColor = localStorage.getItem("primaryColor")
@@ -82,6 +89,13 @@ export class AdminComponent {
     this.request.get("oem").subscribe((res) => {
       if (res.error) return
       Object.assign(this.oem, res.data);
+    })
+  }
+
+  loadVersion() {
+    this.request.get("version").subscribe((res) => {
+      if (res.error) return
+      Object.assign(this.version, res.data);
     })
   }
 
